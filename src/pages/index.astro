@@ -1,0 +1,115 @@
+---
+import ApartmentLayout from "../layouts/Layout.astro";
+
+import Navbar from "../components/Navbar.astro";
+import ApartmentHeader from "../components/ApartmentHeader.astro";
+import Gallery from "../components/Gallery.astro";
+import Description from "../components/Description.astro";
+import Services from "../components/Services.astro";
+import PriceComponentFixedPlain from "../components/PriceComponentFixedPlain.astro";
+import PriceComponentFixedPlainPlusGuest from "../components/PriceComponentFixedPlainPlusGuest.astro";
+import PriceComponentDynamic from "../components/PriceComponentDynamic.astro";
+import Map from "../components/Map.astro";
+import Host from "../components/Host.astro";
+import Footer from "../components/Footer.astro";
+
+import { apartmentConfig } from '../clients/00_default';
+const {
+    headTitle,
+    title,
+    location,
+    guests,
+    bathrooms,
+    beds,
+    bedrooms,
+    description,
+    imagesByCategory,
+    apartmentServices,
+    price,
+    pricePeriods,
+    extraPerGuest,
+    currency,
+    checkIn,
+    checkOut,
+    priceCardEmail,
+    priceCardPhone,
+    priceCardWhatsApp,
+    mapEmbed,
+    showDirections,
+    carDirectionsDescription,
+    publicTransportDirectionsDescription,
+    hostImage,
+    hostName,
+    hostBio,
+    hostEmail,
+    hostPhone,
+    hostLanguages,
+} = apartmentConfig;
+---
+
+<ApartmentLayout headTitle={headTitle}>
+    <Navbar slot="navbar"/>
+    <ApartmentHeader
+            slot="header"
+            title={title}
+            location={location}
+            guests={guests}
+            bathrooms={bathrooms}
+            beds={beds}
+            bedrooms={bedrooms}
+            description={description}
+    />
+
+    <Gallery slot="gallery" imagesByCategory={imagesByCategory}/>
+    <Description slot="description" description={description}/>
+    <Services slot="services" apartmentServices={apartmentServices}/>
+
+
+    <PriceComponentFixedPlain
+            slot="price"
+            price={price}
+            currency={currency}
+            checkIn={checkIn}
+            checkOut={checkOut}
+            priceCardEmail={priceCardEmail}
+            priceCardPhone={priceCardPhone}
+            priceCardWhatsApp={priceCardWhatsApp}
+
+    />
+    <Map slot="map" mapEmbed={mapEmbed} showDirections={showDirections}
+         carDirectionsDescription={carDirectionsDescription}
+         publicTransportDirectionsDescription={publicTransportDirectionsDescription}/>
+    <Host slot="host" hostName={hostName} hostImage={hostImage} hostBio={hostBio} hostEmail={hostEmail}
+          hostPhone={hostPhone} hostLanguages={hostLanguages}/>
+    <Footer slot="footer"/>
+
+    <PriceComponentFixedPlainPlusGuest
+      slot="test"
+      price={price}
+      currency={currency}
+      checkIn={checkIn}
+      checkOut={checkOut}
+      priceCardEmail={priceCardEmail}
+      priceCardPhone={priceCardPhone}
+      priceCardWhatsApp={priceCardWhatsApp}
+      guests={guests}
+      extraPerGuest={extraPerGuest}
+    />
+
+    <PriceComponentDynamic
+      slot="test"
+      price={price}
+      pricePeriods={pricePeriods}
+      currency={currency}
+      checkIn={checkIn}
+      checkOut={checkOut}
+      priceCardEmail={priceCardEmail}
+      priceCardPhone={priceCardPhone}
+      priceCardWhatsApp={priceCardWhatsApp}
+      guests={guests}
+      extraPerGuest={extraPerGuest}
+    />
+
+
+    PriceComponentFixedPlainPlusGuest
+</ApartmentLayout>

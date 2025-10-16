@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+html {
+    scrollbar-gutter: auto !important;
+}
+
+body {
+    font-family: 'Geist', sans-serif;
+}

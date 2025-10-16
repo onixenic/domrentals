@@ -1,0 +1,289 @@
+---
+interface Props {
+  imagesByCategory: Record<string, string[]>;
+}
+
+const {imagesByCategory} = Astro.props;
+---
+
+
+<!-- Image gallery -->
+<div class="col-span-6">
+    <div class="hidden sm:grid grid-cols-2 gap-2 overflow-hidden rounded-lg">
+        <img src={imagesByCategory.all[0]} alt="Main"
+             class="w-full h-98 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
+             onclick="openGalleryModal()"/>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="space-y-2">
+                <img src={imagesByCategory.all[1]} alt="Small1"
+                     class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
+                     onclick="openGalleryModal()"/>
+                <img src={imagesByCategory.all[2]} alt="Small2"
+                     class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
+                     onclick="openGalleryModal()"/>
+            </div>
+            <div class="space-y-2">
+                <img src={imagesByCategory.all[3]} alt="Small3"
+                     class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
+                     onclick="openGalleryModal()"/>
+                <div class="relative">
+                    <img src={imagesByCategory.all[4]} alt="Small4"
+                         class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
+                         onclick="openGalleryModal()"/>
+                    <button
+                            class="btn border-1 border-black absolute bottom-3 right-3 flex items-center gap-2 px-4 py-2 text-base sm:px-2 sm:py-1 text-xs"
+                            onclick="openGalleryModal()"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                             stroke-linejoin="round" class="icon icon-tabler icon-tabler-photo-scan">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M15 8h.01"/>
+                            <path d="M6 13l2.644 -2.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644"/>
+                            <path d="M13 13l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l1.644 1.644"/>
+                            <path d="M4 8v-2a2 2 0 0 1 2 -2h2"/>
+                            <path d="M4 16v2a2 2 0 0 0 2 2h2"/>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v2"/>
+                            <path d="M16 20h2a2 2 0 0 0 2 -2v-2"/>
+                        </svg>
+                        <span>More images</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile carousel -->
+    <div class="relative sm:hidden carousel rounded-box">
+      {Object.values(imagesByCategory)
+        .flat()
+        .map((img, i) => (
+                <div class="carousel-item w-full relative" key={i}>
+                    <img
+                            src={img}
+                            class="w-full h-80 object-cover cursor-pointer"
+                            onclick="openGalleryModal()"/>
+                  {/* Counter */}
+                    <div class="absolute bottom-3 right-3 bg-black/70 text-white text-sm px-3 py-1 rounded-full">
+                      {i + 1} / {Object.values(imagesByCategory).flat().length}
+                    </div>
+                </div>
+        ))}
+    </div>
+
+</div>
+
+<dialog id="gallery_modal" class="modal">
+    <div class="modal-box !px-0 lg:!px-6 pt-0 w-full h-full max-w-full max-h-full max-w-none max-h-none rounded-none"
+         id="gallery_modal_box">
+        <div class="mx-auto md:px-6 max-w-6xl">
+            <!-- Dynamic Tabs -->
+
+            <div class="sticky py-6 px-4">
+                <button
+                        onclick="closeGalleryModal()"
+                        class="btn btn-sm btn-circle btn-ghost"
+                        aria-label="Close gallery"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                         stroke-linejoin="round"
+                         class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l14 0"/>
+                        <path d="M5 12l6 6"/>
+                        <path d="M5 12l6 -6"/>
+                    </svg>
+                </button>
+
+            </div>
+            <div class="sticky top-0 bg-base-100 z-30 pt-6 pb-20 overflow-x-auto" id="gallery_tabs">
+                <div class="tabs tabs-bordered flex flex-nowrap min-w-max lg:flex-wrap lg:min-w-0 px-6 lg:px-0">
+                  {Object.keys(imagesByCategory).filter((category) => category.toLowerCase() !== "all").map((category, index) => (
+                          <button
+                                  type="button"
+                                  class={`tab relative flex-shrink-0 ${index === 0 ? "tab-active pl-0" : ""}`}
+                                  data-target={category}
+                          >
+                              <div class="flex flex-col items-center gap-1">
+                                  <img
+                                          src={imagesByCategory[category]?.[0] || "/placeholder.svg"}
+                                          alt={`${category}-0`}
+                                          class="w-20 h-20 object-cover rounded-sm"
+                                  />
+                                  <span class="text-xs text-center">
+                                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                                </span>
+                              </div>
+                          </button>
+                  ))}
+                </div>
+            </div>
+
+            <div class="mx-auto max-w-7xl px-0 py-0 lg:px-12 lg:py-12">
+              {Object.entries(imagesByCategory)
+                .map(([key, value]) => [key, value])
+                .filter(([category]) => category.toLowerCase() !== "all")
+                .map(([category, imgs]) => (
+                        <section id={category} class="mb-20 flex flex-col gap-8 lg:flex-row lg:gap-12">
+                          {/* Left side: sticky title */}
+                            <div class="lg:w-1/5 px-6 lg:px-0">
+                                <h2 class="text-2xl font-medium tracking-tight text-foreground lg:sticky lg:top-24">
+                                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                                </h2>
+                            </div>
+
+                          {/* Right side: images grid */}
+                            <div class="flex-1">
+                                <div class="grid grid-cols-2 gap-4 lg:gap-5">
+                                  {imgs.map((img, i) => (
+                                          <div
+                                                  class={`
+                                                group relative overflow-hidden bg-muted cursor-pointer
+                                                ${i % 3 === 0 ? "col-span-2" : "col-span-1"}
+                                            `}
+                                                  data-image={img}
+                                          >
+                                              <img
+                                                      src={img || "/placeholder.svg"}
+                                                      alt={`${category}-${i}`}
+                                                      class={`
+                                                    h-full w-full object-cover transition-transform duration-200
+                                                    group-hover:scale-105
+                                                    ${i % 3 === 0 ? "aspect-[16/9]" : "aspect-square"}
+                                                `}
+                                              />
+                                              <div class="absolute inset-0 bg-foreground/0 transition-colors duration-300 group-hover:bg-foreground/5"/>
+                                          </div>
+                                  ))}
+                                </div>
+                            </div>
+                        </section>
+                ))}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for full-size image -->
+    <div
+            id="imageModal"
+            class="fixed inset-0 hidden items-center justify-center bg-foreground/90 p-4 backdrop-blur-sm"
+    >
+        <button
+                id="closeModal"
+                class="absolute right-6 top-6 text-background hover:text-background/80 transition-colors"
+                aria-label="Close modal"
+        >
+            <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+            >
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <img
+                id="modalImage"
+                src="/placeholder.svg"
+                alt="Full size"
+                class="max-h-[90vh] max-w-[90vw] rounded-2xl object-contain"
+        />
+    </div>
+
+    <script>
+      // expose open/close on window Scroll functionality
+      window.openGalleryModal = function () {
+        const d = document.getElementById("gallery_modal");
+        if (d && !d.open) d.showModal();
+        // optionally focus first tab for keyboard users
+        const firstTab = document.querySelector("#gallery_tabs .tab");
+        firstTab?.focus();
+      };
+
+      window.closeGalleryModal = function () {
+        const d = document.getElementById("gallery_modal");
+        if (d && d.open) d.close();
+      };
+
+      window.scrollToSection = function (id, btnEl) {
+        const container = document.getElementById("gallery_modal_box");
+        const section = document.getElementById(id);
+        if (!section || !container) return;
+
+        // activate clicked tab (if provided)
+        if (btnEl) {
+          document.querySelectorAll("#gallery_tabs .tab").forEach((t) => t.classList.remove("tab-active"));
+          btnEl.classList.add("tab-active");
+        }
+
+        if (section.previousElementSibling === null) {
+          container.scrollTo({top: 0, behavior: "smooth"});
+        } else {
+          const sectionTopRelative = section.offsetTop;
+          let offset = 150;
+          container.scrollTo({top: sectionTopRelative - offset, behavior: "smooth"});
+        }
+      };
+
+      // Wire tab clicks (delegation) so we don't rely on inline onclick string eval
+      (function wireGalleryTabs() {
+        const tabsContainer = document.getElementById("gallery_tabs");
+        if (!tabsContainer) return;
+        tabsContainer.addEventListener("click", function (ev) {
+          const btn = ev.target.closest(".tab");
+          if (!btn) return;
+          const target = btn.getAttribute("data-target");
+          if (!target) return;
+          // call the global function (keeps behavior consistent)
+          window.scrollToSection(target, btn);
+        });
+      })();
+
+      // Modal functionality
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage') as HTMLImageElement;
+      const closeButton = document.getElementById('closeModal');
+      const imageContainers = document.querySelectorAll('[data-image]');
+
+      // Open modal when clicking on an image
+      imageContainers.forEach((container) => {
+        container.addEventListener('click', () => {
+          const imageSrc = container.getAttribute('data-image');
+          if (imageSrc && modal && modalImage) {
+            modalImage.src = imageSrc;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+          }
+        });
+      });
+
+      // Close modal
+      const closeModal = () => {
+        if (modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      };
+
+      closeButton?.addEventListener('click', closeModal);
+      modal?.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      // Close on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeModal();
+        }
+      });
+    </script>
+</dialog>

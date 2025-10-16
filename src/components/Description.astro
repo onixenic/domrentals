@@ -1,0 +1,56 @@
+---
+interface Props {
+  description: string;
+}
+
+const {description} = Astro.props;
+---
+
+
+<!-- Description Section -->
+<section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Description</h2>
+    <p class="text-gray-700 leading-relaxed whitespace-pre-line mb-4">
+      {description}
+    </p>
+    <div class="flex justify-end">
+        <button class="btn btn-outline btn-sm" onclick="houseRulesModal.showModal()">
+            View rules
+        </button>
+    </div>
+</section>
+
+<!-- House Rules Modal -->
+<dialog id="houseRulesModal" class="modal">
+    <div class="modal-box max-w-2xl">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="text-2xl font-bold mb-6">House Rules</h3>
+        <ul class="space-y-3">
+            <li class="flex items-start gap-2">
+                <span class="text-primary mt-1">•</span>
+                <span>No smoking inside the apartment.</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="text-primary mt-1">•</span>
+                <span>No pets allowed.</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="text-primary mt-1">•</span>
+                <span>Check-in after 3 PM, check-out before 11 AM.</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="text-primary mt-1">•</span>
+                <span>Parties and events are not allowed.</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="text-primary mt-1">•</span>
+                <span>Please respect the neighbors and keep noise to a minimum.</span>
+            </li>
+        </ul>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>

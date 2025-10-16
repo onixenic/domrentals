@@ -1,0 +1,85 @@
+---
+interface Service {
+  key: string;
+  name: string;
+  iconPath: string;
+}
+
+interface Props {
+  services: Service[];
+  apartmentServices: Record<string, boolean>;
+}
+
+import { services } from "../config/servicesConfig";
+
+const {apartmentServices} = Astro.props;
+const availableServices = services.filter((s) => apartmentServices[s.key]);
+const showButton = availableServices.length > 9;
+const firstServices = availableServices.slice(0, 9);
+---
+
+
+<!-- Services Section -->
+<section>
+    <h2 class="text-2xl font-semibold my-8">What our place offers</h2>
+
+    <!-- Services Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+      {firstServices.map((service) => (
+              <div class="flex items-center gap-3 text-gray-700">
+                  <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 32 32"
+                          aria-hidden="true"
+                          class="w-6 h-6 flex-shrink-0"
+                          fill="currentColor"
+                  >
+                      <path d={service.iconPath}/>
+                  </svg>
+                  <span class="text-sm">{service.name}</span>
+              </div>
+      ))}
+    </div>
+
+  {showButton && (
+          <div class="mt-8 flex justify-end">
+              <button
+                      class="btn btn-outline btn-sm"
+                      onclick="services_modal.showModal()"
+              >
+                  Show all {availableServices.length} amenities
+              </button>
+          </div>
+  )}
+</section>
+
+<!-- All Services Modal -->
+<dialog id="services_modal" class="modal">
+    <div class="modal-box max-w-4xl">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="text-2xl font-bold mb-6">All Amenities</h3>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+          {services
+            .filter((service) => apartmentServices[service.key]).map((service) => (
+                          <div class="flex items-center gap-3 text-gray-700">
+                              <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 32 32"
+                                      aria-hidden="true"
+                                      class="w-6 h-6 flex-shrink-0"
+                                      fill="currentColor"
+                              >
+                                  <path d={service.iconPath}/>
+                              </svg>
+                              <span class="text-sm">{service.name}</span>
+                          </div>
+            ))}
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>

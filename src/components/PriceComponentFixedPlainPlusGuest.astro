@@ -1,0 +1,100 @@
+---
+interface Props {
+    price: number;
+  currency: string;
+  checkIn: string;
+  checkOut: string;
+  priceCardEmail: string;
+  priceCardPhone: string;
+  priceCardWhatsApp: string;
+  guests: number;
+  extraPerGuest?: number;
+}
+
+const {
+  price,
+  currency,
+  checkIn,
+  checkOut,
+  priceCardEmail,
+  priceCardPhone,
+  priceCardWhatsApp,
+  guests,
+  extraPerGuest
+} = Astro.props;
+---
+
+<div
+        class="card bg-base-100 shadow-xl border border-base-300"
+        client:load
+        data-price={price}
+        data-extra-per-guest={extraPerGuest}
+        data-currency={currency}
+>
+    <script type="text/javascript">
+      const card = document.currentScript.parentElement;
+      const base = Number(card.dataset.price);
+      const extra = Number(card.dataset.extraPerGuest);
+      const currency = card.dataset.currency;
+
+      let selectedGuests = 1;
+
+      // Initialize price
+      document.getElementById("price-text").innerText = base + currency;
+
+      function updatePrice(event) {
+        selectedGuests = Number(event.target.value);
+        document.getElementById("price-text").innerText = base + (selectedGuests - 1) * extra + currency;
+      }
+    </script>
+
+    <div class="card-body">
+        <!-- Price Header -->
+        <div class="flex items-baseline gap-1 mb-4">
+            <span id="price-text" class="text-3xl font-bold">{price + currency}</span>
+            <span class="text-base text-gray-500">/ night</span>
+        </div>
+
+        <!-- Guest Selector -->
+        <div class="mb-4">
+            <label class="block text-sm font-semibold mb-1" for="guests">Guests</label>
+            <select id="guests" class="border p-2 rounded w-full" onChange="updatePrice(event)">
+              {Array.from({length: guests}, (_, i) => (
+                      <option value={i + 1}>{i + 1}</option>
+              ))}
+            </select>
+        </div>
+
+        <!-- Check-in/out Info -->
+        <div class="divider my-1"></div>
+        <div class="space-y-3">
+            <div class="flex justify-between text-sm">
+                <span class="font-semibold">Check-in</span>
+                <span class="text-gray-600">{checkIn}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="font-semibold">Check-out</span>
+                <span class="text-gray-600">{checkOut}</span>
+            </div>
+        </div>
+
+        <div class="divider my-1"></div>
+
+        <!-- Contact Section -->
+        <h3 class="text-xl font-semibold mb-1">Contact us</h3>
+        <div class="space-y-3">
+            <a href={`mailto:${priceCardEmail}`}
+               class="flex items-center gap-3 text-blue-600 hover:underline transition-colors">
+                <span class="text-sm">{priceCardEmail}</span>
+            </a>
+            <a href={`tel:${priceCardPhone}`}
+               class="flex items-center gap-3 text-blue-600 hover:underline transition-colors">
+                <span class="text-sm">{priceCardPhone}</span>
+            </a>
+            <a href={`https://wa.me/${priceCardWhatsApp}`} target="_blank"
+               class="flex items-center gap-3 text-green-600 hover:underline transition-colors">
+                <span class="text-sm">WhatsApp</span>
+            </a>
+        </div>
+    </div>
+</div>

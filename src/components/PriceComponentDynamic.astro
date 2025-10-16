@@ -1,0 +1,129 @@
+---
+interface PricePeriod {
+    from: string;
+    to: string;
+    price: number;
+}
+
+interface Props {
+    price: number;
+    pricePeriods: PricePeriod[];
+    currency: string;
+    checkIn: string;
+    checkOut: string;
+    priceCardEmail: string;
+    priceCardPhone: string;
+    priceCardWhatsApp: string;
+}
+
+const {
+    price,
+    pricePeriods,
+    currency,
+    checkIn,
+    checkOut,
+    priceCardEmail,
+    priceCardPhone,
+    priceCardWhatsApp
+} = Astro.props;
+
+// Pass data as JSON to the client
+const pricePeriodsJson = JSON.stringify(pricePeriods);
+---
+<div
+  class="card bg-base-100 shadow-xl border border-base-300"
+  client:load
+  data-price={price}
+  data-currency={currency}
+  data-price-periods={pricePeriodsJson}
+>
+    <script type="text/javascript">
+        const card = document.currentScript.parentElement;
+        const basePrice = Number(card.dataset.price);
+        const currency = card.dataset.currency;
+        const pricePeriods = JSON.parse(card.dataset.pricePeriods);
+
+        const checkInInput = card.querySelector("#checkIn-input");
+        const checkOutInput = card.querySelector("#checkOut-input");
+        const priceText = card.querySelector("#price-text");
+
+        const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+        function getDailyPrice(date) {
+            for (const period of pricePeriods) {
+                const fromDate = new Date(period.from);
+                const toDate = new Date(period.to);
+                if (date >= fromDate && date <= toDate) return period.price;
+            }
+            return basePrice;
+        }
+
+        function calculateTotalPrice(checkInStr, checkOutStr) {
+            if (!checkInStr || !checkOutStr) return basePrice;
+
+            const checkIn = new Date(checkInStr);
+            const checkOut = new Date(checkOutStr);
+
+            if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime()) || checkOut <= checkIn) {
+                return basePrice;
+            }
+
+            const nights = Math.round((checkOut - checkIn) / MS_PER_DAY);
+            let total = 0;
+            for (let i = 0; i < nights; i++) {
+                const day = new Date(checkIn);
+                day.setDate(checkIn.getDate() + i);
+                total += getDailyPrice(day);
+            }
+            return total;
+        }
+
+        function updatePrice(event) {
+            console.log("test")
+            console.log(checkInInput.value)
+            console.log(checkOutInput.value)
+            const total = calculateTotalPrice(checkInInput.value, checkOutInput.value);
+            priceText.textContent = total.toFixed(2) + " " + currency;
+        }
+
+        // Initial price
+        updatePrice();
+    </script>
+
+
+    <div class="card-body">
+        <!-- Price Header -->
+        <div class="flex items-baseline gap-1 mb-4">
+            <span id="price-text" class="text-3xl font-bold">{currency}</span>
+            <span class="text-base text-gray-500">/ stay</span>
+        </div>
+
+        <!-- Date Pickers -->
+        <div class="space-y-3">
+            <div class="flex justify-between text-sm">
+                <label for="checkIn-input" class="font-semibold">Check-in</label>
+                <input type="date" id="checkIn-input" value={checkIn} class="text-gray-600 border rounded p-1 w-2/3 text-right" />
+            </div>
+            <div class="flex justify-between text-sm">
+                <label for="checkOut-input" class="font-semibold">Check-out</label>
+                <input type="date" id="checkOut-input" value={checkOut} class="text-gray-600 border rounded p-1 w-2/3 text-right" oninput="updatePrice(event)" />
+            </div>
+        </div>
+
+        <div class="divider my-1"></div>
+
+        <!-- Contact Section -->
+        <h3 class="text-xl font-semibold mb-1">Contact us</h3>
+        <div class="space-y-3">
+            <a href={`mailto:${priceCardEmail}`} class="flex items-center gap-3 text-blue-600 hover:underline transition-colors">
+                <span class="text-sm">{priceCardEmail}</span>
+            </a>
+            <a href={`tel:${priceCardPhone}`} class="flex items-center gap-3 text-blue-600 hover:underline transition-colors">
+                <span class="text-sm">{priceCardPhone}</span>
+            </a>
+            <a href={`https://wa.me/${priceCardWhatsApp}`} target="_blank" class="flex items-center gap-3 text-green-600 hover:underline transition-colors">
+                <span class="text-sm">WhatsApp</span>
+            </a>
+        </div>
+    </div>
+</div>
