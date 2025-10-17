@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 @plugin "daisyui";
 
 html {
@@ -7,4 +8,22 @@ html {
 
 body {
     font-family: 'Geist', sans-serif;
+}
+
+.content-auto-section {
+    /* 1. The main performance booster */
+    content-visibility: auto;
+
+    /* 2. CRITICAL for smooth scrolling - sets an estimated height */
+    /* Adjust '1000px' to the average height of one of your category sections */
+    contain-intrinsic-size: 0 1500px; /* width height */
+}
+
+.section-hidden {
+    /* Prevents layout, paint, and hits on the main thread. */
+    content-visibility: hidden;
+
+    /* CRITICAL: Must be applied to maintain the scrollbar height */
+    /* Use the same intrinsic size as before (e.g., 1000px height) */
+    contain-intrinsic-size: 0 1000px;
 }

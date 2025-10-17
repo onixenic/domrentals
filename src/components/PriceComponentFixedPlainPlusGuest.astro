@@ -1,4 +1,5 @@
 ---
+import ContactUsPriceComponent from "./ContactUsPriceComponent.astro";
 interface Props {
     price: number;
   currency: string;
@@ -58,7 +59,7 @@ const {
         <!-- Guest Selector -->
         <div class="mb-4">
             <label class="block text-sm font-semibold mb-1" for="guests">Guests</label>
-            <select id="guests" class="border p-2 rounded w-full" onChange="updatePrice(event)">
+            <select id="guests" class="border p-2 rounded w-full text-left" onChange="updatePrice(event)">
               {Array.from({length: guests}, (_, i) => (
                       <option value={i + 1}>{i + 1}</option>
               ))}
@@ -79,22 +80,6 @@ const {
         </div>
 
         <div class="divider my-1"></div>
-
-        <!-- Contact Section -->
-        <h3 class="text-xl font-semibold mb-1">Contact us</h3>
-        <div class="space-y-3">
-            <a href={`mailto:${priceCardEmail}`}
-               class="flex items-center gap-3 text-blue-600 hover:underline transition-colors">
-                <span class="text-sm">{priceCardEmail}</span>
-            </a>
-            <a href={`tel:${priceCardPhone}`}
-               class="flex items-center gap-3 text-blue-600 hover:underline transition-colors">
-                <span class="text-sm">{priceCardPhone}</span>
-            </a>
-            <a href={`https://wa.me/${priceCardWhatsApp}`} target="_blank"
-               class="flex items-center gap-3 text-green-600 hover:underline transition-colors">
-                <span class="text-sm">WhatsApp</span>
-            </a>
-        </div>
+       <ContactUsPriceComponent priceCardEmail={priceCardEmail} priceCardPhone={priceCardPhone} priceCardWhatsApp={priceCardWhatsApp}/>
     </div>
 </div>

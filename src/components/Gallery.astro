@@ -10,24 +10,24 @@ const {imagesByCategory} = Astro.props;
 <!-- Image gallery -->
 <div class="col-span-6">
     <div class="hidden sm:grid grid-cols-2 gap-2 overflow-hidden rounded-lg">
-        <img src={imagesByCategory.all[0]} alt="Main"
+        <img src={imagesByCategory.all[0]} alt="Main" loading="eager"
              class="w-full h-98 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
              onclick="openGalleryModal()"/>
         <div class="grid grid-cols-2 gap-2">
             <div class="space-y-2">
-                <img src={imagesByCategory.all[1]} alt="Small1"
+                <img src={imagesByCategory.all[1]} alt="Small1" loading="eager"
                      class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                      onclick="openGalleryModal()"/>
-                <img src={imagesByCategory.all[2]} alt="Small2"
+                <img src={imagesByCategory.all[2]} alt="Small2" loading="eager"
                      class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                      onclick="openGalleryModal()"/>
             </div>
             <div class="space-y-2">
-                <img src={imagesByCategory.all[3]} alt="Small3"
+                <img src={imagesByCategory.all[3]} alt="Small3" loading="eager"
                      class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                      onclick="openGalleryModal()"/>
                 <div class="relative">
-                    <img src={imagesByCategory.all[4]} alt="Small4"
+                    <img src={imagesByCategory.all[4]} alt="Small4" loading="eager"
                          class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                          onclick="openGalleryModal()"/>
                     <button
@@ -61,6 +61,7 @@ const {imagesByCategory} = Astro.props;
                 <div class="carousel-item w-full relative" key={i}>
                     <img
                             src={img}
+                            loading="lazy"
                             class="w-full h-80 object-cover cursor-pointer"
                             onclick="openGalleryModal()"/>
                   {/* Counter */}
@@ -113,7 +114,7 @@ const {imagesByCategory} = Astro.props;
                                   />
                                   <span class="text-xs text-center">
                                     {category.charAt(0).toUpperCase() + category.slice(1)}
-                                </span>
+                                  </span>
                               </div>
                           </button>
                   ))}
@@ -125,7 +126,7 @@ const {imagesByCategory} = Astro.props;
                 .map(([key, value]) => [key, value])
                 .filter(([category]) => category.toLowerCase() !== "all")
                 .map(([category, imgs]) => (
-                        <section id={category} class="mb-20 flex flex-col gap-8 lg:flex-row lg:gap-12">
+                        <section id={category} class="mb-20 flex flex-col gap-8 lg:flex-row lg:gap-12 content-auto-section">
                           {/* Left side: sticky title */}
                             <div class="lg:w-1/5 px-6 lg:px-0">
                                 <h2 class="text-2xl font-medium tracking-tight text-foreground lg:sticky lg:top-24">
@@ -145,7 +146,7 @@ const {imagesByCategory} = Astro.props;
                                                   data-image={img}
                                           >
                                               <img
-                                                      src={img || "/placeholder.svg"}
+                                                      data-src={img || "/placeholder.svg"}
                                                       alt={`${category}-${i}`}
                                                       class={`
                                                     h-full w-full object-cover transition-transform duration-200
@@ -153,7 +154,6 @@ const {imagesByCategory} = Astro.props;
                                                     ${i % 3 === 0 ? "aspect-[16/9]" : "aspect-square"}
                                                 `}
                                               />
-                                              <div class="absolute inset-0 bg-foreground/0 transition-colors duration-300 group-hover:bg-foreground/5"/>
                                           </div>
                                   ))}
                                 </div>
@@ -198,13 +198,35 @@ const {imagesByCategory} = Astro.props;
     </div>
 
     <script>
+
+      function loadModalImages() {
+        const dialog = document.getElementById("gallery_modal");
+        if (!dialog) return;
+
+        // Selects all image elements inside the dialog that have a 'data-src' but not a 'src'
+        // The 'data-loaded' attribute prevents trying to load them more than once.
+        const imagesToLoad = dialog.querySelectorAll('img[data-src]:not([data-loaded])');
+
+        imagesToLoad.forEach(imgEl => {
+          const src = imgEl.getAttribute('data-src');
+          if (src) {
+            // Move the source from data-src to src to trigger the load
+            imgEl.setAttribute('src', src);
+            // Mark as loaded
+            imgEl.setAttribute('data-loaded', 'true');
+            // Optionally, remove data-src if you prefer a cleaner DOM
+            imgEl.removeAttribute('data-src');
+          }
+        });
+      }
+
       // expose open/close on window Scroll functionality
       window.openGalleryModal = function () {
         const d = document.getElementById("gallery_modal");
-        if (d && !d.open) d.showModal();
-        // optionally focus first tab for keyboard users
-        const firstTab = document.querySelector("#gallery_tabs .tab");
-        firstTab?.focus();
+        if (d && !d.open) {
+          d.showModal();
+          loadModalImages();
+        }
       };
 
       window.closeGalleryModal = function () {

@@ -38,6 +38,9 @@ interface Props {
   priceCardEmail: string;
   priceCardPhone: string;
   priceCardWhatsApp: string;
+  guests: number;
+  extraPerGuest: number;
+  guestCostBasis: string;
 }
 
 const {
@@ -48,11 +51,12 @@ const {
   checkOut,
   priceCardEmail,
   priceCardPhone,
-  priceCardWhatsApp
+  priceCardWhatsApp,
+  guests,
+  extraPerGuest,
+  guestCostBasis
 } = Astro.props;
 
-
-// Pass data as JSON to the client
 const pricePeriodsJson = JSON.stringify(pricePeriods);
 ---
 <div
@@ -61,7 +65,12 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
         data-price={price}
         data-currency={currency}
         data-price-periods={pricePeriodsJson}
-        data-initial-checkin={checkInDate} data-initial-checkout={checkOutDate}>
+        data-initial-checkin={checkInDate}
+        data-initial-checkout={checkOutDate}
+        data-extra-per-guest={extraPerGuest}
+        data-max-guests={guests}
+        data-guest-cost-basis={guestCostBasis}
+>
 
     <div class="card-body">
         <div class="flex items-baseline gap-1 mb-4">
@@ -69,25 +78,41 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
             <span class="text-base text-gray-500">/ stay</span>
         </div>
 
+
         <div class="space-y-3">
             <div class="flex justify-between text-sm items-center">
                 <label for="checkIn-input" class="font-semibold">Check-in</label>
-                <input type="date" id="checkIn-input" value={checkInDate} class="text-gray-600 border rounded p-1 w-2/3 text-right" onchange="updatePrice()" min={checkInDate}/>
+                <input type="date" id="checkIn-input" value={checkInDate} class="text-gray-600 border rounded p-1 w-2/3 text-right" onchange="updateMinCheckoutDate(event); updatePrice()" min={checkInDate}/>
             </div>
             <div class="flex justify-between text-sm items-center">
                 <label for="checkOut-input" class="font-semibold">Check-out</label>
                 <input type="date" id="checkOut-input" value={checkOutDate} class="text-gray-600 border rounded p-1 w-2/3 text-right" onchange="updatePrice()" min={checkOutMinDateDefault}/>
             </div>
-            <div class="divider my-1"></div>
-            <div class="space-y-3">
-                <div class="flex justify-between text-sm items-center">
-                    <span class="font-semibold">Check-in</span>
-                    <span class="text-gray-600">{checkIn}</span>
-                </div>
-                <div class="flex justify-between text-sm items-center">
-                    <span class="font-semibold">Check-out</span>
-                    <span class="text-gray-600">{checkOut}</span>
-                </div>
+        </div>
+
+        <div class="divider my-1"></div>
+
+        <div class="flex justify-between text-sm items-center">
+            <label class="font-semibold" for="guests-input">Guests</label>
+            <select id="guests-input" class="text-gray-600 border rounded p-1 w-2/3 text-left" onchange="updatePrice()">
+              {
+                Array.from({length: guests}, (_, i) => (
+                        <option value={i + 1}>{i + 1}</option>
+                ))
+              }
+            </select>
+        </div>
+
+        <div class="divider my-1"></div>
+
+        <div class="space-y-3">
+            <div class="flex justify-between text-sm items-center">
+                <span class="font-semibold">Check-in</span>
+                <span class="text-gray-600 w-2/3 text-right">{checkIn}</span>
+            </div>
+            <div class="flex justify-between text-sm items-center">
+                <span class="font-semibold">Check-out</span>
+                <span class="text-gray-600 w-2/3 text-right">{checkOut}</span>
             </div>
         </div>
 
@@ -100,13 +125,15 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
       const basePrice = Number(card.dataset.price);
       const currency = card.dataset.currency;
       const pricePeriods = JSON.parse(card.dataset.pricePeriods);
+      const extraPerGuest = Number(card.dataset.extraPerGuest);
+      const guestCostBasis = card.dataset.guestCostBasis;
 
-      // READ INITIAL DATES FROM DATA ATTRIBUTES
       const initialCheckIn = card.dataset.initialCheckin;
       const initialCheckOut = card.dataset.initialCheckout;
 
       const checkInInput = card.querySelector("#checkIn-input");
       const checkOutInput = card.querySelector("#checkOut-input");
+      const guestsInput = card.querySelector("#guests-input"); // 💡 GET GUEST INPUT
       const priceText = card.querySelector("#price-text");
 
       const MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -122,7 +149,6 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
       }
 
       function calculateTotalPrice(checkInStr, checkOutStr) {
-        // NOTE: This check remains, but it's not the primary display control
         if (!checkInStr || !checkOutStr) return basePrice;
 
         const checkIn = new Date(checkInStr);
@@ -139,35 +165,81 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
           day.setDate(checkIn.getDate() + i);
           total += getDailyPrice(day);
         }
-        return total;
+        return {total, nights};
+      }
+
+      window.updateMinCheckoutDate = function (event) {
+        const newCheckInDateStr = event.target.value;
+        if (!newCheckInDateStr) {
+          checkOutInput.min = card.dataset.initialCheckout;
+          return;
+        }
+
+        const newCheckInDate = new Date(newCheckInDateStr);
+        const minCheckOutDate = new Date(newCheckInDate);
+        minCheckOutDate.setDate(newCheckInDate.getDate() + 1);
+
+        const year = minCheckOutDate.getFullYear();
+        const month = String(minCheckOutDate.getMonth() + 1).padStart(2, '0');
+        const day = String(minCheckOutDate.getDate()).padStart(2, '0');
+        const minDateStr = `${year}-${month}-${day}`;
+
+        checkOutInput.min = minDateStr;
+
+        if (checkOutInput.value && checkOutInput.value < minDateStr) {
+          checkOutInput.value = '';
+        }
       }
 
       window.updatePrice = function () {
         const checkInValue = checkInInput.value;
         const checkOutValue = checkOutInput.value;
+        const selectedGuests = Number(guestsInput.value);
 
-        // 💡 NEW LOGIC: If checkOutValue is missing, show nothing.
         if (!checkInValue || !checkOutValue) {
-          priceText.textContent = `${currency}`; // Or set to an empty string: priceText.textContent = '';
-          // If you want to show a message like "Select dates", use: priceText.textContent = 'Select Dates';
+          priceText.textContent = `${currency}`;
           return;
         }
 
-        const total = calculateTotalPrice(checkInValue, checkOutValue);
+        const {total: datesTotal, nights} = calculateTotalPrice(checkInValue, checkOutValue);
 
-        // Show the total, using toFixed(2) is usually good practice for currency
-        priceText.textContent = total.toFixed(2) + " " + currency;
+        const extraGuests = Math.max(0, selectedGuests - 1);
+
+        let totalGuestSurcharge = 0;
+
+        if (extraGuests > 0) {
+          const guestSurchargePerExtraGuest = extraGuests * extraPerGuest;
+
+          if (guestCostBasis === 'perNight') {
+            // Apply surcharge for every extra guest, every night
+            totalGuestSurcharge = guestSurchargePerExtraGuest * nights;
+          } else if (guestCostBasis === 'perStay') {
+            // Apply surcharge for every extra guest, only once for the whole stay
+            totalGuestSurcharge = guestSurchargePerExtraGuest;
+          }
+        }
+
+        const finalTotal = datesTotal + totalGuestSurcharge;
+
+
+        priceText.textContent = finalTotal.toFixed(2) + " " + currency;
       }
 
-      // 💡 INITIAL PRICE CALCULATION LOGIC (Using guaranteed dates)
-      // We must also apply the check here to ensure if initialCheckOut is empty, no price is shown.
       if (initialCheckIn && initialCheckOut) {
-        const total = calculateTotalPrice(initialCheckIn, initialCheckOut);
-        priceText.textContent = total.toFixed(2) + " " + currency;
+
+        const initialGuests = 1;
+
+        const {total: datesTotal, nights} = calculateTotalPrice(initialCheckIn, initialCheckOut);
+
+        const extraGuests = Math.max(0, initialGuests - 1);
+        const guestSurchargePerNight = extraGuests * extraPerGuest;
+        const totalGuestSurcharge = guestSurchargePerNight * nights;
+
+        const finalTotal = datesTotal + totalGuestSurcharge;
+
+        priceText.textContent = finalTotal.toFixed(2) + " " + currency;
       } else {
-        // If the initial checkout date is missing (unlikely with your current utility, but safe)
         priceText.textContent = `${currency}`;
       }
-
     </script>
 </div>
