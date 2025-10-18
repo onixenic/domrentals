@@ -1,6 +1,6 @@
 ---
 interface Props {
-  imagesByCategory: Record<string, string[]>;
+    imagesByCategory: Record<string, string[]>;
 }
 
 const {imagesByCategory} = Astro.props;
@@ -31,8 +31,8 @@ const {imagesByCategory} = Astro.props;
                          class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                          onclick="openGalleryModal()"/>
                     <button
-                            class="btn border-1 border-black absolute bottom-3 right-3 flex items-center gap-2 px-4 py-2 text-base sm:px-2 sm:py-1 text-xs"
-                            onclick="openGalleryModal()"
+                      class="btn border-1 border-black absolute bottom-3 right-3 flex items-center gap-2 px-4 py-2 text-base sm:px-2 sm:py-1 text-xs"
+                      onclick="openGalleryModal()"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -55,21 +55,21 @@ const {imagesByCategory} = Astro.props;
 
     <!-- Mobile carousel -->
     <div class="relative sm:hidden carousel rounded-box">
-      {Object.values(imagesByCategory)
-        .flat()
-        .map((img, i) => (
-                <div class="carousel-item w-full relative" key={i}>
-                    <img
-                            src={img}
-                            loading="lazy"
-                            class="w-full h-80 object-cover cursor-pointer"
-                            onclick="openGalleryModal()"/>
-                  {/* Counter */}
-                    <div class="absolute bottom-3 right-3 bg-black/70 text-white text-sm px-3 py-1 rounded-full">
-                      {i + 1} / {Object.values(imagesByCategory).flat().length}
-                    </div>
+        {Object.values(imagesByCategory)
+          .flat()
+          .map((img, i) => (
+            <div class="carousel-item w-full relative" key={i}>
+                <img
+                  src={img}
+                  loading="lazy"
+                  class="w-full h-80 object-cover cursor-pointer"
+                  onclick="openGalleryModal()"/>
+                {/* Counter */}
+                <div class="absolute bottom-3 right-3 bg-black/70 text-white text-sm px-3 py-1 rounded-full">
+                    {i + 1} / {Object.values(imagesByCategory).flat().length}
                 </div>
-        ))}
+            </div>
+          ))}
     </div>
 
 </div>
@@ -77,14 +77,23 @@ const {imagesByCategory} = Astro.props;
 <dialog id="gallery_modal" class="modal">
     <div class="modal-box !px-0 lg:!px-6 pt-0 w-full h-full max-w-full max-h-full max-w-none max-h-none rounded-none"
          id="gallery_modal_box">
+
+        <!-- Loading overlay inside modal -->
+        <div id="gallery_loading" class="absolute inset-0 bg-base-100 z-50 flex items-center justify-center">
+            <div class="flex flex-col items-center gap-4">
+                <div class="loading loading-spinner loading-lg"></div>
+                <p class="text-sm">Loading images...</p>
+            </div>
+        </div>
+
         <div class="mx-auto md:px-6 max-w-6xl">
             <!-- Dynamic Tabs -->
 
             <div class="sticky py-6 px-4">
                 <button
-                        onclick="closeGalleryModal()"
-                        class="btn btn-sm btn-circle btn-ghost"
-                        aria-label="Close gallery"
+                  onclick="closeGalleryModal()"
+                  class="btn btn-sm btn-circle btn-ghost"
+                  aria-label="Close gallery"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                          fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -100,212 +109,260 @@ const {imagesByCategory} = Astro.props;
             </div>
             <div class="sticky top-0 bg-base-100 z-30 pt-6 pb-20 overflow-x-auto" id="gallery_tabs">
                 <div class="tabs tabs-bordered flex flex-nowrap min-w-max lg:flex-wrap lg:min-w-0 px-6 lg:px-0">
-                  {Object.keys(imagesByCategory).filter((category) => category.toLowerCase() !== "all").map((category, index) => (
-                          <button
-                                  type="button"
-                                  class={`tab relative flex-shrink-0 ${index === 0 ? "tab-active pl-0" : ""}`}
-                                  data-target={category}
-                          >
-                              <div class="flex flex-col items-center gap-1">
-                                  <img
-                                          src={imagesByCategory[category]?.[0] || "/placeholder.svg"}
-                                          alt={`${category}-0`}
-                                          class="w-20 h-20 object-cover rounded-sm"
-                                  />
-                                  <span class="text-xs text-center">
+                    {Object.keys(imagesByCategory).filter((category) => category.toLowerCase() !== "all").map((category, index) => (
+                      <button
+                        type="button"
+                        class={`tab relative flex-shrink-0 ${index === 0 ? "tab-active pl-0" : ""}`}
+                        data-target={category}
+                      >
+                          <div class="flex flex-col items-center gap-1">
+                              <img
+                                src={imagesByCategory[category]?.[0] || "/placeholder.svg"}
+                                alt={`${category}-0`}
+                                class="w-20 h-20 object-cover rounded-sm"
+                              />
+                              <span class="text-xs text-center">
                                     {category.charAt(0).toUpperCase() + category.slice(1)}
                                   </span>
-                              </div>
-                          </button>
-                  ))}
+                          </div>
+                      </button>
+                    ))}
                 </div>
             </div>
 
             <div class="mx-auto max-w-7xl px-0 py-0 lg:px-12 lg:py-12">
-              {Object.entries(imagesByCategory)
-                .map(([key, value]) => [key, value])
-                .filter(([category]) => category.toLowerCase() !== "all")
-                .map(([category, imgs]) => (
-                        <section id={category} class="mb-20 flex flex-col gap-8 lg:flex-row lg:gap-12 content-auto-section">
-                          {/* Left side: sticky title */}
-                            <div class="lg:w-1/5 px-6 lg:px-0">
-                                <h2 class="text-2xl font-medium tracking-tight text-foreground lg:sticky lg:top-24">
-                                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                                </h2>
-                            </div>
+                {Object.entries(imagesByCategory)
+                  .map(([key, value]) => [key, value])
+                  .filter(([category]) => category.toLowerCase() !== "all")
+                  .map(([category, imgs]) => (
+                    <section id={category} class="mb-20 flex flex-col gap-8 lg:flex-row lg:gap-12 content-auto-section">
+                        {/* Left side: sticky title */}
+                        <div class="lg:w-1/5 px-6 lg:px-0">
+                            <h2 class="text-2xl font-medium tracking-tight text-foreground lg:sticky lg:top-24">
+                                {category.charAt(0).toUpperCase() + category.slice(1)}
+                            </h2>
+                        </div>
 
-                          {/* Right side: images grid */}
-                            <div class="flex-1">
-                                <div class="grid grid-cols-2 gap-4 lg:gap-5">
-                                  {imgs.map((img, i) => (
-                                          <div
-                                                  class={`
+                        {/* Right side: images grid */}
+                        <div class="flex-1">
+                            <div class="grid grid-cols-2 gap-4 lg:gap-5">
+                                {imgs.map((img, i) => (
+                                  <div
+                                    class={`
                                                 group relative overflow-hidden bg-muted cursor-pointer
                                                 ${i % 3 === 0 ? "col-span-2" : "col-span-1"}
                                             `}
-                                                  data-image={img}
-                                          >
-                                              <img
-                                                      data-src={img || "/placeholder.svg"}
-                                                      alt={`${category}-${i}`}
-                                                      class={`
+                                    data-image={img}
+                                  >
+                                      <img
+                                        src={img || "/placeholder.svg"}
+                                        loading="lazy"
+                                        decoding="async"
+                                        alt={`${category}-${i}`}
+                                        class={`
                                                     h-full w-full object-cover transition-transform duration-200
-                                                    group-hover:scale-105
+                                                    group-hover:scale-105 gallery-image
                                                     ${i % 3 === 0 ? "aspect-[16/9]" : "aspect-square"}
                                                 `}
-                                              />
-                                          </div>
-                                  ))}
-                                </div>
+                                      />
+                                      <!-- Image loading skeleton -->
+                                      <div class="absolute inset-0 bg-base-200 animate-pulse image-skeleton"></div>
+                                  </div>
+                                ))}
                             </div>
-                        </section>
-                ))}
+                        </div>
+                    </section>
+                  ))}
             </div>
         </div>
     </div>
 
     <!-- Modal for full-size image -->
     <div
-            id="imageModal"
-            class="fixed inset-0 hidden items-center justify-center bg-foreground/90 p-4 backdrop-blur-sm"
+      id="imageModal"
+      class="fixed inset-0 hidden items-center justify-center bg-foreground/90 p-4 backdrop-blur-sm z-50"
     >
         <button
-                id="closeModal"
-                class="absolute right-6 top-6 text-background hover:text-background/80 transition-colors"
-                aria-label="Close modal"
+          id="closeModal"
+          class="absolute right-6 top-6 text-background hover:text-background/80 transition-colors"
+          aria-label="Close modal"
         >
             <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
             >
                 <line x1="18" y1="6" x2="6" y2="18"/>
                 <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
         </button>
         <img
-                id="modalImage"
-                src="/placeholder.svg"
-                alt="Full size"
-                class="max-h-[90vh] max-w-[90vw] rounded-2xl object-contain"
+          id="modalImage"
+          src="/placeholder.svg"
+          alt="Full size"
+          class="max-h-[90vh] max-w-[90vw] rounded-2xl object-contain"
         />
     </div>
 
     <script>
+        let imagesLoaded = 0;
+        let totalImages = 0;
 
-      function loadModalImages() {
-        const dialog = document.getElementById("gallery_modal");
-        if (!dialog) return;
+        // Track image loading
+        function setupImageLoadTracking() {
+            const modal = document.getElementById("gallery_modal");
+            const loading = document.getElementById("gallery_loading");
+            const images = modal.querySelectorAll('.gallery-image');
+            const skeletons = modal.querySelectorAll('.image-skeleton');
 
-        // Selects all image elements inside the dialog that have a 'data-src' but not a 'src'
-        // The 'data-loaded' attribute prevents trying to load them more than once.
-        const imagesToLoad = dialog.querySelectorAll('img[data-src]:not([data-loaded])');
+            totalImages = images.length;
+            imagesLoaded = 0;
 
-        imagesToLoad.forEach(imgEl => {
-          const src = imgEl.getAttribute('data-src');
-          if (src) {
-            // Move the source from data-src to src to trigger the load
-            imgEl.setAttribute('src', src);
-            // Mark as loaded
-            imgEl.setAttribute('data-loaded', 'true');
-            // Optionally, remove data-src if you prefer a cleaner DOM
-            imgEl.removeAttribute('data-src');
-          }
+            images.forEach((img, index) => {
+                const skeleton = skeletons[index];
+
+                // If already loaded
+                if (img.complete && img.naturalHeight !== 0) {
+                    imagesLoaded++;
+                    if (skeleton) skeleton.style.display = 'none';
+                } else {
+                    // Listen for load event
+                    img.addEventListener('load', function onLoad() {
+                        imagesLoaded++;
+                        if (skeleton) {
+                            skeleton.style.opacity = '0';
+                            skeleton.style.transition = 'opacity 0.3s';
+                            setTimeout(() => skeleton.style.display = 'none', 300);
+                        }
+
+                        // Hide main loading overlay when enough images loaded
+                        if (imagesLoaded >= Math.min(10, totalImages) && loading) {
+                            loading.style.opacity = '0';
+                            loading.style.transition = 'opacity 0.3s';
+                            setTimeout(() => loading.style.display = 'none', 300);
+                        }
+
+                        img.removeEventListener('load', onLoad);
+                    });
+
+                    // Handle errors
+                    img.addEventListener('error', function onError() {
+                        imagesLoaded++;
+                        if (skeleton) skeleton.style.display = 'none';
+                        img.removeEventListener('error', onError);
+                    });
+                }
+            });
+
+            // Hide loading if all images already loaded
+            if (imagesLoaded >= Math.min(10, totalImages) && loading) {
+                loading.style.display = 'none';
+            }
+        }
+
+        // expose open/close on window
+        window.openGalleryModal = function () {
+            const d = document.getElementById("gallery_modal");
+            const loading = document.getElementById("gallery_loading");
+
+            if (d && !d.open) {
+                // Show loading overlay
+                if (loading) {
+                    loading.style.display = 'flex';
+                    loading.style.opacity = '1';
+                }
+
+                d.showModal();
+
+                // Start tracking image loads
+                setTimeout(() => setupImageLoadTracking(), 100);
+            }
+        };
+
+        window.closeGalleryModal = function () {
+            const d = document.getElementById("gallery_modal");
+            if (d && d.open) {
+                d.close();
+            }
+        };
+
+        window.scrollToSection = function (id, btnEl) {
+            const container = document.getElementById("gallery_modal_box");
+            const section = document.getElementById(id);
+            if (!section || !container) return;
+
+            // activate clicked tab (if provided)
+            if (btnEl) {
+                document.querySelectorAll("#gallery_tabs .tab").forEach((t) => t.classList.remove("tab-active"));
+                btnEl.classList.add("tab-active");
+            }
+
+            if (section.previousElementSibling === null) {
+                container.scrollTo({top: 0, behavior: "smooth"});
+            } else {
+                const sectionTopRelative = section.offsetTop;
+                let offset = 150;
+                container.scrollTo({top: sectionTopRelative - offset, behavior: "smooth"});
+            }
+        };
+
+        // Wire tab clicks (delegation)
+        (function wireGalleryTabs() {
+            const tabsContainer = document.getElementById("gallery_tabs");
+            if (!tabsContainer) return;
+            tabsContainer.addEventListener("click", function (ev) {
+                const btn = ev.target.closest(".tab");
+                if (!btn) return;
+                const target = btn.getAttribute("data-target");
+                if (!target) return;
+                window.scrollToSection(target, btn);
+            });
+        })();
+
+        // Modal functionality
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage') as HTMLImageElement;
+        const closeButton = document.getElementById('closeModal');
+        const imageContainers = document.querySelectorAll('[data-image]');
+
+        // Open modal when clicking on an image
+        imageContainers.forEach((container) => {
+            container.addEventListener('click', () => {
+                const imageSrc = container.getAttribute('data-image');
+                if (imageSrc && modal && modalImage) {
+                    modalImage.src = imageSrc;
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                }
+            });
         });
-      }
 
-      // expose open/close on window Scroll functionality
-      window.openGalleryModal = function () {
-        const d = document.getElementById("gallery_modal");
-        if (d && !d.open) {
-          d.showModal();
-          loadModalImages();
-        }
-      };
+        // Close modal
+        const closeModal = () => {
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        };
 
-      window.closeGalleryModal = function () {
-        const d = document.getElementById("gallery_modal");
-        if (d && d.open) d.close();
-      };
-
-      window.scrollToSection = function (id, btnEl) {
-        const container = document.getElementById("gallery_modal_box");
-        const section = document.getElementById(id);
-        if (!section || !container) return;
-
-        // activate clicked tab (if provided)
-        if (btnEl) {
-          document.querySelectorAll("#gallery_tabs .tab").forEach((t) => t.classList.remove("tab-active"));
-          btnEl.classList.add("tab-active");
-        }
-
-        if (section.previousElementSibling === null) {
-          container.scrollTo({top: 0, behavior: "smooth"});
-        } else {
-          const sectionTopRelative = section.offsetTop;
-          let offset = 150;
-          container.scrollTo({top: sectionTopRelative - offset, behavior: "smooth"});
-        }
-      };
-
-      // Wire tab clicks (delegation) so we don't rely on inline onclick string eval
-      (function wireGalleryTabs() {
-        const tabsContainer = document.getElementById("gallery_tabs");
-        if (!tabsContainer) return;
-        tabsContainer.addEventListener("click", function (ev) {
-          const btn = ev.target.closest(".tab");
-          if (!btn) return;
-          const target = btn.getAttribute("data-target");
-          if (!target) return;
-          // call the global function (keeps behavior consistent)
-          window.scrollToSection(target, btn);
+        closeButton?.addEventListener('click', closeModal);
+        modal?.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
         });
-      })();
 
-      // Modal functionality
-      const modal = document.getElementById('imageModal');
-      const modalImage = document.getElementById('modalImage') as HTMLImageElement;
-      const closeButton = document.getElementById('closeModal');
-      const imageContainers = document.querySelectorAll('[data-image]');
-
-      // Open modal when clicking on an image
-      imageContainers.forEach((container) => {
-        container.addEventListener('click', () => {
-          const imageSrc = container.getAttribute('data-image');
-          if (imageSrc && modal && modalImage) {
-            modalImage.src = imageSrc;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-          }
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
         });
-      });
-
-      // Close modal
-      const closeModal = () => {
-        if (modal) {
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
-        }
-      };
-
-      closeButton?.addEventListener('click', closeModal);
-      modal?.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          closeModal();
-        }
-      });
-
-      // Close on escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeModal();
-        }
-      });
     </script>
 </dialog>
