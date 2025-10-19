@@ -6,6 +6,45 @@ export const apartmentConfig = {
   bedrooms: 3,
   beds: 5,
   bathrooms: 2,
+  imagesMainPage: [
+    "property/showcase/avif/600/living_room_0.avif",
+    "property/showcase/avif/600/kitchen_0.avif",
+    "property/showcase/avif/600/bedroom_0_1.avif",
+    "property/showcase/avif/600/bathroom_0_0.avif",
+    "property/showcase/avif/600/residence_0.avif"
+  ],
+  imagesThumbnail: {
+    "living room": [
+      "property/showcase/avif/200/living_room_0.avif"
+    ],
+    kitchen: [
+      "property/showcase/avif/200/kitchen_0.avif"
+    ],
+    "bedroom 1": [
+      "property/showcase/avif/200/bedroom_0_0.avif"
+    ],
+    "bedroom 2": [
+      "property/showcase/avif/200/bedroom_1_0.avif"
+    ],
+    "bedroom 3": [
+      "property/showcase/avif/200/bedroom_2_0.avif"
+    ],
+    "bathroom 1": [
+      "property/showcase/avif/200/bathroom_0_0.avif"
+    ],
+    "bathroom 2": [
+      "property/showcase/avif/200/bathroom_1_0.avif"
+    ],
+    "balcony": [
+      "property/showcase/avif/200/balcony_1.avif"
+    ],
+    "residence": [
+      "property/showcase/avif/200/residence_0.avif"
+    ],
+    "additional": [
+      "property/showcase/avif/200/other_0.avif"
+    ],
+  },
   imagesByCategory: {
     all: [ //5 images
       "property/showcase/avif/living_room_0.avif",
@@ -79,7 +118,7 @@ This exceptional setting perfectly combines vibrant urban energy with the tranqu
   ],
   price: 120,
   pricePeriods: [
-    { from: "2025-10-20", to: "2025-10-25", price: 100 },
+    { from: "2025-10-200", to: "2025-10-25", price: 100 },
     { from: "2025-10-26", to: "2025-10-31", price: 120 },
   ],
   extraPerGuest: 20,

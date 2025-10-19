@@ -1,33 +1,34 @@
 ---
 interface Props {
+    imagesMainPage: string[];
     imagesByCategory: Record<string, string[]>;
+    imagesThumbnail: Record<string, string[]>;
 }
 
-const {imagesByCategory} = Astro.props;
+const {imagesMainPage, imagesByCategory, imagesThumbnail} = Astro.props;
 ---
-
 
 <!-- Image gallery -->
 <div class="col-span-6">
     <div class="hidden sm:grid grid-cols-2 gap-2 overflow-hidden rounded-lg">
-        <img src={imagesByCategory.all[0]} alt="Main" loading="eager"
+        <img src={imagesMainPage[0]} alt="Main" loading="eager"
              class="w-full h-98 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
              onclick="openGalleryModal()"/>
         <div class="grid grid-cols-2 gap-2">
             <div class="space-y-2">
-                <img src={imagesByCategory.all[1]} alt="Small1" loading="eager"
+                <img src={imagesMainPage[1]} alt="Small1" loading="eager"
                      class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                      onclick="openGalleryModal()"/>
-                <img src={imagesByCategory.all[2]} alt="Small2" loading="eager"
+                <img src={imagesMainPage[2]} alt="Small2" loading="eager"
                      class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                      onclick="openGalleryModal()"/>
             </div>
             <div class="space-y-2">
-                <img src={imagesByCategory.all[3]} alt="Small3" loading="eager"
+                <img src={imagesMainPage[3]} alt="Small3" loading="eager"
                      class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                      onclick="openGalleryModal()"/>
                 <div class="relative">
-                    <img src={imagesByCategory.all[4]} alt="Small4" loading="eager"
+                    <img src={imagesMainPage[4]} alt="Small4" loading="eager"
                          class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                          onclick="openGalleryModal()"/>
                     <button
@@ -75,16 +76,8 @@ const {imagesByCategory} = Astro.props;
 </div>
 
 <dialog id="gallery_modal" class="modal">
-    <div class="modal-box !px-0 lg:!px-6 pt-0 w-full h-full max-w-full max-h-full max-w-none max-h-none rounded-none"
-         id="gallery_modal_box">
+    <div class="modal-box !px-0 lg:!px-6 pt-0 w-full h-full max-w-full max-h-full rounded-none" id="gallery_modal_box">
 
-        <!-- Loading overlay inside modal -->
-        <div id="gallery_loading" class="absolute inset-0 bg-base-100 z-50 flex items-center justify-center">
-            <div class="flex flex-col items-center gap-4">
-                <div class="loading loading-spinner loading-lg"></div>
-                <p class="text-sm">Loading images...</p>
-            </div>
-        </div>
 
         <div class="mx-auto md:px-6 max-w-6xl">
             <!-- Dynamic Tabs -->
@@ -109,7 +102,7 @@ const {imagesByCategory} = Astro.props;
             </div>
             <div class="sticky top-0 bg-base-100 z-30 pt-6 pb-20 overflow-x-auto" id="gallery_tabs">
                 <div class="tabs tabs-bordered flex flex-nowrap min-w-max lg:flex-wrap lg:min-w-0 px-6 lg:px-0">
-                    {Object.keys(imagesByCategory).filter((category) => category.toLowerCase() !== "all").map((category, index) => (
+                    {Object.keys(imagesThumbnail).map((category, index) => (
                       <button
                         type="button"
                         class={`tab relative flex-shrink-0 ${index === 0 ? "tab-active pl-0" : ""}`}
@@ -117,13 +110,13 @@ const {imagesByCategory} = Astro.props;
                       >
                           <div class="flex flex-col items-center gap-1">
                               <img
-                                src={imagesByCategory[category]?.[0] || "/placeholder.svg"}
+                                src={imagesThumbnail[category]?.[0] || "/placeholder.svg"}
                                 alt={`${category}-0`}
                                 class="w-20 h-20 object-cover rounded-sm"
                               />
                               <span class="text-xs text-center">
                                     {category.charAt(0).toUpperCase() + category.slice(1)}
-                                  </span>
+                              </span>
                           </div>
                       </button>
                     ))}
@@ -149,24 +142,24 @@ const {imagesByCategory} = Astro.props;
                                 {imgs.map((img, i) => (
                                   <div
                                     class={`
-                                                group relative overflow-hidden bg-muted cursor-pointer
+                                                group relative overflow-hidden bg-base-200 cursor-pointer
                                                 ${i % 3 === 0 ? "col-span-2" : "col-span-1"}
                                             `}
                                     data-image={img}
+                                    style={`background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23e5e7eb" width="400" height="300"/%3E%3C/svg%3E'); background-size: cover;`}
                                   >
                                       <img
-                                        src={img || "/placeholder.svg"}
+                                        data-src={img}
+                                        src={i < 8 ? img : "/placeholder.svg"}
                                         loading="lazy"
                                         decoding="async"
                                         alt={`${category}-${i}`}
                                         class={`
-                                                    h-full w-full object-cover transition-transform duration-200
+                                                    transition-transform duration-200
                                                     group-hover:scale-105 gallery-image
-                                                    ${i % 3 === 0 ? "aspect-[16/9]" : "aspect-square"}
+                                                  
                                                 `}
                                       />
-                                      <!-- Image loading skeleton -->
-                                      <div class="absolute inset-0 bg-base-200 animate-pulse image-skeleton"></div>
                                   </div>
                                 ))}
                             </div>
@@ -211,80 +204,17 @@ const {imagesByCategory} = Astro.props;
     </div>
 
     <script>
-        let imagesLoaded = 0;
-        let totalImages = 0;
 
-        // Track image loading
-        function setupImageLoadTracking() {
-            const modal = document.getElementById("gallery_modal");
-            const loading = document.getElementById("gallery_loading");
-            const images = modal.querySelectorAll('.gallery-image');
-            const skeletons = modal.querySelectorAll('.image-skeleton');
-
-            totalImages = images.length;
-            imagesLoaded = 0;
-
-            images.forEach((img, index) => {
-                const skeleton = skeletons[index];
-
-                // If already loaded
-                if (img.complete && img.naturalHeight !== 0) {
-                    imagesLoaded++;
-                    if (skeleton) skeleton.style.display = 'none';
-                } else {
-                    // Listen for load event
-                    img.addEventListener('load', function onLoad() {
-                        imagesLoaded++;
-                        if (skeleton) {
-                            skeleton.style.opacity = '0';
-                            skeleton.style.transition = 'opacity 0.3s';
-                            setTimeout(() => skeleton.style.display = 'none', 300);
-                        }
-
-                        // Hide main loading overlay when enough images loaded
-                        if (imagesLoaded >= Math.min(10, totalImages) && loading) {
-                            loading.style.opacity = '0';
-                            loading.style.transition = 'opacity 0.3s';
-                            setTimeout(() => loading.style.display = 'none', 300);
-                        }
-
-                        img.removeEventListener('load', onLoad);
-                    });
-
-                    // Handle errors
-                    img.addEventListener('error', function onError() {
-                        imagesLoaded++;
-                        if (skeleton) skeleton.style.display = 'none';
-                        img.removeEventListener('error', onError);
-                    });
-                }
-            });
-
-            // Hide loading if all images already loaded
-            if (imagesLoaded >= Math.min(10, totalImages) && loading) {
-                loading.style.display = 'none';
-            }
-        }
-
-        // expose open/close on window
+        // Open modal with optimizations
         window.openGalleryModal = function () {
             const d = document.getElementById("gallery_modal");
-            const loading = document.getElementById("gallery_loading");
 
             if (d && !d.open) {
-                // Show loading overlay
-                if (loading) {
-                    loading.style.display = 'flex';
-                    loading.style.opacity = '1';
-                }
-
                 d.showModal();
-
-                // Start tracking image loads
-                setTimeout(() => setupImageLoadTracking(), 100);
             }
         };
 
+        // Optimized close with animation
         window.closeGalleryModal = function () {
             const d = document.getElementById("gallery_modal");
             if (d && d.open) {
@@ -292,12 +222,12 @@ const {imagesByCategory} = Astro.props;
             }
         };
 
+        // Scroll to section
         window.scrollToSection = function (id, btnEl) {
             const container = document.getElementById("gallery_modal_box");
             const section = document.getElementById(id);
             if (!section || !container) return;
 
-            // activate clicked tab (if provided)
             if (btnEl) {
                 document.querySelectorAll("#gallery_tabs .tab").forEach((t) => t.classList.remove("tab-active"));
                 btnEl.classList.add("tab-active");
@@ -312,7 +242,7 @@ const {imagesByCategory} = Astro.props;
             }
         };
 
-        // Wire tab clicks (delegation)
+        // Wire tab clicks
         (function wireGalleryTabs() {
             const tabsContainer = document.getElementById("gallery_tabs");
             if (!tabsContainer) return;
@@ -325,13 +255,12 @@ const {imagesByCategory} = Astro.props;
             });
         })();
 
-        // Modal functionality
+        // Modal functionality for full-size image
         const modal = document.getElementById('imageModal');
         const modalImage = document.getElementById('modalImage') as HTMLImageElement;
         const closeButton = document.getElementById('closeModal');
         const imageContainers = document.querySelectorAll('[data-image]');
 
-        // Open modal when clicking on an image
         imageContainers.forEach((container) => {
             container.addEventListener('click', () => {
                 const imageSrc = container.getAttribute('data-image');
@@ -343,7 +272,6 @@ const {imagesByCategory} = Astro.props;
             });
         });
 
-        // Close modal
         const closeModal = () => {
             if (modal) {
                 modal.classList.add('hidden');
@@ -358,7 +286,6 @@ const {imagesByCategory} = Astro.props;
             }
         });
 
-        // Close on escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal();

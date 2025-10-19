@@ -1,7 +1,7 @@
 ---
 import "../assets/app.css";
 
-const PAGE_TITLE = "Ion Alexandru | Direct Booking Websites for €20/Month";
+const PAGE_TITLE = "domrentals";
 const PAGE_DESCRIPTION = "Stop paying up to 25% to Airbnb/Booking. Showcase your apartment with a custom, high-speed website for only €20/month.";
 const MONTHLY_PRICE = "20€";
 const CONTACT_EMAIL = "ion.claudiu1998@gmail.com"
@@ -11,6 +11,7 @@ const CONTACT_WHATSAPP_LINK = "https://wa.me/00393452754245"
 const AIRBNB_COLOR = "text-red-400";
 const BOOKING_COLOR = "text-blue-600";
 ---
+
 
 <!DOCTYPE html>
 <html lang="en" data-theme="corporate" class="scroll-smooth">
@@ -26,39 +27,75 @@ const BOOKING_COLOR = "text-blue-600";
 
 <main>
 
+    <slot name="navbar"/>
+
     <!-- 1. HERO SECTION (Primary Focus & Price Anchor) -->
-    <section class="hero min-h-[75vh] bg-base-100 pt-16 pb-12">
-        <div class="hero-content flex-col max-w-7xl px-4 mx-auto text-center">
+    <section class="relative min-h-[85vh] overflow-hidden bg-white">
 
-            <div class="max-w-4xl">
+        {/* Background Image Collage */}
+        <div class="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-2 px-4">
+            <img
+              src="/index/01.jpg?height=400&width=400"
+              alt=""
+              class="w-full h-full object-cover rounded-lg"
+            />
+            <img
+              src="/index/02.jpg?height=400&width=400"
+              alt=""
+              class="w-full h-full object-cover rounded-lg"
+            />
+            <img
+              src="/index/03.jpg?height=400&width=400"
+              alt=""
+              class="w-full h-full object-cover rounded-lg"
+            />
+            <img
+              src="/index/04.jpg?height=400&width=400"
+              alt=""
+              class="w-full h-full object-cover rounded-lg"
+            />
+            <img
+              src="/index/05.jpg?height=400&width=400"
+              alt=""
+              class="w-full h-full object-cover rounded-lg"
+            />
+            <img
+              src="/index/06.jpg?height=400&width=400"
+              alt=""
+              class="w-full h-full object-cover rounded-lg"
+            />
+        </div>
 
-                <!-- NEW IMPROVED H1: Emphasizing the fee first, then clarifying the platforms -->
-                <h1 class="text-3xl md:text-6xl font-extrabold tracking-tight text-base-content mb-4 leading-tight">
-                    Do Not Pay Up to <span class="text-red-600">25%</span>
-                    <br class="hidden sm:block">
-                    to <span class={AIRBNB_COLOR}>Airbnb</span> or <span class={BOOKING_COLOR}>Booking.com</span>.
-                </h1>
+         <div class="absolute inset-0 bg-gradient-to-br from-base-100/60 via-base-100/60 to-base-100/60"></div>
 
+        {/* Content Card */}
+        <div class="relative z-10 flex items-center justify-center min-h-[85vh] px-4 py-2">
+            <div class="card bg-base-100/95 backdrop-blur-sm shadow-2xl max-w-5xl w-full">
+                <div class="card-body p-8 md:p-12 text-center">
 
-                <!-- Value Proposition with Price (UPDATED TO text-success) -->
-                <p class="text-2xl md:text-3xl font-extrabold mb-5">
-                    Showcase Your Property With Us.
-                </p>
-                <p class="text-2xl md:text-3xl font-extrabold text-success mb-10">
-                    Only <span class="text-5xl md:text-6xl font-black">{MONTHLY_PRICE}/month.</span>
-                </p>
+                    <h1 class="text-3xl md:text-6xl font-extrabold tracking-tight text-base-content mb-4 leading-tight">
+                        Do Not Pay Up to <span class="text-red-600">25%</span>
+                        <br class="hidden sm:block">
+                        to <span class={AIRBNB_COLOR}>Airbnb</span> or <span class={BOOKING_COLOR}>Booking.com</span>
+                    </h1>
 
-                <!-- CTA Buttons (Updated to include Showcase button) -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="/showcase" class="btn btn-outline btn-primary btn-lg">Property Showcase</a>
-                    <button onclick="contact_modal.showModal()" class="btn btn-primary btn-lg shadow-xl">Contact us</button>
+                    <p class="text-2xl md:text-3xl font-extrabold mb-5">
+                        Showcase Your Property With Us
+                    </p>
+                    <p class="text-2xl md:text-3xl font-extrabold text-success mb-10">
+                        Only <span class="text-5xl md:text-6xl font-black">{MONTHLY_PRICE}/month</span>
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="/showcase" class="btn btn-outline btn-primary btn-lg">Property Showcase</a>
+                        <button onclick="contact_modal.showModal()" class="btn btn-primary btn-lg shadow-xl">Contact us</button>
+                    </div>
+
                 </div>
             </div>
-
         </div>
     </section>
 
-    ---
 
     <section class="py-16 md:py-24 bg-base-200" id="about">
         <div class="container mx-auto px-4 max-w-5xl">
@@ -129,7 +166,7 @@ const BOOKING_COLOR = "text-blue-600";
                 <!-- WhatsApp -->
                 <a href={CONTACT_WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" class="btn btn-block bg-green-500 hover:bg-green-600 text-white border-none text-lg font-semibold transition duration-200 justify-start">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-whatsapp"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" /><path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" /></svg>
-                    {CONTACT_PHONE}`
+                    {CONTACT_PHONE}
                 </a>
 
                 <!-- Phone -->

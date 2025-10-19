@@ -23,7 +23,9 @@ const {
   bathrooms,
   beds,
   bedrooms,
+  imagesMainPage,
   imagesByCategory,
+  imagesThumbnail,
   description,
   houseRules,
   apartmentServices,
@@ -63,7 +65,7 @@ const {
             description={description}
     />
 
-    <Gallery slot="gallery" imagesByCategory={imagesByCategory}/>
+    <Gallery slot="gallery" imagesMainPage={imagesMainPage} imagesByCategory={imagesByCategory} imagesThumbnail={imagesThumbnail}/>
     <Description slot="description" description={description} houseRules={houseRules}/>
     <Services slot="services" apartmentServices={apartmentServices}/>
 
