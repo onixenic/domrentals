@@ -2,7 +2,7 @@
 interface Service {
   key: string;
   name: string;
-  iconPath: string;
+  classPath: string;
 }
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
 }
 
 import { services } from "../config/servicesConfig";
+
 
 const {apartmentServices} = Astro.props;
 const availableServices = services.filter((s) => apartmentServices[s.key]);
@@ -28,9 +29,9 @@ const firstServices = availableServices.slice(0, 9);
               <div class="flex items-center gap-3 text-gray-700">
                   <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 32 32"
+                          viewBox="0 0 24 24"
                           aria-hidden="true"
-                          class="w-6 h-6 flex-shrink-0"
+                          class="w-5 h-5 flex-shrink-0 align-middle"
                           fill="currentColor"
                   >
                       <path d={service.iconPath}/>
@@ -66,9 +67,9 @@ const firstServices = availableServices.slice(0, 9);
                           <div class="flex items-center gap-3 text-gray-700">
                               <svg
                                       xmlns="http://www.w3.org/2000/svg"
-                                      viewBox="0 0 32 32"
+                                      viewBox="0 0 24 24"
                                       aria-hidden="true"
-                                      class="w-6 h-6 flex-shrink-0"
+                                      class="w-5 h-5 flex-shrink-0 align-middle"
                                       fill="currentColor"
                               >
                                   <path d={service.iconPath}/>

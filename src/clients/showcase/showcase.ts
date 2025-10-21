@@ -140,7 +140,11 @@ This exceptional setting perfectly combines vibrant urban energy with the tranqu
     smoke_alarm: true,
     heating: true,
     essentials: true,
-    iron: true
+    iron: true,
+    hair_dryer: true,
+    kitchen_kit: true,
+    bed_sheets: true,
+    towels: true
   },
   mapEmbed: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3236.894601500602!2d-5.803961427467321!3d35.777965305361754!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzXCsDQ2JzQwLjciTiA1wrA0OCcwOS4zIlc!5e0!3m2!1sit!2sit!4v1760702292229!5m2!1sit!2sit",
   showDirections: true,
