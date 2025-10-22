@@ -1,0 +1,127 @@
+<script
+        is:inline
+        src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"
+></script>
+
+<script is:inline>
+  // Function to load Google Analytics
+  function loadGoogleAnalytics() {
+    // Prevent loading multiple times
+    if (window.gtag) return;
+
+    const gaScript = document.createElement("script");
+    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-5K76VL7C16";
+    gaScript.async = true;
+    document.head.appendChild(gaScript);
+
+    gaScript.onload = () => {
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-5K76VL7C16");
+    };
+  }
+
+  // Function to delete Google Analytics cookies
+  function deleteGoogleAnalyticsCookies() {
+    const gaCookies = ['_ga', '_ga_5K76VL7C16', '_gid', '_gat', '_gat_gtag_G_5K76VL7C16'];
+
+    gaCookies.forEach(cookieName => {
+      // Delete for current domain
+      document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      // Delete for parent domain
+      document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
+    });
+  }
+
+  window.addEventListener("load", () => {
+    // Initialize cookie consent
+    CookieConsent.run({
+      guiOptions: {
+        consentModal: { layout: "cloud", position: "bottom center", flipButtons: false },
+        preferencesModal: { layout: "box" },
+      },
+      categories: {
+        necessary: { enabled: true, readOnly: true },
+        analytics: { enabled: false, readOnly: false },
+      },
+      language: {
+        default: "en",
+        translations: {
+          en: {
+            consentModal: {
+              title: "We use cookies 🍪",
+              description:
+                "We use cookies to analyze traffic and improve your experience. You can accept or manage preferences.",
+              acceptAllBtn: "Accept all",
+              acceptNecessaryBtn: "Only necessary",
+              showPreferencesBtn: "Manage preferences",
+            },
+            preferencesModal: {
+              title: "Cookie Preferences",
+              acceptAllBtn: "Accept all",
+              acceptNecessaryBtn: "Only necessary",
+              savePreferencesBtn: "Save preferences",
+              closeIconLabel: "Close modal",
+              sections: [
+                {
+                  title: "Strictly Necessary Cookies",
+                  description:
+                    "These cookies are essential for the website to function and cannot be disabled.",
+                  linkedCategory: "necessary",
+                },
+                {
+                  title: "Analytics Cookies",
+                  description:
+                    "These cookies help us understand how visitors use our site, e.g., Google Analytics.",
+                  linkedCategory: "analytics",
+                },
+              ],
+            },
+          },
+        },
+      },
+
+      onFirstConsent: function () {
+        console.log("First consent given");
+        if (CookieConsent.acceptedCategory("analytics")) {
+          loadGoogleAnalytics();
+        }
+      },
+
+      onConsent: function () {
+        console.log("Consent changed");
+        if (CookieConsent.acceptedCategory("analytics")) {
+          loadGoogleAnalytics();
+        }
+      },
+
+      onChange: function () {
+        console.log("Preferences changed");
+        if (CookieConsent.acceptedCategory("analytics")) {
+          loadGoogleAnalytics();
+        } else {
+          // User revoked analytics consent - delete GA cookies
+          deleteGoogleAnalyticsCookies();
+        }
+      },
+    });
+
+    // Check if analytics was already accepted (on page reload)
+    if (CookieConsent.acceptedCategory("analytics")) {
+      loadGoogleAnalytics();
+    }
+
+    // Setup preferences button
+    const prefBtn = document.getElementById("cookie_preferences_btn");
+    if (prefBtn) {
+      prefBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        CookieConsent.showPreferences();
+      });
+    }
+  });
+</script>

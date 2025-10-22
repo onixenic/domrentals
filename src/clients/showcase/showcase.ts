@@ -1,4 +1,6 @@
 export const apartmentConfig = {
+  propertyId: "00",
+  propertyPsw: "99223",
   headTitle: "Marina Residence Tangeri",
   title: "Tangeri Residence: Cozy Apartment Main Street",
   location: "Tangeri, Morocco",

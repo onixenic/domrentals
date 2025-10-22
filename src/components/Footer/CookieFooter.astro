@@ -1,0 +1,49 @@
+<dialog id="cookie_modal" class="modal">
+    <div class="modal-box w-full max-w-2xl max-h-screen overflow-y-auto">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+
+        <h3 class="font-bold text-xl mb-2">Cookie Policy & Terms</h3>
+        <p class="text-sm"><strong>Last Updated:</strong> October 2025</p>
+
+        <div class="space-y-4 text-sm mt-4">
+            <p>
+                Our website uses cookies to ensure proper site functionality and enhance your browsing experience.
+            </p>
+
+            <h4 class="font-semibold">Types of Cookies:</h4>
+            <ul class="list-disc list-inside">
+                <li><strong>Necessary/Technical Cookies:</strong> Required for the website to work correctly (e.g., session management).</li>
+                <li><strong>Analytics Cookies:</strong> Help us understand how visitors interact with the site (e.g., Google Analytics). These are anonymous and do not personally identify you.</li>
+            </ul>
+
+            <p>
+                <strong>Cookie Retention Period:</strong> Your cookie consent is stored for up to 12 months. After this period, consent will expire, and you will be prompted again.
+            </p>
+
+            <p>
+                <strong>Managing & Withdrawing Consent:</strong> You can manage your cookie preferences at any time by clicking the “Update Preferences” button in this modal or in the footer.
+                Disabling necessary cookies may affect website functionality.
+            </p>
+
+            <p>
+                By clicking “Accept all”, you consent to the use of analytics cookies. You can always change your preferences with the button below.
+            </p>
+
+            <div class="mt-4">
+                <button
+                        class="btn btn-sm btn-info"
+                        id="cookie_preferences_btn"
+                        onclick="cookie_modal.close()"
+                >
+                    Update Preferences
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <form method="dialog" class="modal-backdrop">
+        <button>Close</button>
+    </form>
+</dialog>

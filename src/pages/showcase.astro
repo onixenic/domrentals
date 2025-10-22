@@ -16,6 +16,7 @@ import Footer from "../components/Footer.astro";
 
 import { apartmentConfig } from '../clients/showcase/showcase';
 const {
+  propertyId,
   headTitle,
   title,
   location,
@@ -65,12 +66,14 @@ const {
             description={description}
     />
 
-    <Gallery slot="gallery" imagesMainPage={imagesMainPage} imagesByCategory={imagesByCategory} imagesThumbnail={imagesThumbnail}/>
+    <Gallery slot="gallery" imagesMainPage={imagesMainPage} imagesByCategory={imagesByCategory}
+             imagesThumbnail={imagesThumbnail}/>
     <Description slot="description" description={description} houseRules={houseRules}/>
     <Services slot="services" apartmentServices={apartmentServices}/>
 
 
     <!--<PriceComponentFixedPlain-->
+    <!--headTitle={headTitle}-->
     <!--        slot="price"-->
     <!--        price={price}-->
     <!--        currency={currency}-->
@@ -84,7 +87,8 @@ const {
 
 
     <!--<PriceComponentFixedPlainPlusGuest-->
-    <!--  slot="test"-->
+    propertyId={propertyId}
+    <!--  slot="price"-->
     <!--  price={price}-->
     <!--  currency={currency}-->
     <!--  checkIn={checkIn}-->
@@ -97,7 +101,8 @@ const {
     <!--/>-->
 
     <!--<PriceComponentDynamic-->
-    <!--  slot="test"-->
+    propertyId={propertyId}
+    <!--  slot="price"-->
     <!--  price={price}-->
     <!--  pricePeriods={pricePeriods}-->
     <!--  currency={currency}-->
@@ -110,7 +115,8 @@ const {
 
 
     <PriceComponentDynamicPlusGuest
-            slot="test"
+            propertyId={propertyId}
+            slot="price"
             price={price}
             pricePeriods={pricePeriods}
             currency={currency}

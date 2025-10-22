@@ -1,0 +1,60 @@
+---
+import { SITE_CONFIG } from "../../config/constantsConfig";
+---
+<dialog id="terms_modal" class="modal">
+    <div class="modal-box w-full max-w-2xl max-h-screen overflow-y-auto">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="font-bold text-xl mb-4">Website Terms and Conditions of Use</h3>
+        <p class="text-sm"><strong>Last Updated:</strong> October 2025</p>
+
+        <div class="space-y-4 text-sm mt-4">
+
+            <p class="font-bold">1. Introduction and Acceptance of Terms</p>
+            <!--<p><strong>1.1. The Website Operator:</strong> domrentals.com (the "Website" or "Site"), is owned and operated by Ion Claudiu Alexandru ("We," "Us," "Our," or the "Site Owner"), P.IVA (VAT ID) **[YOUR VAT NUMBER]**.</p>-->
+            <p><strong>1.1. The Website Operator:</strong> domrentals.com (the "Website" or "Site"), is owned and operated by Ion Claudiu Alexandru ("We," "Us," "Our," or the "Site Owner"), VAT ID {SITE_CONFIG.fiscalCode}.</p>
+            <p><strong>1.2. Agreement to Terms:</strong> By accessing or using the Website, you agree to be bound by these Terms and Conditions of Use ("Terms"), all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these Terms, you are prohibited from using or accessing this Site.</p>
+
+            <p class="font-bold">2. Nature of the Service (Our Role as a Showcase/Intermediary)</p>
+            <p><strong>2.1. Service Definition:</strong> The Website operates as an online showcase and information service, exclusively providing promotional and descriptive information about apartments, holiday homes, or other accommodation facilities ("Properties") offered by third-party owners or managers ("Hosts").</p>
+            <p><strong>2.2. No Booking or Payment Processing:</strong> We do not process, confirm, or manage any bookings, reservations, or payments. We are solely a channel for providing information and connecting users with the relevant Host.</p>
+            <p><strong>2.3. External Contact and Contract:</strong> Any communication, negotiation, agreement, or contract for the rental or reservation of a Property takes place exclusively and directly between the user and the respective Host.</p>
+
+            <p class="font-bold">3. Limitation of Liability</p>
+            <p><strong>3.1. Information Accuracy:</strong> The descriptions, photographs, availability, pricing, and all other information related to the Properties are provided and managed entirely by the respective Host. We strive for accuracy but do not guarantee that all information is current, complete, or accurate.</p>
+            <p>
+                <strong>3.2. Exclusion of Warranty:</strong> The Website and its contents are provided "as is" and "as available." We make no warranties, expressed or implied, regarding the operation of the Site, the absence of viruses or malicious code, or the continuous, uninterrupted, or error-free accessibility of the services.
+            </p>
+            <p>
+                <strong>3.3. Exclusion of Liability for Transactions and Damages:</strong> The Site Owner is not a party to the rental contract established between the user and the Host. We shall not be liable for any direct, indirect, incidental, punitive, or consequential damages (including, but not limited to, damages for loss of profits or data) arising out of or in connection with: a) Any defect, dispute, cancellation, or loss related to the booking or stay at the Property. b) Any payment or transaction conducted directly with the Host. c) The accuracy, truthfulness, or completeness of the information provided by the Host.
+            </p>
+            <p><strong>3.4. Passive Hosting Provider:</strong> The Site Owner acts as a passive hosting provider and is not obliged to exercise general supervision over the information transmitted or stored, nor to actively seek facts or circumstances indicating illegal activity (pursuant to Legislative Decree no. 70/2003).</p>
+
+            <p class="font-bold">4. User and Host Content</p>
+            <p>
+                <strong>4.1. Intellectual Property (Our Site):</strong> All content provided by the Site Owner (including the design, logo, code, and site texts, excluding Host Content) is the exclusive property of the Site Owner and is protected by applicable intellectual property and copyright laws.
+            </p>
+            <p>
+                <strong>4.2. Host Content License:</strong> By submitting content (descriptions, photos, etc.) to the Website, Hosts warrant that they own or have the necessary licenses and rights to such content. Hosts grant Us a non-exclusive, worldwide, royalty-free license to display, reproduce, and distribute their content on the Website for the purpose of the advertised service.
+            </p>
+            <p><strong>4.3. Prohibited Content and Anti-Discrimination:</strong> Users and Hosts are strictly prohibited from publishing or promoting through the Site any content that is illegal, defamatory, obscene, threatening, or, in particular, discriminatory based on race, gender, religion, sexual orientation, disability, or any other protected characteristic.</p>
+            <p>
+                <strong>4.4. Notice and Take Down Procedure (Illegal Content Reporting):</strong> Should a user become aware of any information on the Website that is inaccurate or illegal (e.g., a scam, copyright infringement, or discriminatory content), they must immediately notify Us at {SITE_CONFIG.abuseEmail}. We undertake to investigate and remove or disable access to the illegal content promptly upon verification.
+            </p>
+
+            <p class="font-bold">5. Data Protection and Privacy</p>
+            <p>
+                <strong>5.1. Privacy Policy and Data Processing:</strong> All data collection and processing activities are governed by our Privacy Policy and Cookie Policy which are incorporated into these Terms by reference. By using the Site, you consent to the data practices described in the Privacy Policy.
+            </p>
+
+
+            <p class="font-bold">6. Governing Law and Jurisdiction</p>
+            <p><strong>6.1. Governing Law:</strong> These Terms and Conditions shall be governed by and construed in accordance with the laws of Italy.</p>
+            <p><strong>6.2. Jurisdiction:</strong> For the resolution of any disputes arising from these Terms, the exclusive jurisdiction shall be the competent court of Bologna, IT.</p>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>

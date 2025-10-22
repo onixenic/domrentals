@@ -30,6 +30,7 @@ interface PricePeriod {
 }
 
 interface Props {
+  propertyId: string;
   price: number;
   pricePeriods: PricePeriod[];
   currency: string;
@@ -44,6 +45,7 @@ interface Props {
 }
 
 const {
+  propertyId,
   price,
   pricePeriods,
   currency,
@@ -82,11 +84,15 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
         <div class="space-y-3">
             <div class="flex justify-between text-sm items-center">
                 <label for="checkIn-input" class="font-semibold">Check-in</label>
-                <input type="date" id="checkIn-input" value={checkInDate} class="text-gray-600 border rounded p-1 w-2/3 text-right" onchange="updateMinCheckoutDate(event); updatePrice()" min={checkInDate}/>
+                <input type="date" id="checkIn-input" value={checkInDate}
+                       class="text-gray-600 border rounded p-1 w-2/3 text-right"
+                       onchange="updateMinCheckoutDate(event); updatePrice()" min={checkInDate}/>
             </div>
             <div class="flex justify-between text-sm items-center">
                 <label for="checkOut-input" class="font-semibold">Check-out</label>
-                <input type="date" id="checkOut-input" value={checkOutDate} class="text-gray-600 border rounded p-1 w-2/3 text-right" onchange="updatePrice()" min={checkOutMinDateDefault}/>
+                <input type="date" id="checkOut-input" value={checkOutDate}
+                       class="text-gray-600 border rounded p-1 w-2/3 text-right" onchange="updatePrice()"
+                       min={checkOutMinDateDefault}/>
             </div>
         </div>
 
@@ -117,7 +123,8 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
         </div>
 
         <div class="divider my-1"></div>
-        <ContactUsPriceComponent priceCardEmail={priceCardEmail} priceCardPhone={priceCardPhone} priceCardWhatsApp={priceCardWhatsApp}/>
+        <ContactUsPriceComponent propertyId={propertyId} priceCardEmail={priceCardEmail} priceCardPhone={priceCardPhone}
+                                 priceCardWhatsApp={priceCardWhatsApp}/>
     </div>
 
     <script type="text/javascript">

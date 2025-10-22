@@ -1,3 +1,12 @@
+---
+import Flaticon from "./Footer/Flaticon.astro";
+import Privacy from "./Footer/Privacy.astro";
+import CookieFooter from "./Footer/CookieFooter.astro";
+import Terms from "./Footer/Terms.astro";
+import Company from "./Footer/Company.astro";
+
+---
+
 <footer class="footer bg-base-200 text-base-content p-6 text-center">
 
     <div class="flex justify-center space-x-4 mt-2 text-xs text-gray-500">
@@ -28,7 +37,7 @@
                 class="hover:underline cursor-pointer"
                 onclick="company_data_modal.showModal()"
         >
-            Dati Societari
+            Legal Details
         </button>
         <span class="text-gray-400">|</span>
         <button
@@ -40,161 +49,16 @@
     </div>
 </footer>
 
-<dialog id="attributions_modal" class="modal">
-    <div class="modal-box w-full max-w-sm">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <h3 class="font-bold text-lg mb-4">Icon Attributions</h3>
-        <a href="https://www.flaticon.com/uicons"></a>
-        <p class="text-sm">
-            Uicons by
-            <a
-                    href="https://www.flaticon.com/uicons"
-                    title="Pixel perfect"
-                    target="_blank"
-                    class="text-blue-600 hover:underline"
-            >
-                Flaticon
-            </a>
-            from
-            <a
-                    href="https://www.flaticon.com/"
-                    title="Flaticon"
-                    target="_blank"
-                    class="text-blue-600 hover:underline"
-            >
-                www.flaticon.com
-            </a>
-        </p>
+<Privacy />
+<CookieFooter />
+<Terms />
+<Company />
+<Flaticon />
 
-    </div>
-    <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-    </form>
-</dialog>
 
-<dialog id="privacy_modal" class="modal">
-    <div class="modal-box w-full max-w-2xl max-h-screen overflow-y-auto">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <h3 class="font-bold text-xl mb-4">Privacy Policy (Informativa sulla Privacy)</h3>
-        <div class="space-y-4 text-sm">
-            <p>
-                <strong>This section should contain the full text of your Privacy Policy,</strong>
-                as required by GDPR, detailing what data you collect, how you use it, and the user's rights.
-                This is the most critical legal document and should be drafted by a legal professional.
-            </p>
-            <p><strong>Dati del Titolare del Trattamento:</strong> Ion Claudiu Alexandru, **[YOUR LEGAL ADDRESS]**, **[Your primary contact email]**.</p>
-            <p>
-                <a href="mailto:**[Your primary contact email]**" class="text-blue-600 hover:underline">Contattaci per i diritti relativi al trattamento dati.</a>
-            </p>
-        </div>
-    </div>
-    <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-    </form>
-</dialog>
 
-<dialog id="cookie_modal" class="modal">
-    <div class="modal-box w-full max-w-2xl max-h-screen overflow-y-auto">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <h3 class="font-bold text-xl mb-4">Cookie Policy (Informativa sui Cookie)</h3>
-        <div class="space-y-4 text-sm">
-            <p>
-                <strong>This section should detail the types of cookies used</strong> (technical, analytical, profiling),
-                their purpose, and how users can manage or refuse consent (if applicable, which depends on the cookies you use).
-            </p>
-            <p>
-                Attualmente il sito utilizza principalmente cookie tecnici essenziali per il funzionamento e,
-                potenzialmente, cookie analitici anonimizzati che non richiedono un banner di consenso preventivo.
-                Verifica sempre con il tuo consulente legale in base agli strumenti di tracciamento utilizzati (es. Google Analytics, Facebook Pixel).
-            </p>
-        </div>
-    </div>
-    <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-    </form>
-</dialog>
 
-<dialog id="terms_modal" class="modal">
-    <div class="modal-box w-full max-w-2xl max-h-screen overflow-y-auto">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <h3 class="font-bold text-xl mb-4">Website Terms and Conditions of Use</h3>
 
-        <div class="space-y-4 text-sm">
 
-            <p class="font-bold">1. Introduction and Acceptance of Terms</p>
-            <p><strong>1.1. The Website Operator:</strong> This website, domrentals.com (the "Website" or "Site"), is owned and operated by Ion Claudiu Alexandru ("We," "Us," "Our," or the "Site Owner"), with registered office at **[YOUR LEGAL ADDRESS]**, P.IVA (VAT ID) **[YOUR VAT NUMBER]**.</p>
-            <p><strong>1.2. Agreement to Terms:</strong> By accessing or using the Website, you agree to be bound by these Terms and Conditions of Use ("Terms"), all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these Terms, you are prohibited from using or accessing this Site.</p>
 
-            <p class="font-bold">2. Nature of the Service (Our Role as a Showcase/Intermediary)</p>
-            <p><strong>2.1. Service Definition:</strong> The Website operates as an online showcase and information service, exclusively providing promotional and descriptive information about apartments, holiday homes, or other accommodation facilities ("Properties") offered by third-party owners or managers ("Hosts").</p>
-            <p><strong>2.2. No Booking or Payment Processing:</strong> We do not process, confirm, or manage any bookings, reservations, or payments. We are solely a channel for providing information and connecting users with the relevant Host.</p>
-            <p><strong>2.3. External Contact and Contract:</strong> Any communication, negotiation, agreement, or contract for the rental or reservation of a Property takes place exclusively and directly between the user and the respective Host.</p>
 
-            <p class="font-bold">3. Limitation of Liability</p>
-            <p><strong>3.1. Information Accuracy:</strong> The descriptions, photographs, availability, pricing, and all other information related to the Properties are provided and managed entirely by the respective Host. We strive for accuracy but do not guarantee that all information is current, complete, or accurate.</p>
-            <p>
-                <strong>3.2. Exclusion of Warranty:</strong> The Website and its contents are provided "as is" and "as available." We make no warranties, expressed or implied, regarding the operation of the Site, the absence of viruses or malicious code, or the continuous, uninterrupted, or error-free accessibility of the services.
-            </p>
-            <p>
-                <strong>3.3. Exclusion of Liability for Transactions and Damages:</strong> The Site Owner is not a party to the rental contract established between the user and the Host. We shall not be liable for any direct, indirect, incidental, punitive, or consequential damages (including, but not limited to, damages for loss of profits or data) arising out of or in connection with: a) Any defect, dispute, cancellation, or loss related to the booking or stay at the Property. b) Any payment or transaction conducted directly with the Host. c) The accuracy, truthfulness, or completeness of the information provided by the Host.
-            </p>
-            <p><strong>3.4. Passive Hosting Provider:</strong> The Site Owner acts as a passive hosting provider and is not obliged to exercise general supervision over the information transmitted or stored, nor to actively seek facts or circumstances indicating illegal activity (pursuant to Legislative Decree no. 70/2003).</p>
-
-            <p class="font-bold">4. User and Host Content</p>
-            <p>
-                <strong>4.1. Intellectual Property (Our Site):</strong> All content provided by the Site Owner (including the design, logo, code, and site texts, excluding Host Content) is the exclusive property of the Site Owner and is protected by applicable intellectual property and copyright laws.
-            </p>
-            <p>
-                <strong>4.2. Host Content License:</strong> By submitting content (descriptions, photos, etc.) to the Website, Hosts warrant that they own or have the necessary licenses and rights to such content. Hosts grant Us a non-exclusive, worldwide, royalty-free license to display, reproduce, and distribute their content on the Website for the purpose of the advertised service.
-            </p>
-            <p><strong>4.3. Prohibited Content and Anti-Discrimination:</strong> Users and Hosts are strictly prohibited from publishing or promoting through the Site any content that is illegal, defamatory, obscene, threatening, or, in particular, discriminatory based on race, gender, religion, sexual orientation, disability, or any other protected characteristic.</p>
-            <p>
-                <strong>4.4. Notice and Take Down Procedure (Illegal Content Reporting):</strong> Should a user become aware of any information on the Website that is inaccurate or illegal (e.g., a scam, copyright infringement, or discriminatory content), they must immediately notify Us at **[YOUR CONTACT EMAIL FOR LEGAL/ABUSE]**. We undertake to investigate and remove or disable access to the illegal content promptly upon verification.
-            </p>
-
-            <p class="font-bold">5. Data Protection and Privacy</p>
-            <p>
-                <strong>5.1. Privacy Policy and Data Processing:</strong> All data collection and processing activities are governed by our **Privacy Policy** and **Cookie Policy** (or equivalent sections) which are incorporated into these Terms by reference. By using the Site, you consent to the data practices described in the Privacy Policy.
-            </p>
-            <p><strong>5.2. Data Shared with Hosts:</strong> You acknowledge and agree that when you use a contact form or feature on the Website, your personal data will be transferred to the relevant Host, who will become an independent data controller of that information.</p>
-
-            <p class="font-bold">6. Governing Law and Jurisdiction</p>
-            <p><strong>6.1. Governing Law:</strong> These Terms and Conditions shall be governed by and construed in accordance with the laws of Italy.</p>
-            <p><strong>6.2. Jurisdiction:</strong> For the resolution of any disputes arising from these Terms, the exclusive jurisdiction shall be the competent court of **[YOUR COMPETENT COURT/CITY, e.g., Rome, Milan, etc.]**.</p>
-        </div>
-    </div>
-    <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-    </form>
-</dialog>
-
-<dialog id="company_data_modal" class="modal">
-    <div class="modal-box w-full max-w-md">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <h3 class="font-bold text-xl mb-4">Dati Societari / Informazioni Legali</h3>
-
-        <div class="space-y-3 text-sm">
-            <p><strong>Titolare del Sito (Site Owner):</strong> Ion Claudiu Alexandru</p>
-            <p><strong>Sede Legale (Registered Office):</strong> **[YOUR LEGAL ADDRESS]**</p>
-            <p><strong>Partita IVA / Codice Fiscale (VAT / Tax ID):</strong> **[YOUR VAT NUMBER]**</p>
-            <p><strong>Email di contatto:</strong> **[Your primary contact email]**</p>
-            <p><strong>PEC (Posta Elettronica Certificata):</strong> **[Your PEC email address]**</p>
-        </div>
-        <p class="mt-6 text-xs text-gray-500">
-            Questi dati sono forniti ai sensi della normativa italiana vigente in materia di trasparenza e identificazione societaria (es. D.Lgs. 70/2003).
-        </p>
-    </div>
-    <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-    </form>
-</dialog>

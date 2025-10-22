@@ -1,0 +1,27 @@
+#cc-main {
+    /** Use a font that matches your existing UI **/
+    --cc-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    /** Change primary color to match your blue accent color **/
+    --cc-btn-primary-bg: #0095ff;
+    --cc-btn-primary-border-color: #0095ff;
+    --cc-btn-primary-hover-bg: #007fd9;
+    --cc-btn-primary-hover-border-color: #007fd9;
+
+    /** Match toggles to your brand color **/
+    --cc-toggle-on-bg: #0095ff;
+
+    /** Use the same border radius as your other UI elements **/
+    --cc-btn-border-radius: 4px;
+
+    /** Additional styles to better integrate with your UI **/
+    --cc-bg: #ffffff;
+    --cc-text: #333333;
+    --cc-border-color: #e6e6e6;
+    --cc-section-bg: #f8f9fa;
+
+    /** Secondary button styling to match your gray style **/
+    --cc-btn-secondary-bg: #f0f0f0;
+    --cc-btn-secondary-color: #333;
+    --cc-btn-secondary-hover-bg: #e0e0e0;
+}
