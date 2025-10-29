@@ -1,0 +1,157 @@
+---
+import ContactUsPriceComponent from "./ContactUsPriceComponent.astro";
+
+interface Props {
+  propertyId: string;
+  roomPricing: Record<
+    string,
+    {
+      price: number;
+      pricePeriods: { from: string; to: string; price: number }[];
+      extraPerGuest: number;
+      guestCostBasis: string;
+    }
+  >;
+  roomDetails: {
+    roomName: string;
+    guests: number;
+    beds: number;
+    bathrooms: number;
+  }[];
+  currency: string;
+  checkIn: string;
+  checkOut: string;
+  email: string;
+  phoneNumber: string;
+  whatsAppNumber: string;
+}
+
+const {
+  propertyId,
+  roomPricing,
+  roomDetails,
+  currency,
+  checkIn,
+  checkOut,
+  email,
+  phoneNumber,
+  whatsAppNumber,
+} = Astro.props;
+
+const roomNames = Object.keys(roomPricing);
+---
+
+<div class="card bg-base-100 shadow-xl border border-base-300">
+    <div class="card-body">
+
+        <!-- Price Header -->
+        <div id="priceContainer" class="flex items-baseline gap-1">
+          <span id="priceValue" class="text-3xl font-bold">
+            {roomPricing[roomNames[0]].price}{currency}
+          </span>
+            <span class="text-base text-gray-500">/ night*</span>
+        </div>
+
+        <div class="divider my-1"></div>
+
+        <!-- Room Selector -->
+        <div>
+            <label class="block text-sm font-semibold mb-1" for="roomSelect">Room</label>
+            <select
+                    id="roomSelect"
+                    class="border p-2 rounded w-full text-left"
+            >
+              {roomNames.map((room) => (
+                      <option value={room}>{room}</option>
+              ))}
+            </select>
+        </div>
+
+        <!-- Guest Selector -->
+        <div>
+            <label class="block text-sm font-semibold mb-1" for="guestsSelect">Guests</label>
+            <select
+                    id="guestsSelect"
+                    class="border p-2 rounded w-full text-left"
+            ></select>
+        </div>
+
+        <div class="divider my-1"></div>
+
+        <!-- Check-in/out Info -->
+        <div class="space-y-3">
+            <div class="flex justify-between text-sm items-center">
+                <span class="font-semibold">Check-in</span>
+                <span class="text-gray-600 w-2/3 text-right">{checkIn}</span>
+            </div>
+            <div class="flex justify-between text-sm items-center">
+                <span class="font-semibold">Check-out</span>
+                <span class="text-gray-600 w-2/3 text-right">{checkOut}</span>
+            </div>
+        </div>
+
+        <div class="divider my-1"></div>
+        <h3 class="text-xl font-semibold mb-1">Contact your host</h3>
+        <ContactUsPriceComponent
+                propertyId={propertyId}
+                email={email}
+                phoneNumber={phoneNumber}
+                whatsAppNumber={whatsAppNumber}
+        />
+        <!-- Price confirmation notice -->
+        <p class="text-xs text-gray-500 my-1">*Price must be confirmed by the host</p>
+    </div>
+</div>
+
+<!-- Script -->
+<script
+        is:inline
+        set:html={`
+  (function() {
+    const roomPricing = ${JSON.stringify(roomPricing)};
+    const roomDetails = ${JSON.stringify(roomDetails)};
+    const currency = "${currency}";
+    const roomSelect = document.getElementById("roomSelect");
+    const guestsSelect = document.getElementById("guestsSelect");
+    const priceValue = document.getElementById("priceValue");
+
+    function getMaxGuests(roomName) {
+      const room = roomDetails.find(r => r.roomName === roomName);
+      return room ? room.guests : 1;
+    }
+
+    function populateGuestOptions(maxGuests) {
+      guestsSelect.innerHTML = "";
+      for (let i = 1; i <= maxGuests; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = i;
+        guestsSelect.appendChild(opt);
+      }
+    }
+
+    function updatePrice() {
+      const selectedRoom = roomSelect.value;
+      const guests = Number(guestsSelect.value);
+      const basePrice = roomPricing[selectedRoom]?.price ?? 0;
+      const extra = roomPricing[selectedRoom]?.extraPerGuest ?? 0;
+      const total = basePrice + (guests - 1) * extra;
+      priceValue.textContent = total + currency;
+    }
+
+    function handleRoomChange() {
+      const selectedRoom = roomSelect.value;
+      const maxGuests = getMaxGuests(selectedRoom);
+      populateGuestOptions(maxGuests);
+      updatePrice();
+    }
+
+    if (roomSelect && guestsSelect && priceValue) {
+      roomSelect.addEventListener("change", handleRoomChange);
+      guestsSelect.addEventListener("change", updatePrice);
+      // Initialize
+      handleRoomChange();
+    }
+  })();
+`}
+></script>

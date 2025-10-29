@@ -37,9 +37,9 @@ const {
   currency,
   checkIn,
   checkOut,
-  priceCardEmail,
-  priceCardPhone,
-  priceCardWhatsApp,
+  email,
+  phoneNumber,
+  whatsAppNumber,
   mapEmbed,
   showDirections,
   carDirectionsDescription,
@@ -72,69 +72,69 @@ const {
     <Services slot="services" apartmentServices={apartmentServices}/>
 
 
-    <!--<PriceComponentFixedPlain-->
-    <!--headTitle={headTitle}-->
+    <PriceComponentFixedPlain
+            headTitle={headTitle}
+            slot="price"
+            price={price}
+            currency={currency}
+            checkIn={checkIn}
+            checkOut={checkOut}
+            email={email}
+            phoneNumber={phoneNumber}
+            whatsAppNumber={whatsAppNumber}
+
+    />
+
+    <!--<PriceComponentFixedPlainPlusGuest-->
     <!--        slot="price"-->
+    <!--        propertyId={propertyId}-->
+
     <!--        price={price}-->
     <!--        currency={currency}-->
     <!--        checkIn={checkIn}-->
     <!--        checkOut={checkOut}-->
-    <!--        priceCardEmail={priceCardEmail}-->
-    <!--        priceCardPhone={priceCardPhone}-->
-    <!--        priceCardWhatsApp={priceCardWhatsApp}-->
-
-    <!--/>-->
-
-
-    <!--<PriceComponentFixedPlainPlusGuest-->
-    propertyId={propertyId}
-    <!--  slot="price"-->
-    <!--  price={price}-->
-    <!--  currency={currency}-->
-    <!--  checkIn={checkIn}-->
-    <!--  checkOut={checkOut}-->
-    <!--  priceCardEmail={priceCardEmail}-->
-    <!--  priceCardPhone={priceCardPhone}-->
-    <!--  priceCardWhatsApp={priceCardWhatsApp}-->
-    <!--  guests={guests}-->
-    <!--  extraPerGuest={extraPerGuest}-->
+    <!--        email={email}-->
+    <!--        phoneNumber={phoneNumber}-->
+    <!--        whatsAppNumber={whatsAppNumber}-->
+    <!--        guests={guests}-->
+    <!--        extraPerGuest={extraPerGuest}-->
     <!--/>-->
 
     <!--<PriceComponentDynamic-->
-    propertyId={propertyId}
-    <!--  slot="price"-->
-    <!--  price={price}-->
-    <!--  pricePeriods={pricePeriods}-->
-    <!--  currency={currency}-->
-    <!--  checkIn={checkIn}-->
-    <!--  checkOut={checkOut}-->
-    <!--  priceCardEmail={priceCardEmail}-->
-    <!--  priceCardPhone={priceCardPhone}-->
-    <!--  priceCardWhatsApp={priceCardWhatsApp}-->
+    <!--        slot="price"-->
+    <!--        propertyId={propertyId}-->
+    <!--        price={price}-->
+    <!--        pricePeriods={pricePeriods}-->
+    <!--        currency={currency}-->
+    <!--        checkIn={checkIn}-->
+    <!--        checkOut={checkOut}-->
+    <!--        email={email}-->
+    <!--        phoneNumber={phoneNumber}-->
+    <!--        whatsAppNumber={whatsAppNumber}-->
     <!--/>-->
 
 
-    <PriceComponentDynamicPlusGuest
-            propertyId={propertyId}
-            slot="price"
-            price={price}
-            pricePeriods={pricePeriods}
-            currency={currency}
-            checkIn={checkIn}
-            checkOut={checkOut}
-            priceCardEmail={priceCardEmail}
-            priceCardPhone={priceCardPhone}
-            priceCardWhatsApp={priceCardWhatsApp}
-            guests={guests}
-            extraPerGuest={extraPerGuest}
-            guestCostBasis={guestCostBasis}
-    />
+    <!--<PriceComponentDynamicPlusGuest-->
+    <!--        slot="price"-->
+    <!--        propertyId={propertyId}-->
+    <!--        price={price}-->
+    <!--        pricePeriods={pricePeriods}-->
+    <!--        currency={currency}-->
+    <!--        checkIn={checkIn}-->
+    <!--        checkOut={checkOut}-->
+    <!--        email={email}-->
+    <!--        phoneNumber={phoneNumber}-->
+    <!--        whatsAppNumber={whatsAppNumber}-->
+    <!--        guests={guests}-->
+    <!--        extraPerGuest={extraPerGuest}-->
+    <!--        guestCostBasis={guestCostBasis}-->
+    <!--/>-->
 
     <Map slot="map" mapEmbed={mapEmbed} showDirections={showDirections}
          carDirectionsDescription={carDirectionsDescription}
          publicTransportDirectionsDescription={publicTransportDirectionsDescription}/>
-    <Host slot="host" hostName={hostName} hostImage={hostImage} hostBio={hostBio} hostEmail={hostEmail}
-          hostPhone={hostPhone} hostLanguages={hostLanguages}/>
+    <Host slot="host" hostName={hostName} hostImage={hostImage} hostBio={hostBio} hostEmail={email}
+          hostPhone={phoneNumber} hostLanguages={hostLanguages}/>
     <Footer slot="footer"/>
 
 

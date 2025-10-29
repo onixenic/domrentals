@@ -1,0 +1,9 @@
+---
+import ConfigGeneratorLayout from "../layouts/ConfigGeneratorLayout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+
+const type = Astro.url.searchParams.get("type") || "apartment"; // ?type=bb or ?type=apartment
+---
+
+<ConfigGeneratorLayout />

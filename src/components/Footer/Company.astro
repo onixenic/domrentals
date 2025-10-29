@@ -7,14 +7,14 @@ import { SITE_CONFIG } from "../../config/constantsConfig";
         <form method="dialog">
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
-        <h3 class="font-bold text-xl mb-4">Company Information / Legal Details</h3>
-        <p class="text-sm"><strong>Last Updated:</strong> October 2025</p>
+        <h3 class="font-bold text-xl mb-4">Legal Details</h3>
+        <p class="text-sm"><strong>Last Updated:</strong> {SITE_CONFIG.LAST_UPDATED}</p>
 
         <div class="space-y-3 text-sm mt-4">
             <p><strong>Site Owner:</strong> Ion Claudiu Alexandru</p>
-            <p><strong>Registered Office:</strong> {SITE_CONFIG.legalAddress}</p>
-            <p><strong>VAT / Tax ID:</strong> {SITE_CONFIG.fiscalCode}</p>
-            <p><strong>Contact Email:</strong> {SITE_CONFIG.contactEmail}</p>
+            <p><strong>Registered Office:</strong> {SITE_CONFIG.LEGAL_ADDRESS}</p>
+            <p><strong>VAT / Tax ID:</strong> {SITE_CONFIG.FISCAL_CODE}</p>
+            <p><strong>Contact Email:</strong> {SITE_CONFIG.CONTACT_EMAIL}</p>
         </div>
 
         <p class="mt-6 text-xs text-gray-500">

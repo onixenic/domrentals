@@ -1,0 +1,161 @@
+---
+import BBLayout from "../layouts/Showcase_BB.astro";
+
+import Navbar from "../components/Navbar.astro";
+import ApartmentHeader from "../components/ApartmentHeader.astro";
+import Gallery from "../components/Gallery.astro";
+import Description from "../components/Description.astro";
+import Services from "../components/Services.astro";
+import PriceComponentToQuote from "../components/PriceComponentToQuote.astro";
+import PriceComponentFixedPlain from "../components/PriceComponentFixedPlain.astro";
+import PriceComponentFixedPlainPlusGuest from "../components/PriceComponentFixedPlainPlusGuest.astro";
+import PriceComponentDynamic from "../components/PriceComponentDynamic.astro";
+import PriceComponentDynamicPlusGuest from "../components/PriceComponentDynamicPlusGuest.astro";
+import Map from "../components/Map.astro";
+import Host from "../components/Host.astro";
+import Footer from "../components/Footer.astro";
+
+import { bbConfig } from '../clients/showcase/showcase_bb';
+import BBHeader from "../components/BBHeader.astro";
+import BBRoomDetails from "../components/BBRoomDetails.astro";
+import BBPriceComponentFixedPlain from "../components/BBPriceComponentFixedPlain.astro";
+import BBPriceComponentFixedPlainPlusGuest from "../components/BBPriceComponentFixedPlainPlusGuest.astro";
+import BBPriceComponentDynamic from "../components/BBPriceComponentDynamic.astro";
+import BBPriceComponentDynamicPlusGuest from "../components/BBPriceComponentDynamicPlusGuest.astro";
+const {
+    propertyId,
+    headTitle,
+    title,
+    location,
+    rooms,
+    breakFastIncluded,
+    breakFastAvailable,
+    breakFastCost,
+    roomDetails,
+    imagesMainPage,
+    imagesByCategory,
+    imagesThumbnail,
+    description,
+    houseRules,
+    roomPricing,
+    currency,
+    checkIn,
+    checkOut,
+    email,
+    phoneNumber,
+    whatsAppNumber,
+    apartmentServices,
+    mapEmbed,
+    showDirections,
+    carDirectionsDescription,
+    publicTransportDirectionsDescription,
+    hostImage,
+    hostName,
+    hostBio,
+    hostEmail,
+    hostPhone,
+    hostLanguages,
+} = bbConfig;
+---
+
+<BBLayout headTitle={headTitle}>
+    <Navbar slot="navbar"/>
+    <BBHeader
+      slot="header"
+      title={title}
+      location={location}
+      rooms={rooms}
+      roomDetails={roomDetails}
+      breakFastIncluded={breakFastIncluded}
+      breakFastAvailable={breakFastAvailable}
+      breakFastCost={breakFastCost}
+      currency={currency}
+      description={description}
+    />
+    <Gallery slot="gallery" imagesMainPage={imagesMainPage} imagesByCategory={imagesByCategory}
+             imagesThumbnail={imagesThumbnail}/>
+
+    <BBRoomDetails
+      slot="bb_room_description"
+      title={title}
+      roomDetails={roomDetails}
+    />
+    <Description slot="description" description={description} houseRules={houseRules}/>
+    <Services slot="services" apartmentServices={apartmentServices}/>
+
+    <!--<PriceComponentToQuote-->
+    <!--  slot="price"-->
+    <!--  propertyId={propertyId}-->
+    <!--  checkIn={checkIn}-->
+    <!--  checkOut={checkOut}-->
+    <!--  email={email}-->
+    <!--  phoneNumber={phoneNumber}-->
+    <!--  whatsAppNumber={whatsAppNumber}-->
+    <!--/>-->
+
+    <!--<BBPriceComponentFixedPlain-->
+    <!--        slot="price"-->
+    <!--        propertyId={propertyId}-->
+    <!--        roomPricing={roomPricing}-->
+    <!--        currency={currency}-->
+    <!--        checkIn={checkIn}-->
+    <!--        checkOut={checkOut}-->
+    <!--        email={email}-->
+    <!--        phoneNumber={phoneNumber}-->
+    <!--        whatsAppNumber={whatsAppNumber}-->
+
+    <!--/>-->
+
+    <!--<BBPriceComponentFixedPlainPlusGuest-->
+    <!--  slot="price"-->
+    <!--  propertyId={propertyId}-->
+    <!--  roomPricing={roomPricing}-->
+    <!--  roomDetails={roomDetails}-->
+    <!--  currency={currency}-->
+    <!--  checkIn={checkIn}-->
+    <!--  checkOut={checkOut}-->
+    <!--  email={email}-->
+    <!--  phoneNumber={phoneNumber}-->
+    <!--  whatsAppNumber={whatsAppNumber}-->
+
+    <!--/>-->
+
+    <BBPriceComponentDynamic
+      slot="price"
+      propertyId={propertyId}
+      roomPricing={roomPricing}
+      roomDetails={roomDetails}
+      currency={currency}
+      checkIn={checkIn}
+      checkOut={checkOut}
+      email={email}
+      phoneNumber={phoneNumber}
+      whatsAppNumber={whatsAppNumber}
+
+    />
+
+
+    <!--<BBPriceComponentDynamicPlusGuest-->
+    <!--  slot="price"-->
+    <!--  propertyId={propertyId}-->
+    <!--  roomPricing={roomPricing}-->
+    <!--  roomDetails={roomDetails}-->
+    <!--  currency={currency}-->
+    <!--  checkIn={checkIn}-->
+    <!--  checkOut={checkOut}-->
+    <!--  email={email}-->
+    <!--  phoneNumber={phoneNumber}-->
+    <!--  whatsAppNumber={whatsAppNumber}-->
+
+    <!--/>-->
+
+
+    <Map slot="map" mapEmbed={mapEmbed} showDirections={showDirections}
+         carDirectionsDescription={carDirectionsDescription}
+         publicTransportDirectionsDescription={publicTransportDirectionsDescription}/>
+    <Host slot="host" hostName={hostName} hostImage={hostImage} hostBio={hostBio} hostEmail={email}
+          hostPhone={phoneNumber} hostLanguages={hostLanguages}/>
+    <Footer slot="footer"/>
+
+
+</BBLayout>

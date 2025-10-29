@@ -7,19 +7,20 @@ import { SITE_CONFIG } from "../../config/constantsConfig";
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <h3 class="font-bold text-xl mb-4">Website Terms and Conditions of Use</h3>
-        <p class="text-sm"><strong>Last Updated:</strong> October 2025</p>
+        <p class="text-sm"><strong>Last Updated:</strong> {SITE_CONFIG.LAST_UPDATED}</p>
 
         <div class="space-y-4 text-sm mt-4">
 
             <p class="font-bold">1. Introduction and Acceptance of Terms</p>
-            <!--<p><strong>1.1. The Website Operator:</strong> domrentals.com (the "Website" or "Site"), is owned and operated by Ion Claudiu Alexandru ("We," "Us," "Our," or the "Site Owner"), P.IVA (VAT ID) **[YOUR VAT NUMBER]**.</p>-->
-            <p><strong>1.1. The Website Operator:</strong> domrentals.com (the "Website" or "Site"), is owned and operated by Ion Claudiu Alexandru ("We," "Us," "Our," or the "Site Owner"), VAT ID {SITE_CONFIG.fiscalCode}.</p>
+            <!--<p><strong>1.1. The Website Operator:</strong> {SITE_CONFIG.DOMAIN} (the "Website" or "Site"), is owned and operated by Ion Claudiu Alexandru ("We," "Us," "Our," or the "Site Owner"), P.IVA (VAT ID) **[YOUR VAT NUMBER]**.</p>-->
+            <p><strong>1.1. The Website Operator:</strong> {SITE_CONFIG.DOMAIN} (the "Website" or "Site"), is owned and operated by Ion Claudiu Alexandru ("We," "Us," "Our," or the "Site Owner"), VAT ID {SITE_CONFIG.FISCAL_CODE}.</p>
             <p><strong>1.2. Agreement to Terms:</strong> By accessing or using the Website, you agree to be bound by these Terms and Conditions of Use ("Terms"), all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these Terms, you are prohibited from using or accessing this Site.</p>
 
             <p class="font-bold">2. Nature of the Service (Our Role as a Showcase/Intermediary)</p>
             <p><strong>2.1. Service Definition:</strong> The Website operates as an online showcase and information service, exclusively providing promotional and descriptive information about apartments, holiday homes, or other accommodation facilities ("Properties") offered by third-party owners or managers ("Hosts").</p>
             <p><strong>2.2. No Booking or Payment Processing:</strong> We do not process, confirm, or manage any bookings, reservations, or payments. We are solely a channel for providing information and connecting users with the relevant Host.</p>
-            <p><strong>2.3. External Contact and Contract:</strong> Any communication, negotiation, agreement, or contract for the rental or reservation of a Property takes place exclusively and directly between the user and the respective Host.</p>
+            <p><strong>2.3. External Contact and Contract:</strong> Any communication, negotiation, agreement, or contract for the rental or reservation of a Property takes place exclusively and directly between the user and the respective Host. Any bookings must be made directly with the Host through their
+                preferred booking system or contact method.</p>
 
             <p class="font-bold">3. Limitation of Liability</p>
             <p><strong>3.1. Information Accuracy:</strong> The descriptions, photographs, availability, pricing, and all other information related to the Properties are provided and managed entirely by the respective Host. We strive for accuracy but do not guarantee that all information is current, complete, or accurate.</p>
@@ -29,7 +30,7 @@ import { SITE_CONFIG } from "../../config/constantsConfig";
             <p>
                 <strong>3.3. Exclusion of Liability for Transactions and Damages:</strong> The Site Owner is not a party to the rental contract established between the user and the Host. We shall not be liable for any direct, indirect, incidental, punitive, or consequential damages (including, but not limited to, damages for loss of profits or data) arising out of or in connection with: a) Any defect, dispute, cancellation, or loss related to the booking or stay at the Property. b) Any payment or transaction conducted directly with the Host. c) The accuracy, truthfulness, or completeness of the information provided by the Host.
             </p>
-            <p><strong>3.4. Passive Hosting Provider:</strong> The Site Owner acts as a passive hosting provider and is not obliged to exercise general supervision over the information transmitted or stored, nor to actively seek facts or circumstances indicating illegal activity (pursuant to Legislative Decree no. 70/2003).</p>
+            <p><strong>3.4. Passive Hosting Provider:</strong> The Site Owner acts as a mere technical intermediary and passive hosting provider in accordance with EU Directive 2000/31/EC (E-Commerce Directive) and Legislative Decree no. 70/2003 (Articles 16-17). We are not obliged to exercise general supervision over the information transmitted or stored, nor to actively seek facts or circumstances indicating illegal activity. However, upon obtaining actual knowledge of illegal content, we will act expeditiously to remove or disable access to such content.</p>
 
             <p class="font-bold">4. User and Host Content</p>
             <p>
@@ -40,18 +41,69 @@ import { SITE_CONFIG } from "../../config/constantsConfig";
             </p>
             <p><strong>4.3. Prohibited Content and Anti-Discrimination:</strong> Users and Hosts are strictly prohibited from publishing or promoting through the Site any content that is illegal, defamatory, obscene, threatening, or, in particular, discriminatory based on race, gender, religion, sexual orientation, disability, or any other protected characteristic.</p>
             <p>
-                <strong>4.4. Notice and Take Down Procedure (Illegal Content Reporting):</strong> Should a user become aware of any information on the Website that is inaccurate or illegal (e.g., a scam, copyright infringement, or discriminatory content), they must immediately notify Us at {SITE_CONFIG.abuseEmail}. We undertake to investigate and remove or disable access to the illegal content promptly upon verification.
+                <strong>4.4. Notice and Take Down Procedure (Illegal Content Reporting):</strong> Should a user become aware of any information on the Website that is inaccurate or illegal (e.g., a scam, copyright infringement, or discriminatory content), they must immediately notify Us at {SITE_CONFIG.ABUSE_EMAIL}. We undertake to investigate and remove or disable access to the illegal content promptly upon verification.
             </p>
 
             <p class="font-bold">5. Data Protection and Privacy</p>
-            <p>
-                <strong>5.1. Privacy Policy and Data Processing:</strong> All data collection and processing activities are governed by our Privacy Policy and Cookie Policy which are incorporated into these Terms by reference. By using the Site, you consent to the data practices described in the Privacy Policy.
+
+            <p><strong>5.1. Privacy Policy and Data Processing:</strong> All data collection and processing activities are governed by our <a href="#" onclick="privacy_modal.showModal(); return false;" class="text-blue-600 underline">Privacy Policy</a> and <a href="#" onclick="cookie_modal.showModal(); return false;" class="text-blue-600 underline">Cookie Policy</a>, which are incorporated into these Terms by reference. By using the Site, you consent to the data practices described in the Privacy Policy.</p>
+
+            <p><strong>5.2. Host Data Processing:</strong> When Hosts submit property configuration data through our forms, they explicitly consent to the collection, storage, and processing of their personal and business information as detailed in our Privacy Policy. This includes but is not limited to: company/individual details, contact information, VAT numbers, tax IDs, and property descriptions.</p>
+
+            <p><strong>5.3. Legal Basis for Processing:</strong> We process Host data based on:
+            <ul class="list-disc list-inside ml-4">
+                <li><strong>Explicit Consent</strong> (GDPR Art. 6(1)(a)) - for optional data uses and marketing communications</li>
+                <li><strong>Contract Performance</strong> (GDPR Art. 6(1)(b)) - for data necessary to provide the showcase service</li>
+                <li><strong>Legal Obligations</strong> (GDPR Art. 6(1)(c)) - for tax and compliance requirements</li>
+            </ul>
             </p>
 
+            <p><strong>5.4. Data Retention:</strong> Host data will be retained for the duration of the service agreement, plus up to 10 years for tax and legal compliance purposes, unless earlier deletion is requested in accordance with GDPR rights.</p>
+
+            <p><strong>5.5. Your Rights:</strong> Both users and Hosts have the right to access, rectify, erase, restrict processing, object to processing, and request data portability of their personal data. To exercise these rights, contact us at {SITE_CONFIG.PRIVACY_EMAIL}.</p>
+
+            <p><strong>5.6. Data Security:</strong> We implement appropriate technical and organizational measures to protect personal data against unauthorized access, alteration, disclosure, or destruction.</p>
 
             <p class="font-bold">6. Governing Law and Jurisdiction</p>
-            <p><strong>6.1. Governing Law:</strong> These Terms and Conditions shall be governed by and construed in accordance with the laws of Italy.</p>
-            <p><strong>6.2. Jurisdiction:</strong> For the resolution of any disputes arising from these Terms, the exclusive jurisdiction shall be the competent court of Bologna, IT.</p>
+            <p><strong>6.1. Governing Law:</strong> These Terms and Conditions shall be governed by and construed in accordance with the laws of {SITE_CONFIG.COUNTRY}.</p>
+            <p><strong>6.2. Jurisdiction:</strong> For the resolution of any disputes arising from these Terms, the exclusive jurisdiction shall be the competent court of {SITE_CONFIG.JURISDICTION_CITY}, IT.</p>
+
+            <p class="font-bold">7. Host Responsibilities and Representations</p>
+
+            <p><strong>7.1. Accuracy of Information:</strong> Hosts represent and warrant that all information provided about their Properties is accurate, complete, and up-to-date. Hosts are solely responsible for updating their property information promptly.</p>
+
+            <p><strong>7.2. Legal Compliance:</strong> Hosts warrant that their Properties comply with all applicable local laws, regulations, and licensing requirements, including but not limited to: tourism licenses, building permits, health and safety standards, and tax registration.</p>
+
+            <p><strong>7.3. Ownership and Authority:</strong> Hosts confirm they have the legal right to rent or advertise the Property and have obtained all necessary permissions from property owners, landlords, or other relevant parties.</p>
+
+            <p><strong>7.4. Non-Discriminatory Practices:</strong> Hosts agree to comply with all applicable anti-discrimination laws and will not refuse bookings or provide inferior service based on race, color, religion, sex, gender identity, sexual orientation, national origin, disability, or any other protected characteristic.</p>
+
+            <p><strong>7.5. Indemnification:</strong> Hosts agree to indemnify and hold harmless the Site Owner from any claims, damages, or expenses arising from: (a) inaccurate or misleading property information, (b) violations of laws or regulations, (c) disputes with guests, or (d) breaches of these Terms.</p>
+
+            <p class="font-bold">8. Service Modification and Termination</p>
+
+            <p><strong>8.1. Right to Modify:</strong> We reserve the right to modify, suspend, or discontinue any aspect of the Website or service at any time, with or without notice, without liability to you or any third party.</p>
+
+            <p><strong>8.2. Content Removal:</strong> We reserve the right to remove or refuse to display any Host content that violates these Terms, is illegal, discriminatory, or otherwise inappropriate, at our sole discretion.</p>
+
+            <p><strong>8.3. Account Termination:</strong> We may terminate or suspend a Host's access to the service immediately, without prior notice or liability, for any reason, including but not limited to breach of these Terms.</p>
+
+            <p class="font-bold">9. Links to Third-Party Websites</p>
+
+            <p><strong>9.1. External Links:</strong> The Website may contain links to third-party websites (including Host booking platforms). These links are provided for convenience only. We do not endorse, control, or assume responsibility for the content, privacy policies, or practices of any third-party sites.</p>
+
+            <p><strong>9.2. User Responsibility:</strong> Accessing third-party websites is at your own risk. We encourage you to review the terms and privacy policies of any third-party sites you visit.</p>
+
+            <p class="font-bold">10. Contact Information and Complaints</p>
+
+            <p><strong>10.1. General Inquiries:</strong> For questions about these Terms, please contact us at {SITE_CONFIG.CONTACT_EMAIL}.</p>
+
+            <p><strong>10.2. Privacy Inquiries:</strong> For privacy-related questions or to exercise your GDPR rights, contact {SITE_CONFIG.PRIVACY_EMAIL}.</p>
+
+            <p><strong>10.3. Illegal Content Reports:</strong> To report illegal, inaccurate, or discriminatory content, email {SITE_CONFIG.ABUSE_EMAIL}.</p>
+
+            <p><strong>10.4. Dispute Resolution:</strong> We encourage users and Hosts to contact us first to resolve any disputes informally. If informal resolution fails, disputes will be subject to the jurisdiction specified in Section 6.2.</p>
+
         </div>
     </div>
     <form method="dialog" class="modal-backdrop">

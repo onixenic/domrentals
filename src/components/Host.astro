@@ -5,7 +5,7 @@ interface Props {
   hostBio: string;
   hostEmail: string;
   hostPhone: string;
-  hostLanguages?: string[];
+  hostLanguages: string[];
 }
 
 const {
@@ -14,12 +14,12 @@ const {
   hostBio,
   hostEmail,
   hostPhone,
-  hostLanguages = ["English"],
+  hostLanguages,
 } = Astro.props;
 ---
 
 
-<div class="card bg-base-100 shadow-xl border border-base-300">
+<div class="card bg-white shadow-xl border border-base-300">
     <div class="card-body p-6 md:p-8">
 
         <h2 class="card-title text-xl font-bold mb-2 pb-4">Meet Your Host</h2>
@@ -48,7 +48,7 @@ const {
               {/* Languages */}
                 <div>
                     <h4 class="font-semibold text-sm text-base-content/70 mb-1">Languages</h4>
-                    <p class="text-base-content/80">{"English"}</p>
+                    <p class="text-base-content/80">{hostLanguages.join(", ")}</p>
                 </div>
 
               {/* Contact Info */}

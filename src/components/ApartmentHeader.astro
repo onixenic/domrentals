@@ -3,19 +3,21 @@ const {title, location, guests, bathrooms, beds, bedrooms, description} = Astro.
 ---
 <!-- Title and basic info -->
 <div class="col-span-6">
-    <h1 class="text-2xl font-bold">{title}</h1>
-    <div class="flex flex-wrap gap-1 text-gray-600 mt-2 items-center text-xs sm:text-base  leading-relaxed">
+    <h1 class="text-xl sm:text-2xl font-bold">{title}</h1>
+    <div class="flex flex-wrap gap-1 text-gray-600 mt-2 items-center  text-[10px] sm:text-base  leading-relaxed">
 
         <!-- Location -->
         <div class="flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                 class="text-gray-500">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/>
-                <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              aria-hidden="true"
+              class="w-4 h-4 flex-shrink-0"
+              fill="currentColor"
+            >
+                <path d="M255.104,512.171l-14.871-12.747C219.732,482.258,40.725,327.661,40.725,214.577c0-118.398,95.981-214.379,214.379-214.379s214.379,95.981,214.379,214.379c0,113.085-179.007,267.682-199.423,284.932L255.104,512.171z M255.104,46.553c-92.753,0.105-167.918,75.27-168.023,168.023c0,71.042,110.132,184.53,168.023,236.473c57.892-51.964,168.023-165.517,168.023-236.473C423.022,121.823,347.858,46.659,255.104,46.553z M255.104,299.555c-46.932,0-84.978-38.046-84.978-84.978s38.046-84.978,84.978-84.978s84.978,38.046,84.978,84.978S302.037,299.555,255.104,299.555z M255.104,172.087c-23.466,0-42.489,19.023-42.489,42.489s19.023,42.489,42.489,42.489s42.489-19.023,42.489-42.489S278.571,172.087,255.104,172.087z"/>
             </svg>
-            <span>{location}</span>
+            <span class="inline-block align-middle leading-none">{location}</span>
         </div>
 
         <!-- Divider (hidden on mobile to reduce clutter) -->
@@ -23,51 +25,78 @@ const {title, location, guests, bathrooms, beds, bedrooms, description} = Astro.
 
         <!-- Guests -->
         <div class="flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                 class="text-gray-500">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/>
-                <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
-            </svg>
-            <span>{guests} {guests === 1 ? 'guest' : 'guests'}</span>
+            {guests === 1 ?
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="currentColor"
+                class="w-4 h-4"
+              >
+                  <path d="M21,24H19V18.957A2.96,2.96,0,0,0,16.043,16H7.957A2.96,2.96,0,0,0,5,18.957V24H3V18.957A4.963,4.963,0,0,1,7.957,14h8.086A4.963,4.963,0,0,1,21,18.957ZM12,12a6,6,0,1,1,6-6A6.006,6.006,0,0,1,12,12ZM12,2a4,4,0,1,0,4,4A4,4,0,0,0,12,2Z"/>
+              </svg>
+              :
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="currentColor"
+                class="w-4 h-4"
+              >
+                  <path d="m7.5 13a4.5 4.5 0 1 1 4.5-4.5 4.505 4.505 0 0 1-4.5 4.5zm0-7a2.5 2.5 0 1 0 2.5 2.5 2.5 2.5 0 0 0-2.5-2.5zm7.5 14a5.006 5.006 0 0 0-5-5h-5a5.006 5.006 0 0 0-5 5v4h2v-4a3 3 0 0 1 3-3h5a3 3 0 0 1 3 3v4h2zm2.5-11a4.5 4.5 0 1 1 4.5-4.5 4.505 4.505 0 0 1-4.5 4.5zm0-7a2.5 2.5 0 1 0 2.5 2.5 2.5 2.5 0 0 0-2.5-2.5zm6.5 14a5.006 5.006 0 0 0-5-5h-4v2h4a3 3 0 0 1 3 3v4h2z"/>
+              </svg>
+            }
+            <span class="inline-block align-middle leading-none">{guests} {guests === 1 ? 'guest' : 'guests'}</span>
         </div>
 
         <span class="sm:inline text-gray-400">·</span>
 
-        <!-- Bathrooms -->
+        <!-- Bedrooms -->
         <div class="flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                 class="text-gray-500">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M4 12h16a1 1 0 0 1 1 1v3a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-3a1 1 0 0 1 1 -1z"/>
-                <path d="M6 12v-7a2 2 0 0 1 2 -2h3v2.25"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              class="w-4 h-4 flex-shrink-0"
+              fill="currentColor"
+            >
+                <path d="M20,22V3c0-1.654-1.346-3-3-3H7c-1.654,0-3,1.346-3,3V22H0v2H24v-2h-4ZM6,3c0-.551,.448-1,1-1h10c.552,0,1,.449,1,1V22H6V3Zm10,9c0,.828-.672,1.5-1.5,1.5s-1.5-.672-1.5-1.5,.672-1.5,1.5-1.5,1.5,.672,1.5,1.5Z"/>
             </svg>
-            <span>{bathrooms} {bathrooms === 1 ? 'bathroom' : 'bathrooms'}</span>
+            <span>{bedrooms} {bedrooms === 1 ? 'bedroom' : 'bedrooms'} {}</span>
         </div>
 
         <div class="sm:inline text-gray-400 gap-0">·</div>
 
-        <!-- Bedrooms -->
+        <!-- Bathrooms -->
         <div class="flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-door"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 12v.01" /><path d="M3 21h18" /><path d="M6 21v-16a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v16" /></svg>
-            <span>{bedrooms} {bedrooms === 1 ? 'bedroom' : 'bedrooms'} {}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              fill="currentColor"
+              class="w-4 h-4"
+            >
+                <path d="m23.495,15.873l.483-3.873H2v-7.667c0-1.286,1.047-2.333,2.333-2.333.73,0,1.429.349,1.867.933l.259.345-.574,3.29,1.071,1.67,5.777-4.333-1.071-1.67-3.607-.161-.256-.342c-.814-1.085-2.11-1.732-3.467-1.732C1.943,0,0,1.943,0,4.333v7.667l.519,3.873c.256,2.048,1.264,3.841,2.726,5.117l-.744,3.01h2.061l.452-1.832c1.085.533,2.301.832,3.578.832h6.831c1.273,0,2.485-.296,3.567-.826l.451,1.826h2.061l-.742-3.001c1.467-1.276,2.48-3.073,2.737-5.126Zm-14.904,5.127c-3.088,0-5.705-2.311-6.088-5.375l-.203-1.625h19.413l-.202,1.625c-.384,3.064-3.001,5.375-6.089,5.375h-6.831Z"/>
+            </svg>
+            <span class="inline-block align-middle leading-none">{bathrooms} {bathrooms === 1 ? 'bathroom' : 'bathrooms'}</span>
         </div>
-
 
         <div class="sm:inline text-gray-400 gap-0">·</div>
 
         <!-- Beds -->
         <div class="flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                 class="text-gray-500">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M7 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
-                <path d="M22 17v-3h-20"/>
-                <path d="M2 8v9"/>
-                <path d="M12 14h10v-2a3 3 0 0 0 -3 -3h-7v5z"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              fill="currentColor"
+              class="w-4 h-4"
+            >
+                <path d="m21,11H2V2H0v20h2v-3h20v3h2v-8c0-1.654-1.346-3-3-3ZM2,17v-4h19c.552,0,1,.449,1,1v3H2Z"/>
             </svg>
             <span>{beds} {beds === 1 ? 'bed' : 'beds'}</span>
         </div>

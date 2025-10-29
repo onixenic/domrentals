@@ -1,3 +1,6 @@
+---
+import { SITE_CONFIG } from "../../config/constantsConfig";
+---
 <dialog id="cookie_modal" class="modal">
     <div class="modal-box w-full max-w-2xl max-h-screen overflow-y-auto">
         <form method="dialog">
@@ -5,7 +8,7 @@
         </form>
 
         <h3 class="font-bold text-xl mb-2">Cookie Policy & Terms</h3>
-        <p class="text-sm"><strong>Last Updated:</strong> October 2025</p>
+        <p class="text-sm"><strong>Last Updated:</strong> {SITE_CONFIG.LAST_UPDATED}</p>
 
         <div class="space-y-4 text-sm mt-4">
             <p>
@@ -19,7 +22,7 @@
             </ul>
 
             <p>
-                <strong>Cookie Retention Period:</strong> Your cookie consent is stored for up to 12 months. After this period, consent will expire, and you will be prompted again.
+                <strong>Cookie Retention Period:</strong> Your cookie consent is stored for up to {SITE_CONFIG.COOKIE_RETENTION_MONTH} months. After this period, consent will expire, and you will be prompted again.
             </p>
 
             <p>

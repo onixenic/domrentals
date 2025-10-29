@@ -1,16 +1,18 @@
 ---
 import Flaticon from "./Footer/Flaticon.astro";
+import PhotoCredits from "./Footer/PhotoCredits.astro";
 import Privacy from "./Footer/Privacy.astro";
 import CookieFooter from "./Footer/CookieFooter.astro";
 import Terms from "./Footer/Terms.astro";
 import Company from "./Footer/Company.astro";
+import { SITE_CONFIG } from "../config/constantsConfig";
 
 ---
 
-<footer class="footer bg-base-200 text-base-content p-6 text-center">
+<footer class="footer bg-white text-base-content p-6 text-center">
 
     <div class="flex justify-center space-x-4 mt-2 text-xs text-gray-500">
-        <p>© 2025 Domrentals</p>
+        <p>© 2025 {SITE_CONFIG.PAGE_TITLE}</p>
         <span class="text-gray-400">|</span>
         <button
                 class="hover:underline cursor-pointer"
@@ -46,6 +48,13 @@ import Company from "./Footer/Company.astro";
         >
             Icon Credits
         </button>
+        <span class="text-gray-400">|</span>
+        <button
+          class="hover:underline cursor-pointer"
+          onclick="photo_credits_modal.showModal()"
+        >
+            Photos Credits
+        </button>
     </div>
 </footer>
 
@@ -54,6 +63,7 @@ import Company from "./Footer/Company.astro";
 <Terms />
 <Company />
 <Flaticon />
+<PhotoCredits />
 
 
 

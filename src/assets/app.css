@@ -2,6 +2,53 @@
 
 @plugin "daisyui";
 
+@plugin "daisyui/theme" {
+    name: "mytheme";
+    default: true;
+    prefersdark: false;
+    color-scheme: light;
+
+    --color-base-100: #ffffff; /* clean white background */
+    --color-base-200: #f7f7f7;
+    --color-base-300: #ededed;
+    --color-base-content: #1a1a1a;
+
+    /* Primary green */
+    --color-primary: #2ECC71;
+    --color-primary-content: #ffffff;
+
+    /* Secondary orange (for phone maybe) */
+    --color-secondary: #F39C12;
+    --color-secondary-content: #ffffff;
+
+    /* Accent purple */
+    --color-accent: #8E44AD;
+    --color-accent-content: #ffffff;
+
+    --color-neutral: #f4f4f5;
+    --color-neutral-content: #111;
+
+    --color-info: #3498db;
+    --color-info-content: #fff;
+
+    --color-success: #2ecc71;
+    --color-success-content: #fff;
+
+    --color-warning: #f1c40f;
+    --color-warning-content: #111;
+
+    --color-error: #e74c3c;
+    --color-error-content: #fff;
+
+    --radius-selector: 1rem;
+    --radius-field: 0.25rem;
+    --radius-box: 0.5rem;
+
+    --border: 1px;
+    --depth: 1;
+    --noise: 0;
+}
+
 html {
     scrollbar-gutter: auto !important;
 }
@@ -11,12 +58,8 @@ body {
 }
 
 .content-auto-section {
-    /* 1. The main performance booster */
     content-visibility: auto;
-
-    /* 2. CRITICAL for smooth scrolling - sets an estimated height */
-    /* Adjust '1000px' to the average height of one of your category sections */
-    contain-intrinsic-size: 0 2000px; /* width height */
+    contain-intrinsic-size: 0 2000px;
 }
 
 #gallery_modal_box {
@@ -24,3 +67,18 @@ body {
     will-change: scroll-position;
 }
 
+
+/* Hide google translate */
+/*iframe.skiptranslate {*/
+/*    display: none !important;*/
+/*}*/
+
+/*body > .goog-te-banner-frame.skiptranslate {*/
+/*    display: none !important;*/
+/*}*/
+
+/*body {*/
+/*    top: 0 !important;*/
+/*    margin-top: 0 !important;*/
+/*    position: static !important;*/
+/*}*/
