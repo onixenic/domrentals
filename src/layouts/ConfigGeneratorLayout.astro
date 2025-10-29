@@ -94,11 +94,11 @@ let propertyPsw = "test";
                 <span class="text-sm font-medium text-gray-700 mb-1">Host Type</span>
                 <div class="flex gap-4 mt-1">
                     <label class="flex items-center gap-2">
-                        <input type="radio" name="hostType" value="company" class="radio" required"/>
+                        <input type="radio" name="hostType" value="company" class="radio" required/>
                         Company
                     </label>
                     <label class="flex items-center gap-2">
-                        <input type="radio" name="hostType" value="individual" class="radio" required"/>
+                        <input type="radio" name="hostType" value="individual" class="radio" required/>
                         Individual
                     </label>
                 </div>
@@ -130,8 +130,8 @@ let propertyPsw = "test";
                            placeholder="Ex. Jane Smith"/>
                 </div>
                 <div class="flex flex-col">
-                    <label class="text-sm font-medium text-gray-700 mb-1" for="companyName">Company Name</label>
-                    <input type="text" id="hostEmail" name="companyName" class="input w-full mt-1"
+                    <label class="text-sm font-medium text-gray-700 mb-1" for="companyEmail">Company Email</label>
+                    <input type="email" id="companyEmail" name="hostEmail" class="input w-full mt-1"
                            placeholder="Ex. info@example.com"/>
                 </div>
             </div>
@@ -157,8 +157,8 @@ let propertyPsw = "test";
                            placeholder="Ex. 12345678901"/>
                 </div>
                 <div class="flex flex-col">
-                    <label class="text-sm font-medium text-gray-700 mb-1" for="companyName">Company Email</label>
-                    <input type="text" id="hostEmail" name="companyName" class="input w-full mt-1"
+                    <label class="text-sm font-medium text-gray-700 mb-1" for="individualEmail">Email</label>
+                    <input type="email" id="individualEmail" name="hostEmail" class="input w-full mt-1"
                            placeholder="Ex. info@example.com"/>
                 </div>
             </div>
@@ -234,7 +234,7 @@ let propertyPsw = "test";
                         <!-- Tooltip -->
                         <span id="tooltip"
                               class="absolute left-0 -top-14 w-64 p-2 text-xs text-white bg-gray-800 rounded shadow-lg opacity-0 pointer-events-none transition-opacity duration-200">
-                            We’ll create a section for your guests with instructions on how to reach the apartment by car or public transport.
+                            We'll create a section for your guests with instructions on how to reach the apartment by car or public transport.
                         </span>
                     </label>
                 </div>
@@ -329,46 +329,6 @@ let propertyPsw = "test";
 
 
                 <div id="bb-rooms-container" class="space-y-4"></div>
-
-                <div id="bb-room-template" class="border border-gray-200 rounded relative hidden">
-
-                    <div class="grid md:grid-cols-5 gap-4 p-4">
-                        <label class="block">
-                            <span class="text-sm font-medium text-gray-700">Room Name</span>
-                            <input type="text" name="bb_rooms[__INDEX__][name]" class="input mt-1"
-                                   placeholder="Ex. Sea View Room"/>
-                        </label>
-
-                        <label class="block">
-                            <span class="text-sm font-medium text-gray-700">Guests</span>
-                            <input type="number" name="bb_rooms[__INDEX__][guests]" class="input mt-1" min="1"/>
-                        </label>
-
-                        <label class="block">
-                            <span class="text-sm font-medium text-gray-700">Beds</span>
-                            <input type="number" name="bb_rooms[__INDEX__][beds]" class="input mt-1" min="1"/>
-                        </label>
-
-                        <label class="block">
-                            <span class="text-sm font-medium text-gray-700">Bathrooms</span>
-                            <input type="number" name="bb_rooms[__INDEX__][bathrooms]" class="input mt-1" min="1"/>
-                        </label>
-
-                        <label class="flex items-center gap-2 mt-6 md:mt-5">
-                            <input type="checkbox" name="bb_rooms[__INDEX__][privateBathroom]" class="checkbox"/>
-                            <span>Private Bathroom</span>
-                        </label>
-                    </div>
-                    <div class="md:col-span-1 p-5 flex md:justify-end md:items-start">
-                        <button
-                                type="button"
-                                class="delete-room-btn bg-red-500 text-white font-bold rounded w-full md:w-10 h-10 flex items-center justify-center"
-                        >
-                            X
-                        </button>
-                    </div>
-                </div>
-
 
                 <!-- Breakfast Section (existing) -->
                 <fieldset class="block mt-4">
@@ -589,6 +549,104 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     </form>
 </main>
 
+<!-- HIDDEN TEMPLATES -->
+<!-- Room Template -->
+<template id="bb-room-template">
+    <div class="border border-gray-200 rounded relative">
+        <div class="grid md:grid-cols-5 gap-4 p-4">
+            <label class="block">
+                <span class="text-sm font-medium text-gray-700">Room Name</span>
+                <input type="text" name="bb_rooms[__INDEX__][name]" class="input mt-1"
+                       placeholder="Ex. Sea View Room"/>
+            </label>
+
+            <label class="block">
+                <span class="text-sm font-medium text-gray-700">Guests</span>
+                <input type="number" name="bb_rooms[__INDEX__][guests]" class="input mt-1" min="1"/>
+            </label>
+
+            <label class="block">
+                <span class="text-sm font-medium text-gray-700">Beds</span>
+                <input type="number" name="bb_rooms[__INDEX__][beds]" class="input mt-1" min="1"/>
+            </label>
+
+            <label class="block">
+                <span class="text-sm font-medium text-gray-700">Bathrooms</span>
+                <input type="number" name="bb_rooms[__INDEX__][bathrooms]" class="input mt-1" min="1"/>
+            </label>
+
+            <label class="flex items-center gap-2 mt-6 md:mt-5">
+                <input type="checkbox" name="bb_rooms[__INDEX__][privateBathroom]" class="checkbox"/>
+                <span>Private Bathroom</span>
+            </label>
+        </div>
+        <div class="md:col-span-1 p-5 flex md:justify-end md:items-start">
+            <button
+                    type="button"
+                    class="delete-room-btn bg-red-500 text-white font-bold rounded w-full md:w-10 h-10 flex items-center justify-center"
+            >
+                X
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Pricing Templates -->
+<template id="pricing-fixed-template">
+    <div class="mt-4 pricing-section" data-pricing-type="fixed">
+        <h4 class="text-md font-semibold text-gray-800 mb-2">Fixed Price</h4>
+        <div class="flex gap-4 items-center">
+            <div class="flex-1">
+                <input
+                        type="number"
+                        name="pricing[fixedPrice]"
+                        data-room-index="__INDEX__"
+                        class="input mt-1 w-full fixed-price-input"
+                        placeholder="e.g., 120"
+                />
+            </div>
+            <div class="w-32">
+                <select name="pricing[currency]" data-room-index="__INDEX__" class="input mt-1 w-full currency-select">
+                  {sortedCurrencies.map(curr => (
+                          <option value={curr.code}>{curr.code} – {curr.symbol}</option>
+                  ))}
+                </select>
+            </div>
+        </div>
+        <p class="text-gray-600 text-sm mt-2">Price per night by default.</p>
+    </div>
+</template>
+
+<template id="pricing-extra-guest-template">
+    <div class="mt-4 pricing-section" data-pricing-type="extra-guest">
+        <h4 class="text-md font-semibold text-gray-800 mb-2">Extra Fee per Guest</h4>
+        <p class="text-gray-600 text-sm mb-2">
+            Charge extra guests <strong>per night</strong> or <strong>per stay</strong>.
+        </p>
+        <div class="grid md:grid-cols-2 gap-4 items-end">
+            <label class="block">
+                <span class="text-sm font-medium text-gray-700">Extra per guest (€)</span>
+                <input
+                        type="number"
+                        name="pricing[extraPerGuest]"
+                        data-room-index="__INDEX__"
+                        class="input mt-1 extra-guest-input"
+                        placeholder="e.g., 20"
+                        min="0"
+                        step="0.5"
+                />
+            </label>
+            <label class="block">
+                <span class="text-sm font-medium text-gray-700">Charge Type</span>
+                <select name="pricing[extraPerGuestType]" data-room-index="__INDEX__" class="input mt-1 extra-guest-type-select">
+                    <option value="perNight">Per night</option>
+                    <option value="perStay">Per stay</option>
+                </select>
+            </label>
+        </div>
+    </div>
+</template>
+
 <!-- ✅ JS toggle logic -->
 <script>
 
@@ -606,9 +664,19 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     const form = document.getElementById("config-form");
     const formData = new FormData(form);
 
+    // Debug: log all form data
+    console.log("=== FORM DATA DEBUG ===");
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+    console.log("======================");
+
     // Determine property type
     const propertyType = formData.get("type");
     const pricingType = formData.get("pricingType");
+
+    console.log("Property Type:", propertyType);
+    console.log("Pricing Type:", pricingType);
 
     // Common fields
     const baseConfig = {};
@@ -635,13 +703,17 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
       let currency = null;
 
       if (pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") {
-        price = Number(formData.get("pricing[fixedPrice]")) || null;
-        currency = formData.get("pricing[currency]") || null;
+        const priceValue = formData.get("pricing[fixedPrice]");
+        const currencyValue = formData.get("pricing[currency]");
+        price = priceValue ? Number(priceValue) : null;
+        currency = currencyValue || null;
       }
 
       if (pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") {
-        extraPerGuest = Number(formData.get("pricing[extraPerGuest]")) || null;
-        guestCostBasis = formData.get("pricing[extraPerGuestType]") || null;
+        const extraValue = formData.get("pricing[extraPerGuest]");
+        const basisValue = formData.get("pricing[extraPerGuestType]");
+        extraPerGuest = extraValue ? Number(extraValue) : null;
+        guestCostBasis = basisValue || null;
       }
 
       if (pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") {
@@ -699,7 +771,7 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
       const roomDetails = [];
       const roomPricing = {};
 
-      Array.from(roomsContainer.children).forEach((roomDiv) => {
+      Array.from(roomsContainer.children).forEach((roomDiv, roomIndex) => {
         const roomData = {};
         roomDiv.querySelectorAll("input, select").forEach((input) => {
           const name = input.name.match(/\[([^\]]+)\]$/)?.[1];
@@ -709,8 +781,10 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
             input.type === "checkbox" ? input.checked : input.value;
         });
 
+        const roomName = roomData.name || `Room ${roomIndex + 1}`;
+
         roomDetails.push({
-          roomName: roomData.name,
+          roomName: roomName,
           guests: Number(roomData.guests),
           beds: Number(roomData.beds),
           bathrooms: Number(roomData.bathrooms),
@@ -867,7 +941,9 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     const roomPricingContent = document.getElementById("room-pricing-content");
     const typeRadios = document.querySelectorAll('input[name="type"]');
     const bbRoomsContainer = document.getElementById("bb-rooms-container");
-    const addRoomBtn = document.getElementById("add-room-btn");
+
+    const fixedPricingTemplate = document.getElementById("pricing-fixed-template");
+    const extraGuestTemplate = document.getElementById("pricing-extra-guest-template");
 
     let currentRoomTab = 0;
     let propertyType = "apartment";
@@ -881,73 +957,43 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
       });
     });
 
-    // Generate pricing form HTML
-    function generatePricingForm(pricingType, roomIndex = null) {
-      const prefix = roomIndex !== null ? `room_${roomIndex}_` : "";
-      const namePrefix = roomIndex !== null ? `pricing[${roomIndex}]` : "pricing";
+    // Clone and populate pricing template
+    function clonePricingTemplate(template, roomIndex = null) {
+      const clone = template.content.cloneNode(true);
 
-      let html = '';
+      // Update name attributes based on whether it's for a room or apartment
+      clone.querySelectorAll('[name]').forEach(el => {
+        if (roomIndex !== null) {
+          // For B&B rooms: pricing[0][fixedPrice], pricing[0][currency], etc.
+          const baseName = el.name; // e.g., "pricing[fixedPrice]"
+          el.name = baseName.replace('pricing[', `pricing[${roomIndex}][`);
+        }
+        // For apartments, keep as is: pricing[fixedPrice], pricing[currency], etc.
+      });
 
+      return clone;
+    }
+
+    // Update pricing content based on selected type
+    function updatePricingContent(container, pricingType, roomIndex = null) {
+      container.innerHTML = '';
+
+      if (pricingType === "contactHost" || pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") {
+        // No pricing fields needed for these types (or handled separately for dynamic)
+        return;
+      }
+
+      // Add fixed price section if needed
       if (pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") {
-        html += `
-                <div class="mt-4">
-                    <h4 class="text-md font-semibold text-gray-800 mb-2">Fixed Price</h4>
-                    <div class="flex gap-4 items-center">
-                        <div class="flex-1">
-                            <input
-                                type="number"
-                                name="${namePrefix}[fixedPrice]"
-                                id="${prefix}fixedPrice"
-                                class="input mt-1 w-full"
-                                placeholder="e.g., 120"
-                            />
-                        </div>
-                        <div class="w-32">
-                            <select name="${namePrefix}[currency]" id="${prefix}currency" class="input mt-1 w-full">
-                                <option value="EUR">EUR – €</option>
-                                <option value="USD">USD – $</option>
-                                <option value="GBP">GBP – £</option>
-                            </select>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 text-sm mt-2">Price per night by default.</p>
-                </div>
-            `;
+        const fixedClone = clonePricingTemplate(fixedPricingTemplate, roomIndex);
+        container.appendChild(fixedClone);
       }
 
+      // Add extra guest section if needed
       if (pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") {
-        html += `
-                <div class="mt-4">
-                    <h4 class="text-md font-semibold text-gray-800 mb-2">Extra Fee per Guest</h4>
-                    <p class="text-gray-600 text-sm mb-2">
-                        Charge extra guests <strong>per night</strong> or <strong>per stay</strong>.
-                    </p>
-                    <div class="grid md:grid-cols-2 gap-4 items-end">
-                        <label class="block">
-                            <span class="text-sm font-medium text-gray-700">Extra per guest (€)</span>
-                            <input
-                                type="number"
-                                name="${namePrefix}[extraPerGuest]"
-                                id="${prefix}extraPerGuest"
-                                class="input mt-1"
-                                placeholder="e.g., 20"
-                                min="0"
-                                step="0.5"
-                            />
-                        </label>
-                        <label class="block">
-                            <span class="text-sm font-medium text-gray-700">Charge Type</span>
-                            <select name="${namePrefix}[extraPerGuestType]" id="${prefix}extraPerGuestType" class="input mt-1">
-                                <option value="perNight">Per night</option>
-                                <option value="perStay">Per stay</option>
-                            </select>
-                        </label>
-                    </div>
-                </div>
-            `;
+        const extraClone = clonePricingTemplate(extraGuestTemplate, roomIndex);
+        container.appendChild(extraClone);
       }
-
-      return html;
     }
 
     // Update B&B room tabs
@@ -966,33 +1012,59 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
         tab.addEventListener('click', () => {
           currentRoomTab = index;
           updateRoomTabs();
-          updateRoomPricingContent();
+          showRoomPricing(index);
         });
 
         roomTabsContainer.appendChild(tab);
       });
     }
 
-    // Update room pricing content
+    // Update room pricing content - creates fields for all rooms, shows only current
     function updateRoomPricingContent() {
       const selectedPricing = document.querySelector('input[name="pricingType"]:checked')?.value;
+      const rooms = bbRoomsContainer.children;
+
+      // Clear and rebuild all room pricing sections
+      roomPricingContent.innerHTML = '';
+
       if (selectedPricing === "contactHost" || selectedPricing === "dynamicDates") {
-        roomPricingContent.innerHTML = '';
         return;
       }
 
-      roomPricingContent.innerHTML = generatePricingForm(selectedPricing, currentRoomTab);
+      // Create pricing section for each room
+      Array.from(rooms).forEach((room, index) => {
+        const roomPricingSection = document.createElement('div');
+        roomPricingSection.className = 'room-pricing-section';
+        roomPricingSection.dataset.roomIndex = index;
+        roomPricingSection.style.display = index === currentRoomTab ? 'block' : 'none';
+
+        // Add fixed price section if needed
+        if (selectedPricing === "fixedAllYear" || selectedPricing === "fixedExtraGuests") {
+          const fixedClone = clonePricingTemplate(fixedPricingTemplate, index);
+          roomPricingSection.appendChild(fixedClone);
+        }
+
+        // Add extra guest section if needed
+        if (selectedPricing === "fixedExtraGuests" || selectedPricing === "dynamicDatesExtraGuests") {
+          const extraClone = clonePricingTemplate(extraGuestTemplate, index);
+          roomPricingSection.appendChild(extraClone);
+        }
+
+        roomPricingContent.appendChild(roomPricingSection);
+      });
+    }
+
+    // Show pricing for selected room tab
+    function showRoomPricing(roomIndex) {
+      roomPricingContent.querySelectorAll('.room-pricing-section').forEach((section, index) => {
+        section.style.display = index === roomIndex ? 'block' : 'none';
+      });
     }
 
     // Update apartment pricing content
     function updateApartmentPricingContent() {
       const selectedPricing = document.querySelector('input[name="pricingType"]:checked')?.value;
-      if (selectedPricing === "contactHost" || selectedPricing === "dynamicDates") {
-        apartmentPricingContent.innerHTML = '';
-        return;
-      }
-
-      apartmentPricingContent.innerHTML = generatePricingForm(selectedPricing);
+      updatePricingContent(apartmentPricingContent, selectedPricing);
     }
 
     // Main update function
@@ -1009,7 +1081,7 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
       // Show appropriate pricing section
       if (propertyType === "bb") {
         const hasRooms = bbRoomsContainer.children.length > 0;
-        if (hasRooms && selectedPricing !== "contactHost" && selectedPricing !== "dynamicDates") {
+        if (hasRooms && selectedPricing !== "contactHost") {
           bbPricingTabs.classList.remove("hidden");
           apartmentPricingContent.classList.add("hidden");
           updateRoomTabs();
@@ -1086,11 +1158,14 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     // Add room
     addRoomBtn.addEventListener("click", () => {
       roomCount++;
-      const newRoom = roomTemplate.cloneNode(true);
-      newRoom.id = ""; // remove duplicate ID
-      newRoom.classList.remove("hidden");
-      newRoom.innerHTML = newRoom.innerHTML.replace(/__INDEX__/g, roomCount);
+      const clone = roomTemplate.content.cloneNode(true);
 
+      // Update all __INDEX__ placeholders in the cloned content
+      const wrapper = document.createElement('div');
+      wrapper.appendChild(clone);
+      wrapper.innerHTML = wrapper.innerHTML.replace(/__INDEX__/g, roomCount);
+
+      const newRoom = wrapper.firstElementChild;
       bbRoomsContainer.appendChild(newRoom);
       updateRoomsCount();
 
