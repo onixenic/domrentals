@@ -91,7 +91,7 @@ This exceptional setting perfectly combines vibrant urban energy with the tranqu
     { from: "2025-10-26", to: "2025-10-31", price: 120 },
   ],
   extraPerGuest: 20,
-  guestCostBasis: 'perStay',
+  guestCostBasis: 'perNight',
   currency: "€",
   checkIn: "After 2PM",
   checkOut: "Before 11AM",

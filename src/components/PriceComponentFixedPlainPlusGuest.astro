@@ -1,5 +1,6 @@
 ---
 import ContactUsPriceComponent from "./ContactUsPriceComponent.astro";
+import CheckInCheckOut from "./CheckInCheckOut.astro";
 interface Props {
   propertyId: string;
   price: number;
@@ -11,6 +12,7 @@ interface Props {
   whatsAppNumber: string;
   guests: number;
   extraPerGuest?: number;
+  guestCostBasis: string;
 }
 
 const {
@@ -23,71 +25,219 @@ const {
   phoneNumber,
   whatsAppNumber,
   guests,
-  extraPerGuest
+  extraPerGuest,
+  guestCostBasis
 } = Astro.props;
 ---
 
 <div
+        id="preview-price-component-fixed-plain-plus-guest"
         class="card bg-base-100 shadow-xl border border-base-300"
-        client:load
+        data-property-id={propertyId}
         data-price={price}
+        data-guests={guests}
         data-extra-per-guest={extraPerGuest}
+        data-guest-cost-basis={guestCostBasis}
         data-currency={currency}
+        data-check-in={checkIn}
+        data-check-out={checkOut}
+        data-email={email}
+        data-phone-number={phoneNumber}
+        data-whats-app-number={whatsAppNumber}
 >
-    <script type="text/javascript">
-      const card = document.currentScript.parentElement;
-      const base = Number(card.dataset.price);
-      const extra = Number(card.dataset.extraPerGuest);
-      const currency = card.dataset.currency;
-
-      let selectedGuests = 1;
-
-      // Initialize price
-      document.getElementById("price-text").innerText = base + currency;
-
-      function updatePrice(event) {
-        selectedGuests = Number(event.target.value);
-        document.getElementById("price-text").innerText = base + (selectedGuests - 1) * extra + currency;
-      }
-    </script>
-
     <div class="card-body">
         <!-- Price Header -->
         <div class="flex items-baseline gap-1">
-            <span id="price-text" class="text-3xl font-bold">{price + currency}</span>
+            <span id="price-text" class="text-3xl font-bold">{price}</span>
+            <span class="text-3xl font-bold">{currency}</span>
             <span class="text-base text-gray-500">/ night*</span>
         </div>
 
-        <div class="divider my-1"></div>
+        <!-- Extra charge notice for perStay -->
+        <div id="extra-charge-notice"></div>
 
         <!-- Guest Selector -->
-        <div>
-            <label class="block text-sm font-semibold mb-1" for="guests">Guests</label>
-            <select id="guests" class="border p-2 rounded w-full text-left" onChange="updatePrice(event)">
-              {Array.from({length: guests}, (_, i) => (
-                      <option value={i + 1}>{i + 1}</option>
-              ))}
-            </select>
-        </div>
+        <div id="guest-selector-container"></div>
 
-        <!-- Check-in/out Info -->
         <div class="divider my-1"></div>
-        <div class="space-y-3">
-            <div class="flex justify-between text-sm">
-                <span class="font-semibold">Check-in</span>
-                <span class="text-gray-600">{checkIn}</span>
-            </div>
-            <div class="flex justify-between text-sm">
-                <span class="font-semibold">Check-out</span>
-                <span class="text-gray-600">{checkOut}</span>
-            </div>
+
+        <!-- Check-in/Check-out -->
+        <div id="check-in-out-container">
+            <CheckInCheckOut checkIn={checkIn} checkOut={checkOut}/>
         </div>
 
         <div class="divider my-1"></div>
         <h3 class="text-xl font-semibold mb-1">Contact your host</h3>
-        <ContactUsPriceComponent propertyId={propertyId} email={email} phoneNumber={phoneNumber}
-                                 whatsAppNumber={whatsAppNumber}/>
+        <div id="contact-container">
+            <ContactUsPriceComponent propertyId={propertyId} email={email} phoneNumber={phoneNumber}
+                                     whatsAppNumber={whatsAppNumber}/>
+        </div>
+
         <!-- Price confirmation notice -->
         <p class="text-xs text-gray-500 my-1">*Price must be confirmed by the host</p>
     </div>
 </div>
+
+<script type="text/javascript">
+  (function () {
+    const card = document.getElementById("preview-price-component-fixed-plain-plus-guest");
+
+    let state = {
+      base: Number(card.dataset.price),
+      extra: Number(card.dataset.extraPerGuest),
+      currency: card.dataset.currency,
+      guestCostBasis: card.dataset.guestCostBasis,
+      guests: Number(card.dataset.guests),
+      checkIn: card.dataset.checkIn,
+      checkOut: card.dataset.checkOut,
+      email: card.dataset.email,
+      phoneNumber: card.dataset.phoneNumber,
+      whatsAppNumber: card.dataset.whatsAppNumber,
+      propertyId: card.dataset.propertyId,
+      selectedGuests: 1
+    };
+
+    const priceTextElement = card.querySelector("#price-text");
+    const extraChargeNotice = card.querySelector("#extra-charge-notice");
+    const guestSelectorContainer = card.querySelector("#guest-selector-container");
+    const previewCheckIn = card.querySelectorAll(".preview-checkIn");
+    const previewCheckOut = card.querySelectorAll(".preview-checkOut");
+    const previewEmail = card.querySelectorAll(".preview-email");
+    const previewEmailValue = card.querySelectorAll(".preview-email-value");
+    const previewPhone = card.querySelectorAll(".preview-phone");
+    const previewPhoneValue = card.querySelectorAll(".preview-phone-value");
+    const previewWhatsApp = card.querySelectorAll(".preview-whatsapp-link");
+
+    // Get currency span for dynamic updates
+    const currencySpan = card.querySelector(".text-3xl.font-bold:nth-of-type(2)");
+
+    function updateDisplayedPrice() {
+      let total = state.base;
+
+      if (state.guestCostBasis === "perNight") {
+        total = state.base + (state.selectedGuests) * state.extra;
+      }
+
+      priceTextElement.innerText = total.toFixed(2);
+      if (currencySpan) {
+        currencySpan.innerText = state.currency;
+      }
+    }
+
+    function renderGuestSelector() {
+      if (state.guestCostBasis === "perNight") {
+        guestSelectorContainer.innerHTML = `
+                <div class="divider my-1"></div>
+                <label class="block text-sm font-semibold mb-1" for="guestsSelector">Guests</label>
+                <select id="guestsSelector" class="border p-2 rounded w-full text-left">
+                    ${Array.from({length: state.guests}, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+                </select>
+            `;
+        const guestSelect = guestSelectorContainer.querySelector("#guestsSelector");
+        guestSelect.addEventListener("change", (e) => {
+          state.selectedGuests = Number(e.target.value);
+          updateDisplayedPrice();
+        });
+      } else {
+        guestSelectorContainer.innerHTML = "";
+        state.selectedGuests = 1;
+      }
+    }
+
+    function renderExtraChargeNotice() {
+      if (state.guestCostBasis === "perStay" && state.extra) {
+        extraChargeNotice.innerHTML = `
+                <p class="text-xs text-gray-500 mt-1">* An extra charge of ${state.extra}${state.currency} will be added per person per day</p>
+            `;
+      } else {
+        extraChargeNotice.innerHTML = "";
+      }
+    }
+
+    function renderCheckInOut() {
+      previewCheckIn.forEach(el => el.textContent = state.checkIn);
+      previewCheckOut.forEach(el => el.textContent = state.checkOut);
+    }
+
+    function renderContactInfo() {
+      previewEmailValue.forEach(el => el.textContent = state.email);
+      previewPhoneValue.forEach(el => el.textContent = state.phoneNumber);
+      previewEmail.forEach(el => el.href = `mailto:${state.email}`);
+      previewPhone.forEach(el => el.href = `tel:${state.phoneNumber}`);
+      previewWhatsApp.forEach(el => el.href = `https://wa.me/${state.phoneNumber.replace(/^\+/, '00')}`);
+    }
+
+    function render() {
+      updateDisplayedPrice();
+      renderGuestSelector();
+      renderExtraChargeNotice();
+    }
+
+    render();
+
+
+    const observer = new MutationObserver((mutations) => {
+      let shouldUpdate = false;
+
+      mutations.forEach((mutation) => {
+        const attrName = mutation.attributeName;
+        const newValue = card.getAttribute(attrName);
+
+        if (attrName === "data-price") {
+          state.base = Number(newValue);
+          shouldUpdate = true;
+        } else if (attrName === "data-extra-per-guest") {
+          state.extra = Number(newValue);
+          shouldUpdate = true;
+        } else if (attrName === "data-currency") {
+          state.currency = newValue;
+          shouldUpdate = true;
+        } else if (attrName === "data-guests") {
+          state.guests = Number(newValue);
+          state.selectedGuests = 1;
+          shouldUpdate = true;
+        } else if (attrName === "data-guest-cost-basis") {
+          state.guestCostBasis = newValue;
+          shouldUpdate = true;
+        } else if (attrName === "data-check-in") {
+          state.checkIn = newValue;
+          shouldUpdate = true;
+        } else if (attrName === "data-check-out") {
+          state.checkOut = newValue;
+          shouldUpdate = true;
+        } else if (attrName === "data-email") {
+          state.email = newValue;
+          shouldUpdate = true;
+        } else if (attrName === "data-phone-number") {
+          state.phoneNumber = newValue;
+          shouldUpdate = true;
+        } else if (attrName === "data-whats-app-number") {
+          state.whatsAppNumber = newValue;
+          shouldUpdate = true;
+        }
+      });
+
+      if (shouldUpdate) {
+        renderCheckInOut();
+        renderContactInfo();
+        render();
+      }
+    });
+
+    observer.observe(card, {
+      attributes: true,
+      attributeFilter: [
+        "data-price",
+        "data-extra-per-guest",
+        "data-currency",
+        "data-guests",
+        "data-guest-cost-basis",
+        "data-check-in",
+        "data-check-out",
+        "data-email",
+        "data-phone-number",
+        "data-whats-app-number"
+      ]
+    });
+  })();
+</script>

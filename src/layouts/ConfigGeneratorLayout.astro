@@ -6,6 +6,11 @@ import Footer from "../components/Footer.astro";
 import Navbar from "../components/Navbar.astro";
 import { services } from "../config/servicesConfig";
 import { currencies } from '../config/currencies';
+import PriceComponentToQuote from "../components/PriceComponentToQuote.astro";
+import PriceComponentFixedPlain from "../components/PriceComponentFixedPlain.astro";
+import PriceComponentFixedPlainPlusGuest from "../components/PriceComponentFixedPlainPlusGuest.astro";
+import PriceComponentDynamic from "../components/PriceComponentDynamic.astro";
+import PriceComponentDynamicPlusGuest from "../components/PriceComponentDynamicPlusGuest.astro";
 
 const mostUsed = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD"];
 const sortedCurrencies = [
@@ -169,12 +174,13 @@ let propertyPsw = "test";
             <h2 class="text-lg font-semibold text-gray-800">Property Type</h2>
             <div class="flex flex-wrap gap-6 mt-2">
                 <label class="flex items-center gap-2">
-                    <input type="radio" name="type" value="bb" class="radio"/>
+                    <input id="property-type-bb" type="radio" name="type" value="bb" class="radio"/>
                     <span>B&amp;B</span>
                 </label>
 
                 <label class="flex items-center gap-2">
                     <input
+                            id="property-type-apartment"
                             type="radio"
                             name="type"
                             value="apartment"
@@ -366,91 +372,27 @@ let propertyPsw = "test";
             <div class="mt-4 grid md:grid-cols-4 gap-6">
                 <label class="block">
                     <span class="text-sm font-medium text-gray-700">Guests</span>
-                    <input type="number" name="guests" class="input mt-1" min="1"/>
+                    <input id="guests" type="number" name="guests" class="input mt-1" min="1" value="1"/>
                 </label>
 
                 <label class="block">
                     <span class="text-sm font-medium text-gray-700">Bedrooms</span>
-                    <input type="number" name="bedrooms" class="input mt-1" min="1"/>
+                    <input type="number" name="bedrooms" class="input mt-1" min="1" value="1"/>
                 </label>
 
                 <label class="block">
                     <span class="text-sm font-medium text-gray-700">Beds</span>
-                    <input type="number" name="beds" class="input mt-1" min="1"/>
+                    <input type="number" name="beds" class="input mt-1" min="1" value="1"/>
                 </label>
 
                 <label class="block">
                     <span class="text-sm font-medium text-gray-700">Bathrooms</span>
-                    <input type="number" name="bathrooms" class="input mt-1" min="1"/>
+                    <input type="number" name="bathrooms" class="input mt-1" min="1" value="1"/>
                 </label>
             </div>
         </div>
 
-        <!-- 🏷️ Pricing Section -->
-        <div class="mt-6">
-            <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-2">Pricing</h2>
-                <p class="text-gray-600 text-sm mb-4">
-                    Choose how you want to display pricing to guests.
-                </p>
-
-                <!-- Pricing options -->
-                <div class="space-y-3">
-                    <label class="flex items-center gap-2">
-                        <input type="radio" name="pricingType" value="contactHost" class="radio" checked/>
-                        <span>No price shown, contact host</span>
-                    </label>
-
-                    <label class="flex items-center gap-2">
-                        <input type="radio" name="pricingType" value="fixedAllYear" class="radio"/>
-                        <span>Fixed price all year</span>
-                    </label>
-
-                    <label class="flex items-center gap-2">
-                        <input type="radio" name="pricingType" value="fixedExtraGuests" class="radio"/>
-                        <span>Fixed price, plus extra per guest</span>
-                    </label>
-
-                    <!-- Dynamic price options -->
-                    <label class="flex items-center gap-2">
-                        <input type="radio" name="pricingType" value="dynamicDates" class="radio"/>
-                        <span>Price based on dates</span>
-                    </label>
-
-                    <label class="flex items-center gap-2">
-                        <input type="radio" name="pricingType" value="dynamicDatesExtraGuests" class="radio"/>
-                        <span>Price based on dates, plus extra per guest</span>
-                    </label>
-
-                    <!-- Description for dynamic pricing -->
-                    <p id="dynamic-price-desc" class="text-gray-600 text-sm mt-1 hidden">
-                        We will keep in contact with you to update the prices as you want them to be shown.
-                    </p>
-                </div>
-
-                <!-- B&B Room Tabs -->
-                <div id="bb-pricing-tabs" class="mt-6 hidden">
-                    <h3 class="text-md font-semibold text-gray-800 mb-3">Set Pricing Per Room</h3>
-                    <div id="room-tabs" class="flex gap-2 border-b border-gray-300 mb-4 flex-wrap"></div>
-                    <div id="room-pricing-content"></div>
-                </div>
-
-                <!-- Apartment/Villa Pricing (single) -->
-                <div id="apartment-pricing-content" class="mt-6 hidden"></div>
-            </div>
-        </div>
-
         <div class="flex gap-4">
-            <div class="flex-1 flex flex-col">
-                <label class="text-sm font-medium text-gray-700 mb-1" for="checkout">Check-out Time</label>
-                <input
-                        type="time"
-                        id="checkout"
-                        name="checkout"
-                        class="input w-full mt-1"
-                        required
-                />
-            </div>
             <div class="flex-1 flex flex-col">
                 <label class="text-sm font-medium text-gray-700 mb-1" for="checkin">Check-in Time</label>
                 <input
@@ -458,8 +400,159 @@ let propertyPsw = "test";
                         id="checkin"
                         name="checkin"
                         class="input w-full mt-1"
+                        value="14:00"
                         required
                 />
+            </div>
+            <div class="flex-1 flex flex-col">
+                <label class="text-sm font-medium text-gray-700 mb-1" for="checkout">Check-out Time</label>
+                <input
+                        type="time"
+                        id="checkout"
+                        name="checkout"
+                        class="input w-full mt-1"
+                        value="11:00"
+                        required
+                />
+            </div>
+        </div>
+
+        <!-- 🏷️ Pricing Section -->
+        <div class="mt-6">
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-2">Pricing</h2>
+
+
+                <!-- Grid container: 2 columns on desktop, stacked on mobile -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Left side: Pricing options and forms -->
+                    <div class="space-y-6">
+                        <p class="text-gray-600 text-sm mb-4">
+                            Choose how you want to display pricing to guests.
+                        </p>
+                        <!-- Pricing options -->
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-2">
+                                <input id="pricing-contact-host" type="radio" name="pricingType" value="contactHost"
+                                       class="radio" checked/>
+                                <span>No price shown, contact host</span>
+                            </label>
+
+                            <label class="flex items-center gap-2">
+                                <input id="pricing-fixed-all-year" type="radio" name="pricingType" value="fixedAllYear"
+                                       class="radio"/>
+                                <span>Fixed price all year</span>
+                            </label>
+
+                            <label class="flex items-center gap-2">
+                                <input id="pricing-fixed-extra-guests" type="radio" name="pricingType"
+                                       value="fixedExtraGuests" class="radio"/>
+                                <span>Fixed price, plus extra per guest</span>
+                            </label>
+
+                            <!-- Dynamic price options -->
+                            <label class="flex items-center gap-2">
+                                <input id="pricing-dynamic-dates" type="radio" name="pricingType" value="dynamicDates"
+                                       class="radio"/>
+                                <span>Price based on dates</span>
+                            </label>
+
+                            <label class="flex items-center gap-2">
+                                <input id="pricing-dynamic-dates-extra-guests" type="radio" name="pricingType"
+                                       value="dynamicDatesExtraGuests" class="radio"/>
+                                <span>Price based on dates, plus extra per guest</span>
+                            </label>
+                        </div>
+
+                        <!-- B&B Room Tabs -->
+                        <div id="bb-pricing-tabs" class="hidden">
+                            <h3 class="text-md font-semibold text-gray-800 mb-3">Set Pricing Per Room</h3>
+                            <div id="room-tabs" class="flex gap-2 border-b border-gray-300 mb-4 flex-wrap"></div>
+                            <div id="room-pricing-content"></div>
+                        </div>
+
+                        <!-- Apartment/Villa Pricing (single) -->
+                        <div id="apartment-pricing-content" class="hidden"></div>
+
+                        <!-- Description for dynamic pricing -->
+                        <p id="dynamic-price-desc" class="text-gray-600 text-sm mt-1 hidden">
+                            We will keep in contact with you to update the prices as you want them to be shown.
+                        </p>
+                    </div>
+
+                    <div id="apartment-price-component-to-quote" class="hidden">
+                        <PriceComponentToQuote
+                                propertyId={propertyId}
+                                checkIn={""}
+                                checkOut={""}
+                                email={""}
+                                phoneNumber={""}
+                                whatsAppNumber={""}
+                        />
+                    </div>
+
+                    <div id="apartment-price-component-fixed-plain" class="hidden">
+                        <PriceComponentFixedPlain
+                                propertyId={propertyId}
+                                price={0}
+                                currency={"EUR"}
+                                checkIn={""}
+                                checkOut={""}
+                                email={""}
+                                phoneNumber={""}
+                                whatsAppNumber={""}
+                        />
+                    </div>
+
+                    <div id="apartment-price-component-fixed-plain-plus-guest" class="hidden">
+                        <PriceComponentFixedPlainPlusGuest
+                                propertyId={propertyId}
+                                price={0}
+                                currency={"€"}
+                                checkIn={""}
+                                checkOut={""}
+                                email={""}
+                                phoneNumber={""}
+                                whatsAppNumber={""}
+                                guests={1}
+                                extraPerGuest={0}
+                                guestCostBasis={""}
+                        />
+                    </div>
+
+                    <div id="apartment-price-component-dynamic" class="hidden">
+                        <PriceComponentDynamic
+                                propertyId={propertyId}
+                                price={100}
+                                pricePeriods={[{from: "2026-01-01", to: "2026-01-31", price: 50}]}
+                                currency={"€"}
+                                checkIn={""}
+                                checkOut={""}
+                                email={""}
+                                phoneNumber={""}
+                                whatsAppNumber={""}
+                        />
+                    </div>
+
+                    <div id="apartment-price-component-dynamic-plus-guest" class="hidden">
+                        <PriceComponentDynamicPlusGuest
+                                propertyId={propertyId}
+                                price={100}
+                                pricePeriods={[{from: "2026-01-01", to: "2026-01-31", price: 50}]}
+                                currency={"€"}
+                                checkIn={""}
+                                checkOut={""}
+                                email={""}
+                                phoneNumber={""}
+                                whatsAppNumber={""}
+                                guests={1}
+                                extraPerGuest={0}
+                                guestCostBasis={""}
+                        />
+                    </div>
+
+
+                </div>
             </div>
         </div>
 
@@ -598,17 +691,19 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
         <div class="flex gap-4 items-center">
             <div class="flex-1">
                 <input
+                        id="fixed-price-input-__INDEX__"
                         type="number"
-                        name="pricing[fixedPrice]"
-                        data-room-index="__INDEX__"
+                        name="pricing[__INDEX__][fixedPrice]"
                         class="input mt-1 w-full fixed-price-input"
                         placeholder="e.g., 120"
+                        value="0"
                 />
             </div>
             <div class="w-32">
-                <select name="pricing[currency]" data-room-index="__INDEX__" class="input mt-1 w-full currency-select">
+                <select id="currency-select-__INDEX__" name="pricing[__INDEX__][currency]"
+                        class="input mt-1 w-full currency-select">
                   {sortedCurrencies.map(curr => (
-                          <option value={curr.code}>{curr.code} – {curr.symbol}</option>
+                          <option value={curr.symbol} selected={curr.code === 'EUR'}>{curr.code} – {curr.symbol}</option>
                   ))}
                 </select>
             </div>
@@ -627,22 +722,38 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
             <label class="block">
                 <span class="text-sm font-medium text-gray-700">Extra per guest (€)</span>
                 <input
+                        id="extra-guest-input-__INDEX__"
                         type="number"
-                        name="pricing[extraPerGuest]"
-                        data-room-index="__INDEX__"
+                        name="pricing[__INDEX__][extraPerGuest]"
                         class="input mt-1 extra-guest-input"
                         placeholder="e.g., 20"
+                        value="0"
                         min="0"
                         step="0.5"
                 />
             </label>
             <label class="block">
                 <span class="text-sm font-medium text-gray-700">Charge Type</span>
-                <select name="pricing[extraPerGuestType]" data-room-index="__INDEX__" class="input mt-1 extra-guest-type-select">
-                    <option value="perNight">Per night</option>
+                <select id="extra-guest-type-__INDEX__" name="pricing[__INDEX__][extraPerGuestType]"
+                        class="input mt-1 extra-guest-type-select">
+                    <option value="perNight" selected>Per night</option>
                     <option value="perStay">Per stay</option>
                 </select>
             </label>
+        </div>
+    </div>
+</template>
+
+<template id="pricing-currency-template">
+    <div class="mt-4 pricing-section" data-pricing-type="currency">
+        <h4 class="text-md font-semibold text-gray-800 mb-2">Currency</h4>
+        <div class="w-32">
+            <select id="currency-select-__INDEX__" name="pricing[__INDEX__][currency]"
+                    class="input mt-1 w-full currency-select">
+              {sortedCurrencies.map(curr => (
+                      <option value={curr.symbol} selected={curr.code === 'EUR'}>{curr.code} – {curr.symbol}</option>
+              ))}
+            </select>
         </div>
     </div>
 </template>
@@ -664,22 +775,12 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     const form = document.getElementById("config-form");
     const formData = new FormData(form);
 
-    // Debug: log all form data
-    console.log("=== FORM DATA DEBUG ===");
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-    console.log("======================");
-
     // Determine property type
     const propertyType = formData.get("type");
     const pricingType = formData.get("pricingType");
 
     console.log("Property Type:", propertyType);
     console.log("Pricing Type:", pricingType);
-
-    // Common fields
-    const baseConfig = {};
 
     const apartmentServices = {};
 
@@ -691,7 +792,6 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
       }
     }
 
-
     let json;
 
     if (propertyType === "apartment") {
@@ -702,24 +802,48 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
       let guestCostBasis = null;
       let currency = null;
 
+      // EXTRACT DATA FROM INPUTS - THIS IS THE KEY FIX
+      const roomIndex = 0;
+      const priceInput = document.getElementById(`fixed-price-input-${roomIndex}`);
+      const currencySelect = document.getElementById(`currency-select-${roomIndex}`);
+      const extraGuestInput = document.getElementById(`extra-guest-input-${roomIndex}`);
+      const extraGuestTypeSelect = document.getElementById(`extra-guest-type-${roomIndex}`);
+
       if (pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") {
-        const priceValue = formData.get("pricing[fixedPrice]");
-        const currencyValue = formData.get("pricing[currency]");
-        price = priceValue ? Number(priceValue) : null;
-        currency = currencyValue || null;
+        price = priceInput ? Number(priceInput.value) || null : null;
+        currency = currencySelect ? currencySelect.value : null;
       }
 
       if (pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") {
-        const extraValue = formData.get("pricing[extraPerGuest]");
-        const basisValue = formData.get("pricing[extraPerGuestType]");
-        extraPerGuest = extraValue ? Number(extraValue) : null;
-        guestCostBasis = basisValue || null;
+        extraPerGuest = extraGuestInput ? Number(extraGuestInput.value) || null : null;
+        guestCostBasis = extraGuestTypeSelect ? extraGuestTypeSelect.value : null;
       }
 
       if (pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") {
+        currency = currencySelect ? currencySelect.value : null;
         pricePeriods = []; // To be populated later by host
       }
 
+      // VALIDATION
+      if ((pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") && !price) {
+        alert("Please enter a price for the fixed pricing option");
+        return;
+      }
+
+      if ((pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") && !currency) {
+        alert("Please select a currency");
+        return;
+      }
+
+      if ((pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") && extraPerGuest === null) {
+        alert("Please enter the extra per guest amount");
+        return;
+      }
+
+      if ((pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") && !currency) {
+        alert("Please select a currency for dynamic pricing");
+        return;
+      }
 
       json = {
         propertyId: formData.get("propertyId"),
@@ -736,10 +860,10 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
         headTitle: formData.get("title"),
         title: formData.get("title"),
         location: formData.get("fullAddress"),
-        guests: Number(formData.get("guests")),
-        bedrooms: Number(formData.get("bedrooms")),
-        beds: Number(formData.get("beds")),
-        bathrooms: Number(formData.get("bathrooms")),
+        guests: Number(formData.get("guests")) || 1,
+        bedrooms: Number(formData.get("bedrooms")) || 1,
+        beds: Number(formData.get("beds")) || 1,
+        bathrooms: Number(formData.get("bathrooms")) || 1,
         imagesMainPage: null,
         imagesThumbnail: null,
         imagesByCategory: null,
@@ -797,14 +921,16 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
         let extraPerGuest = null;
         let guestCostBasis = null;
 
+        const priceInput = document.querySelector(`input[name="pricing[${roomIndex}][fixedPrice]"]`);
+        const currencySelect = document.querySelector(`select[name="pricing[${roomIndex}][currency]"]`);
+        const extraInput = document.querySelector(`input[name="pricing[${roomIndex}][extraPerGuest]"]`);
+        const typeSelect = document.querySelector(`select[name="pricing[${roomIndex}][extraPerGuestType]"]`);
+
         if (pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") {
-          const priceInput = document.querySelector(`input[name="pricing[${roomIndex}][fixedPrice]"]`);
           price = priceInput ? Number(priceInput.value) || null : null;
         }
 
         if (pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") {
-          const extraInput = document.querySelector(`input[name="pricing[${roomIndex}][extraPerGuest]"]`);
-          const typeSelect = document.querySelector(`select[name="pricing[${roomIndex}][extraPerGuestType]"]`);
           extraPerGuest = extraInput ? Number(extraInput.value) || null : null;
           guestCostBasis = typeSelect ? typeSelect.value : "perStay";
         }
@@ -824,6 +950,17 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
       // Get currency from first room or default
       const currencySelect = document.querySelector(`select[name="pricing[0][currency]"]`);
       const currency = currencySelect ? currencySelect.value : null;
+
+      // VALIDATION
+      if (roomDetails.length === 0) {
+        alert("Please add at least one room");
+        return;
+      }
+
+      if ((pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") && !roomDetails.some(r => roomPricing[r.roomName]?.price)) {
+        alert("Please set prices for all rooms");
+        return;
+      }
 
       json = {
         propertyId: formData.get("propertyId"),
@@ -845,7 +982,7 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
         breakFastAvailable: formData.get("breakFastAvailable") === "on",
         breakFastCost: formData.get("breakFastCost") || null,
         roomDetails,
-        imagesMainPage: null,    // Fill with actual paths if needed
+        imagesMainPage: null,
         imagesThumbnail: null,
         imagesByCategory: null,
         description: null,
@@ -881,6 +1018,7 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     a.click();
     URL.revokeObjectURL(url);
   });
+
 
   document.addEventListener("DOMContentLoaded", () => {
     const breakfastIncluded = document.getElementById("breakfast-included");
@@ -944,9 +1082,17 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
 
     const fixedPricingTemplate = document.getElementById("pricing-fixed-template");
     const extraGuestTemplate = document.getElementById("pricing-extra-guest-template");
+    const currencyTemplate = document.getElementById("pricing-currency-template");
 
     let currentRoomTab = 0;
     let propertyType = "apartment";
+
+    // Store pricing data to preserve values across radio button changes
+    let pricingData = {
+      fixedPrice: {},
+      extraPerGuest: {},
+      currency: {}
+    };
 
     // Track property type
     typeRadios.forEach(radio => {
@@ -960,40 +1106,94 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     // Clone and populate pricing template
     function clonePricingTemplate(template, roomIndex = null) {
       const clone = template.content.cloneNode(true);
+      const indexValue = roomIndex !== null ? roomIndex : 0;
 
-      // Update name attributes based on whether it's for a room or apartment
-      clone.querySelectorAll('[name]').forEach(el => {
-        if (roomIndex !== null) {
-          // For B&B rooms: pricing[0][fixedPrice], pricing[0][currency], etc.
-          const baseName = el.name; // e.g., "pricing[fixedPrice]"
-          el.name = baseName.replace('pricing[', `pricing[${roomIndex}][`);
+      // Update all attributes with __INDEX__
+      clone.querySelectorAll('[name], [id]').forEach(el => {
+        if (el.name) {
+          el.name = el.name.replace(/__INDEX__/g, indexValue);
         }
-        // For apartments, keep as is: pricing[fixedPrice], pricing[currency], etc.
+        if (el.id) {
+          el.id = el.id.replace(/__INDEX__/g, indexValue);
+        }
       });
 
       return clone;
     }
 
+    // Preserve values before clearing
+    function savePricingValues(roomIndex = 0) {
+      // Search entire document instead of just container
+      const priceInput = document.querySelector(`input[id="fixed-price-input-${roomIndex}"]`);
+      const currencySelect = document.querySelector(`select[id="currency-select-${roomIndex}"]`);
+      const extraInput = document.querySelector(`input[id="extra-guest-input-${roomIndex}"]`);
+
+      if (priceInput?.value) {
+        pricingData.fixedPrice[roomIndex] = priceInput.value;
+      }
+      if (currencySelect?.value) {
+        pricingData.currency[roomIndex] = currencySelect.value;
+      }
+      if (extraInput?.value) {
+        pricingData.extraPerGuest[roomIndex] = extraInput.value;
+      }
+    }
+
+    // Restore values after creating new elements
+    function restorePricingValues(container, roomIndex = 0) {
+      setTimeout(() => {
+        const priceInput = container.querySelector(`input[id="fixed-price-input-${roomIndex}"]`);
+        const currencySelect = container.querySelector(`select[id="currency-select-${roomIndex}"]`);
+        const extraInput = container.querySelector(`input[id="extra-guest-input-${roomIndex}"]`);
+
+        if (priceInput && pricingData.fixedPrice[roomIndex]) {
+          priceInput.value = pricingData.fixedPrice[roomIndex];
+          priceInput.dispatchEvent(new Event('input', {bubbles: true}));
+        }
+        if (currencySelect && pricingData.currency[roomIndex]) {
+          currencySelect.value = pricingData.currency[roomIndex];
+          currencySelect.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+        if (extraInput && pricingData.extraPerGuest[roomIndex]) {
+          extraInput.value = pricingData.extraPerGuest[roomIndex];
+          extraInput.dispatchEvent(new Event('input', {bubbles: true}));
+        }
+      }, 0);
+    }
+
     // Update pricing content based on selected type
     function updatePricingContent(container, pricingType, roomIndex = null) {
+      const indexValue = roomIndex !== null ? roomIndex : 0;
+
+      // Save current values before clearing
+      savePricingValues(container, indexValue);
+
       container.innerHTML = '';
 
-      if (pricingType === "contactHost" || pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") {
-        // No pricing fields needed for these types (or handled separately for dynamic)
+      if (pricingType === "contactHost") {
         return;
       }
 
       // Add fixed price section if needed
       if (pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") {
-        const fixedClone = clonePricingTemplate(fixedPricingTemplate, roomIndex);
+        const fixedClone = clonePricingTemplate(fixedPricingTemplate, indexValue);
         container.appendChild(fixedClone);
       }
 
       // Add extra guest section if needed
       if (pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") {
-        const extraClone = clonePricingTemplate(extraGuestTemplate, roomIndex);
+        const extraClone = clonePricingTemplate(extraGuestTemplate, indexValue);
         container.appendChild(extraClone);
       }
+
+      // Add currency section for dynamic pricing
+      if (pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") {
+        const currencyClone = clonePricingTemplate(currencyTemplate, indexValue);
+        container.appendChild(currencyClone);
+      }
+
+      // Restore saved values
+      restorePricingValues(container, indexValue);
     }
 
     // Update B&B room tabs
@@ -1024,10 +1224,9 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
       const selectedPricing = document.querySelector('input[name="pricingType"]:checked')?.value;
       const rooms = bbRoomsContainer.children;
 
-      // Clear and rebuild all room pricing sections
       roomPricingContent.innerHTML = '';
 
-      if (selectedPricing === "contactHost" || selectedPricing === "dynamicDates") {
+      if (selectedPricing === "contactHost") {
         return;
       }
 
@@ -1050,7 +1249,16 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
           roomPricingSection.appendChild(extraClone);
         }
 
+        // Add currency section for dynamic pricing
+        if (selectedPricing === "dynamicDates" || selectedPricing === "dynamicDatesExtraGuests") {
+          const currencyClone = clonePricingTemplate(currencyTemplate, index);
+          roomPricingSection.appendChild(currencyClone);
+        }
+
         roomPricingContent.appendChild(roomPricingSection);
+
+        // Restore values for this room
+        restorePricingValues(roomPricingSection, index);
       });
     }
 
@@ -1064,6 +1272,10 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     // Update apartment pricing content
     function updateApartmentPricingContent() {
       const selectedPricing = document.querySelector('input[name="pricingType"]:checked')?.value;
+
+      // IMPORTANT: Call savePricingValues without container parameter
+      savePricingValues();
+
       updatePricingContent(apartmentPricingContent, selectedPricing);
     }
 
@@ -1125,6 +1337,7 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     updatePricingDisplay();
   });
 
+
   document.addEventListener("DOMContentLoaded", () => {
     const bbSection = document.getElementById("bb-section");
     const apartmentSection = document.getElementById("apartment-section");
@@ -1176,14 +1389,6 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
         updateRoomsCount();
       });
     });
-  });
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const checkinInput = document.getElementById("checkin");
-    const checkoutInput = document.getElementById("checkout");
-
-    if (!checkinInput.value) checkinInput.value = "14:00"; // default 2 PM
-    if (!checkoutInput.value) checkoutInput.value = "11:00"; // default 11 AM
   });
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -1245,6 +1450,8 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     }
   });
 </script>
+
+<script src="../scripts/apartmentPricePreview.js"/>
 
 
 <Footer/>

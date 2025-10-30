@@ -1,0 +1,18 @@
+---
+const {
+    checkIn,
+    checkOut
+} = Astro.props;
+---
+
+<!-- Check-in/out Info -->
+<div class="space-y-3">
+    <div class="flex justify-between text-sm">
+        <span class="font-semibold">Check-in</span>
+        <span class="preview-checkIn" class="text-gray-600">{checkIn}</span>
+    </div>
+    <div class="flex justify-between text-sm">
+        <span class="font-semibold">Check-out</span>
+        <span class="preview-checkOut" class="text-gray-600">{checkOut}</span>
+    </div>
+</div>

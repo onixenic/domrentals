@@ -72,23 +72,9 @@ const {
     <Services slot="services" apartmentServices={apartmentServices}/>
 
 
-    <PriceComponentFixedPlain
-            headTitle={headTitle}
-            slot="price"
-            price={price}
-            currency={currency}
-            checkIn={checkIn}
-            checkOut={checkOut}
-            email={email}
-            phoneNumber={phoneNumber}
-            whatsAppNumber={whatsAppNumber}
-
-    />
-
-    <!--<PriceComponentFixedPlainPlusGuest-->
+    <!--<PriceComponentFixedPlain-->
+    <!--        headTitle={headTitle}-->
     <!--        slot="price"-->
-    <!--        propertyId={propertyId}-->
-
     <!--        price={price}-->
     <!--        currency={currency}-->
     <!--        checkIn={checkIn}-->
@@ -96,9 +82,23 @@ const {
     <!--        email={email}-->
     <!--        phoneNumber={phoneNumber}-->
     <!--        whatsAppNumber={whatsAppNumber}-->
-    <!--        guests={guests}-->
-    <!--        extraPerGuest={extraPerGuest}-->
+
     <!--/>-->
+
+    <PriceComponentFixedPlainPlusGuest
+            slot="price"
+            propertyId={propertyId}
+            price={price}
+            currency={currency}
+            checkIn={checkIn}
+            checkOut={checkOut}
+            email={email}
+            phoneNumber={phoneNumber}
+            whatsAppNumber={whatsAppNumber}
+            guests={guests}
+            extraPerGuest={extraPerGuest}
+            guestCostBasis={guestCostBasis}
+    />
 
     <!--<PriceComponentDynamic-->
     <!--        slot="price"-->

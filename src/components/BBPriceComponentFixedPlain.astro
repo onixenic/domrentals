@@ -1,5 +1,6 @@
 ---
 import ContactUsPriceComponent from "./ContactUsPriceComponent.astro";
+import CheckInCheckOut from "./CheckInCheckOut.astro";
 interface Props {
   propertyId: string;
   roomPricing: Record<string, {
@@ -33,18 +34,6 @@ const roomNames = Object.keys(roomPricing);
 <div class="card bg-base-100 shadow-xl border border-base-300">
     <div class="card-body">
 
-        <!-- Room Selector -->
-        <div class="flex items-center gap-2 mb-3">
-            <label for="roomSelect" class="font-semibold text-sm text-gray-600 whitespace-nowrap">
-                Select Room
-            </label>
-            <select id="roomSelect" class="select select-bordered w-full">
-              {roomNames.map((room) => (
-                      <option value={room}>{room}</option>
-              ))}
-            </select>
-        </div>
-
         <!-- Price Header -->
         <div id="priceContainer" class="flex items-baseline gap-1">
             <span id="priceValue" class="text-3xl font-bold">
@@ -55,17 +44,23 @@ const roomNames = Object.keys(roomPricing);
 
         <div class="divider my-1"></div>
 
-        <!-- Check-in/out Info -->
-        <div class="space-y-3">
-            <div class="flex justify-between text-sm">
-                <span class="font-semibold">Check-in</span>
-                <span class="text-gray-600">{checkIn}</span>
-            </div>
-            <div class="flex justify-between text-sm">
-                <span class="font-semibold">Check-out</span>
-                <span class="text-gray-600">{checkOut}</span>
-            </div>
+        <!-- Room Selector -->
+        <div class="flex justify-between text-sm items-center">
+            <label for="roomSelect" class="font-semibold">Room</label>
+            <select
+              id="roomSelect"
+              class="text-gray-600 border rounded p-1 w-2/3 text-left"
+            >
+                {roomNames.map((room) => (
+                  <option value={room}>{room}</option>
+                ))}
+            </select>
         </div>
+
+        <div class="divider my-1"></div>
+
+        <!-- Check-in/out Info -->
+        <CheckInCheckOut checkIn={checkIn} checkOut={checkOut}/>
 
         <div class="divider my-1"></div>
         <h3 class="text-xl font-semibold mb-1">Contact your host</h3>
