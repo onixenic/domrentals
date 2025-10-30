@@ -11,6 +11,10 @@ import PriceComponentFixedPlain from "../components/PriceComponentFixedPlain.ast
 import PriceComponentFixedPlainPlusGuest from "../components/PriceComponentFixedPlainPlusGuest.astro";
 import PriceComponentDynamic from "../components/PriceComponentDynamic.astro";
 import PriceComponentDynamicPlusGuest from "../components/PriceComponentDynamicPlusGuest.astro";
+import BBPriceComponentFixedPlain from "../components/BBPriceComponentFixedPlain.astro";
+import BBPriceComponentFixedPlainPlusGuest from "../components/BBPriceComponentFixedPlainPlusGuest.astro";
+import BBPriceComponentDynamic from "../components/BBPriceComponentDynamic.astro";
+import BBPriceComponentDynamicPlusGuest from "../components/BBPriceComponentDynamicPlusGuest.astro";
 
 const mostUsed = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD"];
 const sortedCurrencies = [
@@ -174,21 +178,21 @@ let propertyPsw = "test";
             <h2 class="text-lg font-semibold text-gray-800">Property Type</h2>
             <div class="flex flex-wrap gap-6 mt-2">
                 <label class="flex items-center gap-2">
+                    <label class="flex items-center gap-2">
+                        <input
+                                id="property-type-apartment"
+                                type="radio"
+                                name="type"
+                                value="apartment"
+                                class="radio"
+                                checked
+                        />
+                        <span>Villa / Apartment</span>
+                    </label>
                     <input id="property-type-bb" type="radio" name="type" value="bb" class="radio"/>
                     <span>B&amp;B</span>
                 </label>
 
-                <label class="flex items-center gap-2">
-                    <input
-                            id="property-type-apartment"
-                            type="radio"
-                            name="type"
-                            value="apartment"
-                            class="radio"
-                            checked
-                    />
-                    <span>Villa / Apartment</span>
-                </label>
             </div>
         </fieldset>
 
@@ -551,6 +555,61 @@ let propertyPsw = "test";
                         />
                     </div>
 
+                    <div id="bb-price-component-fixed-plain" class="hidden">
+                        <BBPriceComponentFixedPlain server:defer
+                                propertyId={propertyId}
+                                roomPricing={{"Room1":{price: 120},"Room2": {price: 50}}}
+                                currency={"€"}
+                                checkIn={""}
+                                checkOut={""}
+                                email={""}
+                                phoneNumber={phoneNumber}
+                                whatsAppNumber={""}
+                        />
+                    </div>
+
+                    <!--<div id="bb-price-component-fixed-plain-plus-guest" class="hidden">-->
+                    <!--    <BBPriceComponentFixedPlainPlusGuest-->
+                    <!--      propertyId={propertyId}-->
+                    <!--      roomPricing={{}}-->
+                    <!--      roomDetails={[]}-->
+                    <!--      currency={"€"}-->
+                    <!--      checkIn={""}-->
+                    <!--      checkOut={""}-->
+                    <!--      email={""}-->
+                    <!--      phoneNumber={""}-->
+                    <!--      whatsAppNumber={""}-->
+                    <!--    />-->
+                    <!--</div>-->
+
+                    <!--<div id="bb-price-component-dynamic" class="hidden">-->
+                    <!--    <BBPriceComponentDynamic-->
+                    <!--      propertyId={propertyId}-->
+                    <!--      roomPricing={{}}-->
+                    <!--      roomDetails={[]}-->
+                    <!--      currency={"€"}-->
+                    <!--      checkIn={""}-->
+                    <!--      checkOut={""}-->
+                    <!--      email={""}-->
+                    <!--      phoneNumber={""}-->
+                    <!--      whatsAppNumber={""}-->
+                    <!--    />-->
+                    <!--</div>-->
+
+                    <!--<div id="bb-price-component-dynamic-plus-guest" class="hidden">-->
+                    <!--    <BBPriceComponentDynamicPlusGuest-->
+                    <!--      propertyId={propertyId}-->
+                    <!--      roomPricing={{}}-->
+                    <!--      roomDetails={[]}-->
+                    <!--      currency={"€"}-->
+                    <!--      checkIn={""}-->
+                    <!--      checkOut={""}-->
+                    <!--      email={""}-->
+                    <!--      phoneNumber={""}-->
+                    <!--      whatsAppNumber={""}-->
+                    <!--    />-->
+                    <!--</div>-->
+
 
                 </div>
             </div>
@@ -655,17 +714,17 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
 
             <label class="block">
                 <span class="text-sm font-medium text-gray-700">Guests</span>
-                <input type="number" name="bb_rooms[__INDEX__][guests]" class="input mt-1" min="1"/>
+                <input type="number" name="bb_rooms[__INDEX__][guests]" class="input mt-1" min="1" value="1"/>
             </label>
 
             <label class="block">
                 <span class="text-sm font-medium text-gray-700">Beds</span>
-                <input type="number" name="bb_rooms[__INDEX__][beds]" class="input mt-1" min="1"/>
+                <input type="number" name="bb_rooms[__INDEX__][beds]" class="input mt-1" min="1" value="1"/>
             </label>
 
             <label class="block">
                 <span class="text-sm font-medium text-gray-700">Bathrooms</span>
-                <input type="number" name="bb_rooms[__INDEX__][bathrooms]" class="input mt-1" min="1"/>
+                <input type="number" name="bb_rooms[__INDEX__][bathrooms]" class="input mt-1" min="1" value="1"/>
             </label>
 
             <label class="flex items-center gap-2 mt-6 md:mt-5">
@@ -703,7 +762,8 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
                 <select id="currency-select-__INDEX__" name="pricing[__INDEX__][currency]"
                         class="input mt-1 w-full currency-select">
                   {sortedCurrencies.map(curr => (
-                          <option value={curr.symbol} selected={curr.code === 'EUR'}>{curr.code} – {curr.symbol}</option>
+                          <option value={curr.symbol} selected={curr.code === 'EUR'}>{curr.code}
+                              – {curr.symbol}</option>
                   ))}
                 </select>
             </div>
@@ -771,684 +831,685 @@ Please respect the neighbors and keep noise to a minimum.</textarea>
     });
   });
 
-  document.getElementById("download-btn").addEventListener("click", () => {
-    const form = document.getElementById("config-form");
-    const formData = new FormData(form);
+    document.getElementById("download-btn").addEventListener("click", () => {
+      const form = document.getElementById("config-form");
+      const formData = new FormData(form);
 
-    // Determine property type
-    const propertyType = formData.get("type");
-    const pricingType = formData.get("pricingType");
+      // Determine property type
+      const propertyType = formData.get("type");
+      const pricingType = formData.get("pricingType");
 
-    console.log("Property Type:", propertyType);
-    console.log("Pricing Type:", pricingType);
+      console.log("Property Type:", propertyType);
+      console.log("Pricing Type:", pricingType);
 
-    const apartmentServices = {};
+      const apartmentServices = {};
 
-    for (const [key, value] of formData.entries()) {
-      const match = key.match(/^services\[(.+)\]$/);
-      if (match) {
-        const serviceKey = match[1];
-        apartmentServices[serviceKey] = true;
-      }
-    }
-
-    let json;
-
-    if (propertyType === "apartment") {
-
-      let price = null;
-      let pricePeriods = null;
-      let extraPerGuest = null;
-      let guestCostBasis = null;
-      let currency = null;
-
-      // EXTRACT DATA FROM INPUTS - THIS IS THE KEY FIX
-      const roomIndex = 0;
-      const priceInput = document.getElementById(`fixed-price-input-${roomIndex}`);
-      const currencySelect = document.getElementById(`currency-select-${roomIndex}`);
-      const extraGuestInput = document.getElementById(`extra-guest-input-${roomIndex}`);
-      const extraGuestTypeSelect = document.getElementById(`extra-guest-type-${roomIndex}`);
-
-      if (pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") {
-        price = priceInput ? Number(priceInput.value) || null : null;
-        currency = currencySelect ? currencySelect.value : null;
+      for (const [key, value] of formData.entries()) {
+        const match = key.match(/^services\[(.+)\]$/);
+        if (match) {
+          const serviceKey = match[1];
+          apartmentServices[serviceKey] = true;
+        }
       }
 
-      if (pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") {
-        extraPerGuest = extraGuestInput ? Number(extraGuestInput.value) || null : null;
-        guestCostBasis = extraGuestTypeSelect ? extraGuestTypeSelect.value : null;
-      }
+      let json;
 
-      if (pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") {
-        currency = currencySelect ? currencySelect.value : null;
-        pricePeriods = []; // To be populated later by host
-      }
+      if (propertyType === "apartment") {
 
-      // VALIDATION
-      if ((pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") && !price) {
-        alert("Please enter a price for the fixed pricing option");
-        return;
-      }
-
-      if ((pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") && !currency) {
-        alert("Please select a currency");
-        return;
-      }
-
-      if ((pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") && extraPerGuest === null) {
-        alert("Please enter the extra per guest amount");
-        return;
-      }
-
-      if ((pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") && !currency) {
-        alert("Please select a currency for dynamic pricing");
-        return;
-      }
-
-      json = {
-        propertyId: formData.get("propertyId"),
-        propertyPsw: formData.get("propertyPsw"),
-        hostType: formData.get("hostType"),
-        companyName: formData.get("hostType") === "company" ? formData.get("companyName") || null : null,
-        companyAddress: formData.get("hostType") === "company" ? formData.get("companyAddress") || null : null,
-        companyVat: formData.get("hostType") === "company" ? formData.get("companyVat") || null : null,
-        companyRep: formData.get("hostType") === "company" ? formData.get("companyRep") || null : null,
-        individualName: formData.get("hostType") === "individual" ? formData.get("individualName") || null : null,
-        individualAddress: formData.get("hostType") === "individual" ? formData.get("individualAddress") || null : null,
-        individualTaxId: formData.get("hostType") === "individual" ? formData.get("individualTaxId") || null : null,
-        hostEmail: formData.get("hostEmail"),
-        headTitle: formData.get("title"),
-        title: formData.get("title"),
-        location: formData.get("fullAddress"),
-        guests: Number(formData.get("guests")) || 1,
-        bedrooms: Number(formData.get("bedrooms")) || 1,
-        beds: Number(formData.get("beds")) || 1,
-        bathrooms: Number(formData.get("bathrooms")) || 1,
-        imagesMainPage: null,
-        imagesThumbnail: null,
-        imagesByCategory: null,
-        description: null,
-        houseRules: (formData.get("houseRules") || "").split("\n"),
-        price,
-        pricePeriods,
-        extraPerGuest,
-        guestCostBasis,
-        currency,
-        checkIn: formData.get("checkin") || null,
-        checkOut: formData.get("checkout") || null,
-        email: formData.get("email") || null,
-        phoneNumber: formData.get("phone") || null,
-        whatsAppNumber: null,
-        apartmentServices,
-        additionalServices: formData.get("additionalServices") || null,
-        mapEmbed: null,
-        showDirections: formData.get("showDirections") === "true" || null,
-        carDirectionsDescription: null,
-        publicTransportDirectionsDescription: null,
-        hostImage: null,
-        hostName: null,
-        hostBio: formData.get("hostDescription") || null,
-        hostLanguages: formData.getAll("languages[]") || null
-      };
-    } else if (propertyType === "bb") {
-      const roomsContainer = document.getElementById("bb-rooms-container");
-      const roomDetails = [];
-      const roomPricing = {};
-
-      Array.from(roomsContainer.children).forEach((roomDiv, roomIndex) => {
-        const roomData = {};
-        roomDiv.querySelectorAll("input, select").forEach((input) => {
-          const name = input.name.match(/\[([^\]]+)\]$/)?.[1];
-          if (!name) return;
-
-          roomData[name] =
-            input.type === "checkbox" ? input.checked : input.value;
-        });
-
-        const roomName = roomData.name || `Room ${roomIndex + 1}`;
-
-        roomDetails.push({
-          roomName: roomName,
-          guests: Number(roomData.guests),
-          beds: Number(roomData.beds),
-          bathrooms: Number(roomData.bathrooms),
-          privateBathroom: roomData.privateBathroom || false,
-        });
-
-        // Parse room pricing from dynamically generated fields
         let price = null;
         let pricePeriods = null;
         let extraPerGuest = null;
         let guestCostBasis = null;
+        let currency = null;
 
-        const priceInput = document.querySelector(`input[name="pricing[${roomIndex}][fixedPrice]"]`);
-        const currencySelect = document.querySelector(`select[name="pricing[${roomIndex}][currency]"]`);
-        const extraInput = document.querySelector(`input[name="pricing[${roomIndex}][extraPerGuest]"]`);
-        const typeSelect = document.querySelector(`select[name="pricing[${roomIndex}][extraPerGuestType]"]`);
+        // EXTRACT DATA FROM INPUTS - THIS IS THE KEY FIX
+        const roomIndex = 0;
+        const priceInput = document.getElementById(`fixed-price-input-${roomIndex}`);
+        const currencySelect = document.getElementById(`currency-select-${roomIndex}`);
+        const extraGuestInput = document.getElementById(`extra-guest-input-${roomIndex}`);
+        const extraGuestTypeSelect = document.getElementById(`extra-guest-type-${roomIndex}`);
 
         if (pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") {
           price = priceInput ? Number(priceInput.value) || null : null;
+          currency = currencySelect ? currencySelect.value : null;
         }
 
         if (pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") {
-          extraPerGuest = extraInput ? Number(extraInput.value) || null : null;
-          guestCostBasis = typeSelect ? typeSelect.value : "perStay";
+          extraPerGuest = extraGuestInput ? Number(extraGuestInput.value) || null : null;
+          guestCostBasis = extraGuestTypeSelect ? extraGuestTypeSelect.value : null;
         }
 
         if (pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") {
-          pricePeriods = []; // To be populated later
+          currency = currencySelect ? currencySelect.value : null;
+          pricePeriods = []; // To be populated later by host
         }
 
-        roomPricing[roomName] = {
+        // VALIDATION
+        if ((pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") && !price) {
+          alert("Please enter a price for the fixed pricing option");
+          return;
+        }
+
+        if ((pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") && !currency) {
+          alert("Please select a currency");
+          return;
+        }
+
+        if ((pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") && extraPerGuest === null) {
+          alert("Please enter the extra per guest amount");
+          return;
+        }
+
+        if ((pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") && !currency) {
+          alert("Please select a currency for dynamic pricing");
+          return;
+        }
+
+        json = {
+          propertyId: formData.get("propertyId"),
+          propertyPsw: formData.get("propertyPsw"),
+          hostType: formData.get("hostType"),
+          companyName: formData.get("hostType") === "company" ? formData.get("companyName") || null : null,
+          companyAddress: formData.get("hostType") === "company" ? formData.get("companyAddress") || null : null,
+          companyVat: formData.get("hostType") === "company" ? formData.get("companyVat") || null : null,
+          companyRep: formData.get("hostType") === "company" ? formData.get("companyRep") || null : null,
+          individualName: formData.get("hostType") === "individual" ? formData.get("individualName") || null : null,
+          individualAddress: formData.get("hostType") === "individual" ? formData.get("individualAddress") || null : null,
+          individualTaxId: formData.get("hostType") === "individual" ? formData.get("individualTaxId") || null : null,
+          hostEmail: formData.get("hostEmail"),
+          headTitle: formData.get("title"),
+          title: formData.get("title"),
+          location: formData.get("fullAddress"),
+          guests: Number(formData.get("guests")) || 1,
+          bedrooms: Number(formData.get("bedrooms")) || 1,
+          beds: Number(formData.get("beds")) || 1,
+          bathrooms: Number(formData.get("bathrooms")) || 1,
+          imagesMainPage: null,
+          imagesThumbnail: null,
+          imagesByCategory: null,
+          description: null,
+          houseRules: (formData.get("houseRules") || "").split("\n"),
           price,
-          pricePeriods: pricePeriods || [],
-          extraPerGuest: extraPerGuest || 0,
-          guestCostBasis: guestCostBasis || "perStay",
+          pricePeriods,
+          extraPerGuest,
+          guestCostBasis,
+          currency,
+          checkIn: formData.get("checkin") || null,
+          checkOut: formData.get("checkout") || null,
+          email: formData.get("email") || null,
+          phoneNumber: formData.get("phone") || null,
+          whatsAppNumber: null,
+          apartmentServices,
+          additionalServices: formData.get("additionalServices") || null,
+          mapEmbed: null,
+          showDirections: formData.get("showDirections") === "true" || null,
+          carDirectionsDescription: null,
+          publicTransportDirectionsDescription: null,
+          hostImage: null,
+          hostName: null,
+          hostBio: formData.get("hostDescription") || null,
+          hostLanguages: formData.getAll("languages[]") || null
         };
-      });
+      } else if (propertyType === "bb") {
+        const roomsContainer = document.getElementById("bb-rooms-container");
+        const roomDetails = [];
+        const roomPricing = {};
 
-      // Get currency from first room or default
-      const currencySelect = document.querySelector(`select[name="pricing[0][currency]"]`);
-      const currency = currencySelect ? currencySelect.value : null;
+        Array.from(roomsContainer.children).forEach((roomDiv, roomIndex) => {
+          const roomData = {};
+          roomDiv.querySelectorAll("input, select").forEach((input) => {
+            const name = input.name.match(/\[([^\]]+)\]$/)?.[1];
+            if (!name) return;
 
-      // VALIDATION
-      if (roomDetails.length === 0) {
-        alert("Please add at least one room");
-        return;
-      }
+            roomData[name] =
+              input.type === "checkbox" ? input.checked : input.value;
+          });
 
-      if ((pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") && !roomDetails.some(r => roomPricing[r.roomName]?.price)) {
-        alert("Please set prices for all rooms");
-        return;
-      }
+          const roomName = roomData.name || `Room ${roomIndex + 1}`;
 
-      json = {
-        propertyId: formData.get("propertyId"),
-        propertyPsw: formData.get("propertyPsw"),
-        hostType: formData.get("hostType"),
-        companyName: formData.get("hostType") === "company" ? formData.get("companyName") || null : null,
-        companyAddress: formData.get("hostType") === "company" ? formData.get("companyAddress") || null : null,
-        companyVat: formData.get("hostType") === "company" ? formData.get("companyVat") || null : null,
-        companyRep: formData.get("hostType") === "company" ? formData.get("companyRep") || null : null,
-        individualName: formData.get("hostType") === "individual" ? formData.get("individualName") || null : null,
-        individualAddress: formData.get("hostType") === "individual" ? formData.get("individualAddress") || null : null,
-        individualTaxId: formData.get("hostType") === "individual" ? formData.get("individualTaxId") || null : null,
-        hostEmail: formData.get("hostEmail"),
-        headTitle: formData.get("title"),
-        title: formData.get("title"),
-        location: formData.get("fullAddress"),
-        rooms: roomDetails.length,
-        breakFastIncluded: formData.get("breakFastIncluded") === "on",
-        breakFastAvailable: formData.get("breakFastAvailable") === "on",
-        breakFastCost: formData.get("breakFastCost") || null,
-        roomDetails,
-        imagesMainPage: null,
-        imagesThumbnail: null,
-        imagesByCategory: null,
-        description: null,
-        houseRules: (formData.get("houseRules") || "").split("\n"),
-        roomPricing,
-        currency,
-        checkIn: formData.get("checkin") || null,
-        checkOut: formData.get("checkout") || null,
-        email: formData.get("email") || null,
-        phoneNumber: formData.get("phone") || null,
-        whatsAppNumber: null,
-        apartmentServices,
-        additionalServices: formData.get("additionalServices") || null,
-        mapEmbed: null,
-        showDirections: formData.get("showDirections") === "true" || null,
-        carDirectionsDescription: null,
-        publicTransportDirectionsDescription: null,
-        hostImage: null,
-        hostName: null,
-        hostBio: formData.get("hostDescription") || null,
-        hostLanguages: formData.getAll("languages[]") || null
-      };
-    }
+          roomDetails.push({
+            roomName: roomName,
+            guests: Number(roomData.guests),
+            beds: Number(roomData.beds),
+            bathrooms: Number(roomData.bathrooms),
+            privateBathroom: roomData.privateBathroom || false,
+          });
 
-    // Download JSON
-    const blob = new Blob([JSON.stringify(json, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${propertyType}-${json.propertyId || "config"}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  });
+          // Parse room pricing from dynamically generated fields
+          let price = null;
+          let pricePeriods = null;
+          let extraPerGuest = null;
+          let guestCostBasis = null;
 
+          const priceInput = document.querySelector(`input[name="pricing[${roomIndex}][fixedPrice]"]`);
+          const currencySelect = document.querySelector(`select[name="pricing[${roomIndex}][currency]"]`);
+          const extraInput = document.querySelector(`input[name="pricing[${roomIndex}][extraPerGuest]"]`);
+          const typeSelect = document.querySelector(`select[name="pricing[${roomIndex}][extraPerGuestType]"]`);
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const breakfastIncluded = document.getElementById("breakfast-included");
-    const breakfastOptions = document.getElementById("breakfast-options");
-    const breakfastAvailable = document.getElementById("breakfast-available");
-    const breakfastCostLabel = document.getElementById("breakfast-cost-label");
+          if (pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") {
+            price = priceInput ? Number(priceInput.value) || null : null;
+          }
 
-    const toggleBreakfastOptions = () => {
-      if (breakfastIncluded.checked) {
-        // Included in stay → hide available & cost
-        breakfastOptions.classList.add("hidden");
-        breakfastAvailable.checked = false;
-        breakfastCostLabel.classList.add("hidden");
-        document.getElementById("breakfast-cost").value = "";
-      } else {
-        // Not included → show available checkbox
-        breakfastOptions.classList.remove("hidden");
-        // Show cost only if available is checked
-        toggleBreakfastCost();
-      }
-    };
+          if (pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") {
+            extraPerGuest = extraInput ? Number(extraInput.value) || null : null;
+            guestCostBasis = typeSelect ? typeSelect.value : "perStay";
+          }
 
-    const toggleBreakfastCost = () => {
-      if (breakfastAvailable.checked) {
-        breakfastCostLabel.classList.remove("hidden");
-      } else {
-        breakfastCostLabel.classList.add("hidden");
-        document.getElementById("breakfast-cost").value = "";
-      }
-    };
+          if (pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") {
+            pricePeriods = []; // To be populated later
+          }
 
-    breakfastIncluded.addEventListener("change", toggleBreakfastOptions);
-    breakfastAvailable.addEventListener("change", toggleBreakfastCost);
-
-    // Initialize on page load
-    toggleBreakfastOptions();
-  });
-
-
-  const otherCheckbox = document.getElementById("language-other-checkbox");
-  const otherInput = document.getElementById("language-other-input");
-
-  otherCheckbox.addEventListener("change", () => {
-    if (otherCheckbox.checked) {
-      otherInput.classList.remove("hidden");
-    } else {
-      otherInput.classList.add("hidden");
-      otherInput.value = "";
-    }
-  });
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const pricingRadios = document.querySelectorAll('input[name="pricingType"]');
-    const bbPricingTabs = document.getElementById("bb-pricing-tabs");
-    const apartmentPricingContent = document.getElementById("apartment-pricing-content");
-    const dynamicDesc = document.getElementById("dynamic-price-desc");
-    const roomTabsContainer = document.getElementById("room-tabs");
-    const roomPricingContent = document.getElementById("room-pricing-content");
-    const typeRadios = document.querySelectorAll('input[name="type"]');
-    const bbRoomsContainer = document.getElementById("bb-rooms-container");
-
-    const fixedPricingTemplate = document.getElementById("pricing-fixed-template");
-    const extraGuestTemplate = document.getElementById("pricing-extra-guest-template");
-    const currencyTemplate = document.getElementById("pricing-currency-template");
-
-    let currentRoomTab = 0;
-    let propertyType = "apartment";
-
-    // Store pricing data to preserve values across radio button changes
-    let pricingData = {
-      fixedPrice: {},
-      extraPerGuest: {},
-      currency: {}
-    };
-
-    // Track property type
-    typeRadios.forEach(radio => {
-      if (radio.checked) propertyType = radio.value;
-      radio.addEventListener("change", () => {
-        propertyType = radio.value;
-        updatePricingDisplay();
-      });
-    });
-
-    // Clone and populate pricing template
-    function clonePricingTemplate(template, roomIndex = null) {
-      const clone = template.content.cloneNode(true);
-      const indexValue = roomIndex !== null ? roomIndex : 0;
-
-      // Update all attributes with __INDEX__
-      clone.querySelectorAll('[name], [id]').forEach(el => {
-        if (el.name) {
-          el.name = el.name.replace(/__INDEX__/g, indexValue);
-        }
-        if (el.id) {
-          el.id = el.id.replace(/__INDEX__/g, indexValue);
-        }
-      });
-
-      return clone;
-    }
-
-    // Preserve values before clearing
-    function savePricingValues(roomIndex = 0) {
-      // Search entire document instead of just container
-      const priceInput = document.querySelector(`input[id="fixed-price-input-${roomIndex}"]`);
-      const currencySelect = document.querySelector(`select[id="currency-select-${roomIndex}"]`);
-      const extraInput = document.querySelector(`input[id="extra-guest-input-${roomIndex}"]`);
-
-      if (priceInput?.value) {
-        pricingData.fixedPrice[roomIndex] = priceInput.value;
-      }
-      if (currencySelect?.value) {
-        pricingData.currency[roomIndex] = currencySelect.value;
-      }
-      if (extraInput?.value) {
-        pricingData.extraPerGuest[roomIndex] = extraInput.value;
-      }
-    }
-
-    // Restore values after creating new elements
-    function restorePricingValues(container, roomIndex = 0) {
-      setTimeout(() => {
-        const priceInput = container.querySelector(`input[id="fixed-price-input-${roomIndex}"]`);
-        const currencySelect = container.querySelector(`select[id="currency-select-${roomIndex}"]`);
-        const extraInput = container.querySelector(`input[id="extra-guest-input-${roomIndex}"]`);
-
-        if (priceInput && pricingData.fixedPrice[roomIndex]) {
-          priceInput.value = pricingData.fixedPrice[roomIndex];
-          priceInput.dispatchEvent(new Event('input', {bubbles: true}));
-        }
-        if (currencySelect && pricingData.currency[roomIndex]) {
-          currencySelect.value = pricingData.currency[roomIndex];
-          currencySelect.dispatchEvent(new Event('change', {bubbles: true}));
-        }
-        if (extraInput && pricingData.extraPerGuest[roomIndex]) {
-          extraInput.value = pricingData.extraPerGuest[roomIndex];
-          extraInput.dispatchEvent(new Event('input', {bubbles: true}));
-        }
-      }, 0);
-    }
-
-    // Update pricing content based on selected type
-    function updatePricingContent(container, pricingType, roomIndex = null) {
-      const indexValue = roomIndex !== null ? roomIndex : 0;
-
-      // Save current values before clearing
-      savePricingValues(container, indexValue);
-
-      container.innerHTML = '';
-
-      if (pricingType === "contactHost") {
-        return;
-      }
-
-      // Add fixed price section if needed
-      if (pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") {
-        const fixedClone = clonePricingTemplate(fixedPricingTemplate, indexValue);
-        container.appendChild(fixedClone);
-      }
-
-      // Add extra guest section if needed
-      if (pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") {
-        const extraClone = clonePricingTemplate(extraGuestTemplate, indexValue);
-        container.appendChild(extraClone);
-      }
-
-      // Add currency section for dynamic pricing
-      if (pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") {
-        const currencyClone = clonePricingTemplate(currencyTemplate, indexValue);
-        container.appendChild(currencyClone);
-      }
-
-      // Restore saved values
-      restorePricingValues(container, indexValue);
-    }
-
-    // Update B&B room tabs
-    function updateRoomTabs() {
-      const rooms = bbRoomsContainer.children;
-      roomTabsContainer.innerHTML = '';
-
-      Array.from(rooms).forEach((room, index) => {
-        const roomNameInput = room.querySelector('input[name*="[name]"]');
-        const roomName = roomNameInput?.value || `Room ${index + 1}`;
-
-        const tab = document.createElement('button');
-        tab.type = 'button';
-        tab.className = `px-4 py-2 font-medium rounded-t-lg ${index === currentRoomTab ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
-        tab.textContent = roomName;
-        tab.addEventListener('click', () => {
-          currentRoomTab = index;
-          updateRoomTabs();
-          showRoomPricing(index);
+          roomPricing[roomName] = {
+            price,
+            pricePeriods: pricePeriods || [],
+            extraPerGuest: extraPerGuest || 0,
+            guestCostBasis: guestCostBasis || "perStay",
+          };
         });
 
-        roomTabsContainer.appendChild(tab);
-      });
-    }
+        // Get currency from first room or default
+        const currencySelect = document.querySelector(`select[name="pricing[0][currency]"]`);
+        const currency = currencySelect ? currencySelect.value : null;
 
-    // Update room pricing content - creates fields for all rooms, shows only current
-    function updateRoomPricingContent() {
-      const selectedPricing = document.querySelector('input[name="pricingType"]:checked')?.value;
-      const rooms = bbRoomsContainer.children;
+        // VALIDATION
+        if (roomDetails.length === 0) {
+          alert("Please add at least one room");
+          return;
+        }
 
-      roomPricingContent.innerHTML = '';
+        if ((pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") && !roomDetails.some(r => roomPricing[r.roomName]?.price)) {
+          alert("Please set prices for all rooms");
+          return;
+        }
 
-      if (selectedPricing === "contactHost") {
-        return;
+        json = {
+          propertyId: formData.get("propertyId"),
+          propertyPsw: formData.get("propertyPsw"),
+          hostType: formData.get("hostType"),
+          companyName: formData.get("hostType") === "company" ? formData.get("companyName") || null : null,
+          companyAddress: formData.get("hostType") === "company" ? formData.get("companyAddress") || null : null,
+          companyVat: formData.get("hostType") === "company" ? formData.get("companyVat") || null : null,
+          companyRep: formData.get("hostType") === "company" ? formData.get("companyRep") || null : null,
+          individualName: formData.get("hostType") === "individual" ? formData.get("individualName") || null : null,
+          individualAddress: formData.get("hostType") === "individual" ? formData.get("individualAddress") || null : null,
+          individualTaxId: formData.get("hostType") === "individual" ? formData.get("individualTaxId") || null : null,
+          hostEmail: formData.get("hostEmail"),
+          headTitle: formData.get("title"),
+          title: formData.get("title"),
+          location: formData.get("fullAddress"),
+          rooms: roomDetails.length,
+          breakFastIncluded: formData.get("breakFastIncluded") === "on",
+          breakFastAvailable: formData.get("breakFastAvailable") === "on",
+          breakFastCost: formData.get("breakFastCost") || null,
+          roomDetails,
+          imagesMainPage: null,
+          imagesThumbnail: null,
+          imagesByCategory: null,
+          description: null,
+          houseRules: (formData.get("houseRules") || "").split("\n"),
+          roomPricing,
+          currency,
+          checkIn: formData.get("checkin") || null,
+          checkOut: formData.get("checkout") || null,
+          email: formData.get("email") || null,
+          phoneNumber: formData.get("phone") || null,
+          whatsAppNumber: null,
+          apartmentServices,
+          additionalServices: formData.get("additionalServices") || null,
+          mapEmbed: null,
+          showDirections: formData.get("showDirections") === "true" || null,
+          carDirectionsDescription: null,
+          publicTransportDirectionsDescription: null,
+          hostImage: null,
+          hostName: null,
+          hostBio: formData.get("hostDescription") || null,
+          hostLanguages: formData.getAll("languages[]") || null
+        };
       }
 
-      // Create pricing section for each room
-      Array.from(rooms).forEach((room, index) => {
-        const roomPricingSection = document.createElement('div');
-        roomPricingSection.className = 'room-pricing-section';
-        roomPricingSection.dataset.roomIndex = index;
-        roomPricingSection.style.display = index === currentRoomTab ? 'block' : 'none';
+      // Download JSON
+      const blob = new Blob([JSON.stringify(json, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${propertyType}-${json.propertyId || "config"}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const breakfastIncluded = document.getElementById("breakfast-included");
+      const breakfastOptions = document.getElementById("breakfast-options");
+      const breakfastAvailable = document.getElementById("breakfast-available");
+      const breakfastCostLabel = document.getElementById("breakfast-cost-label");
+
+      const toggleBreakfastOptions = () => {
+        if (breakfastIncluded.checked) {
+          // Included in stay → hide available & cost
+          breakfastOptions.classList.add("hidden");
+          breakfastAvailable.checked = false;
+          breakfastCostLabel.classList.add("hidden");
+          document.getElementById("breakfast-cost").value = "";
+        } else {
+          // Not included → show available checkbox
+          breakfastOptions.classList.remove("hidden");
+          // Show cost only if available is checked
+          toggleBreakfastCost();
+        }
+      };
+
+      const toggleBreakfastCost = () => {
+        if (breakfastAvailable.checked) {
+          breakfastCostLabel.classList.remove("hidden");
+        } else {
+          breakfastCostLabel.classList.add("hidden");
+          document.getElementById("breakfast-cost").value = "";
+        }
+      };
+
+      breakfastIncluded.addEventListener("change", toggleBreakfastOptions);
+      breakfastAvailable.addEventListener("change", toggleBreakfastCost);
+
+      // Initialize on page load
+      toggleBreakfastOptions();
+    });
+
+
+    const otherCheckbox = document.getElementById("language-other-checkbox");
+    const otherInput = document.getElementById("language-other-input");
+
+    otherCheckbox.addEventListener("change", () => {
+      if (otherCheckbox.checked) {
+        otherInput.classList.remove("hidden");
+      } else {
+        otherInput.classList.add("hidden");
+        otherInput.value = "";
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const pricingRadios = document.querySelectorAll('input[name="pricingType"]');
+      const bbPricingTabs = document.getElementById("bb-pricing-tabs");
+      const apartmentPricingContent = document.getElementById("apartment-pricing-content");
+      const dynamicDesc = document.getElementById("dynamic-price-desc");
+      const roomTabsContainer = document.getElementById("room-tabs");
+      const roomPricingContent = document.getElementById("room-pricing-content");
+      const typeRadios = document.querySelectorAll('input[name="type"]');
+      const bbRoomsContainer = document.getElementById("bb-rooms-container");
+
+      const fixedPricingTemplate = document.getElementById("pricing-fixed-template");
+      const extraGuestTemplate = document.getElementById("pricing-extra-guest-template");
+      const currencyTemplate = document.getElementById("pricing-currency-template");
+
+      let currentRoomTab = 0;
+      let propertyType = "apartment";
+
+      // Store pricing data to preserve values across radio button changes
+      let pricingData = {
+        fixedPrice: {},
+        extraPerGuest: {},
+        currency: {}
+      };
+
+      // Track property type
+      typeRadios.forEach(radio => {
+        if (radio.checked) propertyType = radio.value;
+        radio.addEventListener("change", () => {
+          propertyType = radio.value;
+          updatePricingDisplay();
+        });
+      });
+
+      // Clone and populate pricing template
+      function clonePricingTemplate(template, roomIndex = null) {
+        const clone = template.content.cloneNode(true);
+        const indexValue = roomIndex !== null ? roomIndex : 0;
+
+        // Update all attributes with __INDEX__
+        clone.querySelectorAll('[name], [id]').forEach(el => {
+          if (el.name) {
+            el.name = el.name.replace(/__INDEX__/g, indexValue);
+          }
+          if (el.id) {
+            el.id = el.id.replace(/__INDEX__/g, indexValue);
+          }
+        });
+
+        return clone;
+      }
+
+      // Preserve values before clearing
+      function savePricingValues(roomIndex = 0) {
+        // Search entire document instead of just container
+        const priceInput = document.querySelector(`input[id="fixed-price-input-${roomIndex}"]`);
+        const currencySelect = document.querySelector(`select[id="currency-select-${roomIndex}"]`);
+        const extraInput = document.querySelector(`input[id="extra-guest-input-${roomIndex}"]`);
+
+        if (priceInput?.value) {
+          pricingData.fixedPrice[roomIndex] = priceInput.value;
+        }
+        if (currencySelect?.value) {
+          pricingData.currency[roomIndex] = currencySelect.value;
+        }
+        if (extraInput?.value) {
+          pricingData.extraPerGuest[roomIndex] = extraInput.value;
+        }
+      }
+
+      // Restore values after creating new elements
+      function restorePricingValues(container, roomIndex = 0) {
+        setTimeout(() => {
+          const priceInput = container.querySelector(`input[id="fixed-price-input-${roomIndex}"]`);
+          const currencySelect = container.querySelector(`select[id="currency-select-${roomIndex}"]`);
+          const extraInput = container.querySelector(`input[id="extra-guest-input-${roomIndex}"]`);
+
+          if (priceInput && pricingData.fixedPrice[roomIndex]) {
+            priceInput.value = pricingData.fixedPrice[roomIndex];
+            priceInput.dispatchEvent(new Event('input', {bubbles: true}));
+          }
+          if (currencySelect && pricingData.currency[roomIndex]) {
+            currencySelect.value = pricingData.currency[roomIndex];
+            currencySelect.dispatchEvent(new Event('change', {bubbles: true}));
+          }
+          if (extraInput && pricingData.extraPerGuest[roomIndex]) {
+            extraInput.value = pricingData.extraPerGuest[roomIndex];
+            extraInput.dispatchEvent(new Event('input', {bubbles: true}));
+          }
+        }, 0);
+      }
+
+      // Update pricing content based on selected type
+      function updatePricingContent(container, pricingType, roomIndex = null) {
+        const indexValue = roomIndex !== null ? roomIndex : 0;
+
+        // Save current values before clearing
+        savePricingValues(container, indexValue);
+
+        container.innerHTML = '';
+
+        if (pricingType === "contactHost") {
+          return;
+        }
 
         // Add fixed price section if needed
-        if (selectedPricing === "fixedAllYear" || selectedPricing === "fixedExtraGuests") {
-          const fixedClone = clonePricingTemplate(fixedPricingTemplate, index);
-          roomPricingSection.appendChild(fixedClone);
+        if (pricingType === "fixedAllYear" || pricingType === "fixedExtraGuests") {
+          const fixedClone = clonePricingTemplate(fixedPricingTemplate, indexValue);
+          container.appendChild(fixedClone);
         }
 
         // Add extra guest section if needed
-        if (selectedPricing === "fixedExtraGuests" || selectedPricing === "dynamicDatesExtraGuests") {
-          const extraClone = clonePricingTemplate(extraGuestTemplate, index);
-          roomPricingSection.appendChild(extraClone);
+        if (pricingType === "fixedExtraGuests" || pricingType === "dynamicDatesExtraGuests") {
+          const extraClone = clonePricingTemplate(extraGuestTemplate, indexValue);
+          container.appendChild(extraClone);
         }
 
         // Add currency section for dynamic pricing
-        if (selectedPricing === "dynamicDates" || selectedPricing === "dynamicDatesExtraGuests") {
-          const currencyClone = clonePricingTemplate(currencyTemplate, index);
-          roomPricingSection.appendChild(currencyClone);
+        if (pricingType === "dynamicDates" || pricingType === "dynamicDatesExtraGuests") {
+          const currencyClone = clonePricingTemplate(currencyTemplate, indexValue);
+          container.appendChild(currencyClone);
         }
 
-        roomPricingContent.appendChild(roomPricingSection);
-
-        // Restore values for this room
-        restorePricingValues(roomPricingSection, index);
-      });
-    }
-
-    // Show pricing for selected room tab
-    function showRoomPricing(roomIndex) {
-      roomPricingContent.querySelectorAll('.room-pricing-section').forEach((section, index) => {
-        section.style.display = index === roomIndex ? 'block' : 'none';
-      });
-    }
-
-    // Update apartment pricing content
-    function updateApartmentPricingContent() {
-      const selectedPricing = document.querySelector('input[name="pricingType"]:checked')?.value;
-
-      // IMPORTANT: Call savePricingValues without container parameter
-      savePricingValues();
-
-      updatePricingContent(apartmentPricingContent, selectedPricing);
-    }
-
-    // Main update function
-    function updatePricingDisplay() {
-      const selectedPricing = document.querySelector('input[name="pricingType"]:checked')?.value;
-
-      // Show/hide dynamic description
-      if (selectedPricing === "dynamicDates" || selectedPricing === "dynamicDatesExtraGuests") {
-        dynamicDesc.classList.remove("hidden");
-      } else {
-        dynamicDesc.classList.add("hidden");
+        // Restore saved values
+        restorePricingValues(container, indexValue);
       }
 
-      // Show appropriate pricing section
-      if (propertyType === "bb") {
-        const hasRooms = bbRoomsContainer.children.length > 0;
-        if (hasRooms && selectedPricing !== "contactHost") {
-          bbPricingTabs.classList.remove("hidden");
-          apartmentPricingContent.classList.add("hidden");
-          updateRoomTabs();
-          updateRoomPricingContent();
+      // Update B&B room tabs
+      function updateRoomTabs() {
+        const rooms = bbRoomsContainer.children;
+        roomTabsContainer.innerHTML = '';
+
+        Array.from(rooms).forEach((room, index) => {
+          const roomNameInput = room.querySelector('input[name*="[name]"]');
+          const roomName = roomNameInput?.value || `Room ${index + 1}`;
+
+          const tab = document.createElement('button');
+          tab.type = 'button';
+          tab.className = `px-4 py-2 font-medium rounded-t-lg ${index === currentRoomTab ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
+          tab.textContent = roomName;
+          tab.addEventListener('click', () => {
+            currentRoomTab = index;
+            updateRoomTabs();
+            showRoomPricing(index);
+          });
+
+          roomTabsContainer.appendChild(tab);
+        });
+      }
+
+      // Update room pricing content - creates fields for all rooms, shows only current
+      function updateRoomPricingContent() {
+        const selectedPricing = document.querySelector('input[name="pricingType"]:checked')?.value;
+        const rooms = bbRoomsContainer.children;
+
+        roomPricingContent.innerHTML = '';
+
+        if (selectedPricing === "contactHost") {
+          return;
+        }
+
+        // Create pricing section for each room
+        Array.from(rooms).forEach((room, index) => {
+          const roomPricingSection = document.createElement('div');
+          roomPricingSection.className = 'room-pricing-section';
+          roomPricingSection.dataset.roomIndex = index;
+          roomPricingSection.style.display = index === currentRoomTab ? 'block' : 'none';
+
+          // Add fixed price section if needed
+          if (selectedPricing === "fixedAllYear" || selectedPricing === "fixedExtraGuests") {
+            const fixedClone = clonePricingTemplate(fixedPricingTemplate, index);
+            roomPricingSection.appendChild(fixedClone);
+          }
+
+          // Add extra guest section if needed
+          if (selectedPricing === "fixedExtraGuests" || selectedPricing === "dynamicDatesExtraGuests") {
+            const extraClone = clonePricingTemplate(extraGuestTemplate, index);
+            roomPricingSection.appendChild(extraClone);
+          }
+
+          // Add currency section for dynamic pricing
+          if (selectedPricing === "dynamicDates" || selectedPricing === "dynamicDatesExtraGuests") {
+            const currencyClone = clonePricingTemplate(currencyTemplate, index);
+            roomPricingSection.appendChild(currencyClone);
+          }
+
+          roomPricingContent.appendChild(roomPricingSection);
+
+          // Restore values for this room
+          restorePricingValues(roomPricingSection, index);
+        });
+      }
+
+      // Show pricing for selected room tab
+      function showRoomPricing(roomIndex) {
+        roomPricingContent.querySelectorAll('.room-pricing-section').forEach((section, index) => {
+          section.style.display = index === roomIndex ? 'block' : 'none';
+        });
+      }
+
+      // Update apartment pricing content
+      function updateApartmentPricingContent() {
+        const selectedPricing = document.querySelector('input[name="pricingType"]:checked')?.value;
+
+        // IMPORTANT: Call savePricingValues without container parameter
+        savePricingValues();
+
+        updatePricingContent(apartmentPricingContent, selectedPricing);
+      }
+
+      // Main update function
+      function updatePricingDisplay() {
+        const selectedPricing = document.querySelector('input[name="pricingType"]:checked')?.value;
+
+        // Show/hide dynamic description
+        if (selectedPricing === "dynamicDates" || selectedPricing === "dynamicDatesExtraGuests") {
+          dynamicDesc.classList.remove("hidden");
+        } else {
+          dynamicDesc.classList.add("hidden");
+        }
+
+        // Show appropriate pricing section
+        if (propertyType === "bb") {
+          const hasRooms = bbRoomsContainer.children.length > 0;
+          if (hasRooms && selectedPricing !== "contactHost") {
+            bbPricingTabs.classList.remove("hidden");
+            apartmentPricingContent.classList.add("hidden");
+            updateRoomTabs();
+            updateRoomPricingContent();
+          } else {
+            bbPricingTabs.classList.add("hidden");
+            apartmentPricingContent.classList.add("hidden");
+          }
         } else {
           bbPricingTabs.classList.add("hidden");
-          apartmentPricingContent.classList.add("hidden");
-        }
-      } else {
-        bbPricingTabs.classList.add("hidden");
-        if (selectedPricing !== "contactHost") {
-          apartmentPricingContent.classList.remove("hidden");
-          updateApartmentPricingContent();
-        } else {
-          apartmentPricingContent.classList.add("hidden");
+          if (selectedPricing !== "contactHost") {
+            apartmentPricingContent.classList.remove("hidden");
+            updateApartmentPricingContent();
+          } else {
+            apartmentPricingContent.classList.add("hidden");
+          }
         }
       }
-    }
 
-    // Listen to pricing type changes
-    pricingRadios.forEach(radio => {
-      radio.addEventListener("change", updatePricingDisplay);
-    });
+      // Listen to pricing type changes
+      pricingRadios.forEach(radio => {
+        radio.addEventListener("change", updatePricingDisplay);
+      });
 
-    // Listen to room additions/deletions
-    const observer = new MutationObserver(() => {
-      if (propertyType === "bb") {
-        updatePricingDisplay();
-      }
-    });
-    observer.observe(bbRoomsContainer, {childList: true});
-
-    // Listen to room name changes to update tabs
-    bbRoomsContainer.addEventListener('input', (e) => {
-      if (e.target.name?.includes('[name]')) {
-        updateRoomTabs();
-      }
-    });
-
-    // Initial update
-    updatePricingDisplay();
-  });
-
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const bbSection = document.getElementById("bb-section");
-    const apartmentSection = document.getElementById("apartment-section");
-    const radios = document.querySelectorAll('input[name="type"]');
-
-    const addRoomBtn = document.getElementById("add-room-btn");
-    const bbRoomsContainer = document.getElementById("bb-rooms-container");
-    const bbRoomsCounter = document.getElementById("bb-rooms");
-    const roomTemplate = document.getElementById("bb-room-template");
-
-    let roomCount = 0;
-
-    // Toggle property type sections
-    radios.forEach((radio) => {
-      radio.addEventListener("change", () => {
-        if (radio.value === "bb" && radio.checked) {
-          bbSection.hidden = false;
-          apartmentSection.hidden = true;
-        } else if (radio.value === "apartment" && radio.checked) {
-          bbSection.hidden = true;
-          apartmentSection.hidden = false;
+      // Listen to room additions/deletions
+      const observer = new MutationObserver(() => {
+        if (propertyType === "bb") {
+          updatePricingDisplay();
         }
       });
-    });
+      observer.observe(bbRoomsContainer, {childList: true});
 
-    // Update counter
-    const updateRoomsCount = () => {
-      bbRoomsCounter.textContent = bbRoomsContainer.children.length;
-    };
-
-    // Add room
-    addRoomBtn.addEventListener("click", () => {
-      roomCount++;
-      const clone = roomTemplate.content.cloneNode(true);
-
-      // Update all __INDEX__ placeholders in the cloned content
-      const wrapper = document.createElement('div');
-      wrapper.appendChild(clone);
-      wrapper.innerHTML = wrapper.innerHTML.replace(/__INDEX__/g, roomCount);
-
-      const newRoom = wrapper.firstElementChild;
-      bbRoomsContainer.appendChild(newRoom);
-      updateRoomsCount();
-
-      // Delete button
-      const deleteBtn = newRoom.querySelector(".delete-room-btn");
-      deleteBtn.addEventListener("click", () => {
-        newRoom.remove();
-        updateRoomsCount();
+      // Listen to room name changes to update tabs
+      bbRoomsContainer.addEventListener('input', (e) => {
+        if (e.target.name?.includes('[name]')) {
+          updateRoomTabs();
+        }
       });
+
+      // Initial update
+      updatePricingDisplay();
     });
-  });
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const hostRadios = document.querySelectorAll('input[name="hostType"]');
-    const companyFields = document.getElementById('companyFields');
-    const individualFields = document.getElementById('individualFields');
 
-    const toggleHostFields = () => {
-      const selectedType = document.querySelector('input[name="hostType"]:checked')?.value;
+    document.addEventListener("DOMContentLoaded", () => {
+      const bbSection = document.getElementById("bb-section");
+      const apartmentSection = document.getElementById("apartment-section");
+      const radios = document.querySelectorAll('input[name="type"]');
 
-      companyFields.classList.toggle('hidden', selectedType !== 'company');
-      individualFields.classList.toggle('hidden', selectedType !== 'individual');
+      const addRoomBtn = document.getElementById("add-room-btn");
+      const bbRoomsContainer = document.getElementById("bb-rooms-container");
+      const bbRoomsCounter = document.getElementById("bb-rooms");
+      const roomTemplate = document.getElementById("bb-room-template");
 
-      // Clear inputs of hidden section
-      const clearInputs = (container) => {
-        container.querySelectorAll('input').forEach(input => input.value = '');
+      let roomCount = 0;
+
+      // Toggle property type sections
+      radios.forEach((radio) => {
+        radio.addEventListener("change", () => {
+          if (radio.value === "bb" && radio.checked) {
+            bbSection.hidden = false;
+            apartmentSection.hidden = true;
+          } else if (radio.value === "apartment" && radio.checked) {
+            bbSection.hidden = true;
+            apartmentSection.hidden = false;
+          }
+        });
+      });
+
+      // Update counter
+      const updateRoomsCount = () => {
+        bbRoomsCounter.textContent = bbRoomsContainer.children.length;
       };
 
-      if (selectedType === 'company') clearInputs(individualFields);
-      else if (selectedType === 'individual') clearInputs(companyFields);
-    };
+      // Add room
+      addRoomBtn.addEventListener("click", () => {
 
-    // Bind listener to all radios
-    hostRadios.forEach(radio => radio.addEventListener('change', toggleHostFields));
+        const clone = roomTemplate.content.cloneNode(true);
 
-    // Optional: Initialize on page load if one is pre-checked
-    toggleHostFields();
-  });
+        // Update all __INDEX__ placeholders in the cloned content
+        const wrapper = document.createElement('div');
+        wrapper.appendChild(clone);
+        wrapper.innerHTML = wrapper.innerHTML.replace(/__INDEX__/g, roomCount);
+        roomCount++;
 
-  //Show directions Tooltip
+        const newRoom = wrapper.firstElementChild;
+        bbRoomsContainer.appendChild(newRoom);
+        updateRoomsCount();
 
-  const label = document.querySelector('label[for="showDirections"]');
-  const tooltip = document.getElementById('tooltip');
+        // Delete button
+        const deleteBtn = newRoom.querySelector(".delete-room-btn");
+        deleteBtn.addEventListener("click", () => {
+          newRoom.remove();
+          updateRoomsCount();
+        });
+      });
+    });
 
-  // Show tooltip on mobile tap
-  label.addEventListener('click', () => {
-    if (window.innerWidth < 768) {
-      tooltip.classList.add('opacity-100');
-      tooltip.classList.remove('pointer-events-none');
+    document.addEventListener("DOMContentLoaded", () => {
+      const hostRadios = document.querySelectorAll('input[name="hostType"]');
+      const companyFields = document.getElementById('companyFields');
+      const individualFields = document.getElementById('individualFields');
 
-      // hide after 3 seconds
-      setTimeout(() => {
+      const toggleHostFields = () => {
+        const selectedType = document.querySelector('input[name="hostType"]:checked')?.value;
+
+        companyFields.classList.toggle('hidden', selectedType !== 'company');
+        individualFields.classList.toggle('hidden', selectedType !== 'individual');
+
+        // Clear inputs of hidden section
+        const clearInputs = (container) => {
+          container.querySelectorAll('input').forEach(input => input.value = '');
+        };
+
+        if (selectedType === 'company') clearInputs(individualFields);
+        else if (selectedType === 'individual') clearInputs(companyFields);
+      };
+
+      // Bind listener to all radios
+      hostRadios.forEach(radio => radio.addEventListener('change', toggleHostFields));
+
+      // Optional: Initialize on page load if one is pre-checked
+      toggleHostFields();
+    });
+
+    //Show directions Tooltip
+
+    const label = document.querySelector('label[for="showDirections"]');
+    const tooltip = document.getElementById('tooltip');
+
+    // Show tooltip on mobile tap
+    label.addEventListener('click', () => {
+      if (window.innerWidth < 768) {
+        tooltip.classList.add('opacity-100');
+        tooltip.classList.remove('pointer-events-none');
+
+        // hide after 3 seconds
+        setTimeout(() => {
+          tooltip.classList.remove('opacity-100');
+          tooltip.classList.add('pointer-events-none');
+        }, 6000);
+      }
+    });
+
+    // Hover support for desktop
+    label.addEventListener('mouseenter', () => {
+      if (window.innerWidth >= 768) {
+        tooltip.classList.add('opacity-100');
+      }
+    });
+
+    label.addEventListener('mouseleave', () => {
+      if (window.innerWidth >= 768) {
         tooltip.classList.remove('opacity-100');
-        tooltip.classList.add('pointer-events-none');
-      }, 6000);
-    }
-  });
-
-  // Hover support for desktop
-  label.addEventListener('mouseenter', () => {
-    if (window.innerWidth >= 768) {
-      tooltip.classList.add('opacity-100');
-    }
-  });
-
-  label.addEventListener('mouseleave', () => {
-    if (window.innerWidth >= 768) {
-      tooltip.classList.remove('opacity-100');
-    }
-  });
+      }
+    });
 </script>
 
 <script src="../scripts/apartmentPricePreview.js"/>
