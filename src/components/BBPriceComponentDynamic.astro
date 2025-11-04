@@ -1,5 +1,6 @@
 ---
 import ContactUsPriceComponent from "./ContactUsPriceComponent.astro";
+import CheckInCheckOut from "./CheckInCheckOut.astro";
 
 // --- Utility to format default dates ---
 function formatDate(date: Date) {
@@ -90,7 +91,7 @@ const roomDetailsJson = JSON.stringify(roomDetails);
                   id="checkIn-input"
                   value={checkInDate}
                   class="text-gray-600 border rounded p-1 w-2/3 text-right"
-                  onchange="updatePrice()"
+                  onchange="handleCheckInChange()"
                   min={checkInDate}
                 />
             </div>
@@ -119,6 +120,10 @@ const roomDetailsJson = JSON.stringify(roomDetails);
                 ></select>
             </div>
         </div>
+
+        <div class="divider my-2"></div>
+
+        <CheckInCheckOut checkIn={checkIn} checkOut={checkOut} />
 
         <div class="divider my-2"></div>
 
@@ -184,6 +189,33 @@ const roomDetailsJson = JSON.stringify(roomDetails);
 
             return total;
         }
+
+        // Format date to YYYY-MM-DD
+        function formatDateForInput(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, "0");
+            const d = String(date.getDate()).padStart(2, "0");
+            return `${y}-${m}-${d}`;
+        }
+
+        window.handleCheckInChange = function () {
+            const checkInStr = checkInInput.value;
+            const checkOutStr = checkOutInput.value;
+
+            if (checkInStr && checkOutStr) {
+                const checkInDate = new Date(checkInStr);
+                const checkOutDate = new Date(checkOutStr);
+
+                // If check-in is after or equal to check-out, set check-out to check-in + 1 day
+                if (checkInDate >= checkOutDate) {
+                    const newCheckOut = new Date(checkInDate);
+                    newCheckOut.setDate(newCheckOut.getDate() + 1);
+                    checkOutInput.value = formatDateForInput(newCheckOut);
+                }
+            }
+
+            updatePrice();
+        };
 
         window.updatePrice = function () {
             const roomName = roomSelect.value;

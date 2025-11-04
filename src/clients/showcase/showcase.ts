@@ -88,9 +88,9 @@ This exceptional setting perfectly combines vibrant urban energy with the tranqu
   price: 120,
   pricePeriods: [
     { from: "2025-10-25", to: "2025-10-25", price: 100 },
-    { from: "2025-10-26", to: "2025-10-31", price: 120 },
+    { from: "2025-11-01", to: "2025-11-05", price: 120 },
   ],
-  extraPerGuest: 20,
+  extraPerGuest: 1,
   guestCostBasis: 'perNight',
   currency: "€",
   checkIn: "After 2PM",

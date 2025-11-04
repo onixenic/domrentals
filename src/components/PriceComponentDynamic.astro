@@ -1,28 +1,22 @@
 ---
-// --- Start Date Formatting Utility ---
-
 import ContactUsPriceComponent from "./ContactUsPriceComponent.astro";
 import CheckInCheckOut from "./CheckInCheckOut.astro";
+
+// --- Start Date Formatting Utility ---
 function formatDate(date) {
   const year = date.getFullYear();
-  // getMonth() is 0-indexed, so we add 1.
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
 
 const today = new Date();
 const tomorrow = new Date();
-// setDate() handles month/year rollovers automatically
 tomorrow.setDate(today.getDate() + 1);
 
-// Use the formatted dates as the default values
 const checkInDate = formatDate(today);
 const checkOutDate = formatDate(tomorrow);
-const checkOutMinDateDefault = checkOutDate;
-
 // --- End Date Formatting Utility ---
-
 
 interface PricePeriod {
   from: string;
@@ -51,13 +45,12 @@ const {
   checkOut,
   email,
   phoneNumber,
-  whatsAppNumber
+  whatsAppNumber,
 } = Astro.props;
 
-
-// Pass data as JSON to the client
 const pricePeriodsJson = JSON.stringify(pricePeriods);
 ---
+
 <div
         id="preview-price-component-dynamic"
         class="card bg-base-100 shadow-xl border border-base-300"
@@ -65,8 +58,7 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
         data-price={price}
         data-currency={currency}
         data-price-periods={pricePeriodsJson}
-        data-initial-checkin={checkInDate} data-initial-checkout={checkOutDate}>
-
+>
     <div class="card-body">
         <div class="flex items-baseline gap-1">
             <span id="price-text" class="text-3xl font-bold">{currency}</span>
@@ -78,180 +70,125 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
         <div class="space-y-3">
             <div class="flex justify-between text-sm items-center">
                 <label for="checkIn-input" class="font-semibold">Check-in</label>
-                <input type="date" id="checkIn-input" value={checkInDate}
-                       class="text-gray-600 border rounded p-1 w-2/3 text-right"
-                       min={checkInDate}/>
+                <input
+                        type="date"
+                        id="checkIn-input"
+                        value={checkInDate}
+                        class="text-gray-600 border rounded p-1 w-2/3 text-right"
+                        min={checkInDate}
+                />
             </div>
+
             <div class="flex justify-between text-sm items-center">
                 <label for="checkOut-input" class="font-semibold">Check-out</label>
-                <input type="date" id="checkOut-input" value={checkOutDate}
-                       class="text-gray-600 border rounded p-1 w-2/3 text-right"
-                       min={checkOutMinDateDefault}/>
+                <input
+                        type="date"
+                        id="checkOut-input"
+                        value={checkOutDate}
+                        class="text-gray-600 border rounded p-1 w-2/3 text-right"
+                        min={checkOutDate}
+                />
             </div>
+
             <div class="divider my-1"></div>
             <CheckInCheckOut checkIn={checkIn} checkOut={checkOut}/>
         </div>
 
         <div class="divider my-1"></div>
-        <h3 class="text-xl font-semibold mb-1">Contact your host</h3>
-        <ContactUsPriceComponent propertyId={propertyId} email={email} phoneNumber={phoneNumber}
-                                 whatsAppNumber={whatsAppNumber}/>
 
-        <!-- Price confirmation notice -->
-        <p class="text-xs text-gray-500 my-1">*Price and availability must be confirmed by the host</p>
+        <h3 class="text-xl font-semibold mb-1">Contact your host</h3>
+        <ContactUsPriceComponent
+                propertyId={propertyId}
+                email={email}
+                phoneNumber={phoneNumber}
+                whatsAppNumber={whatsAppNumber}
+        />
+
+        <p class="text-xs text-gray-500 my-1">
+            *Price and availability must be confirmed by the host
+        </p>
     </div>
 
     <script type="text/javascript">
-        (function () {
-            const card = document.currentScript.parentElement;
-            const basePrice = Number(card.dataset.price);
-            let currency = card.dataset.currency;
-            const pricePeriods = JSON.parse(card.dataset.pricePeriods);
+      (function () {
+        const card = document.currentScript.parentElement;
+        const basePrice = Number(card.dataset.price);
+        const currency = card.dataset.currency;
+        const pricePeriods = JSON.parse(card.dataset.pricePeriods);
 
-            // READ INITIAL DATES FROM DATA ATTRIBUTES
-            const initialCheckIn = card.dataset.initialCheckin;
-            const initialCheckOut = card.dataset.initialCheckout;
+        const checkInInput = card.querySelector("#checkIn-input");
+        const checkOutInput = card.querySelector("#checkOut-input");
+        const priceText = card.querySelector("#price-text");
 
-            const checkInInput = card.querySelector("#checkIn-input");
-            const checkOutInput = card.querySelector("#checkOut-input");
-            const priceText = card.querySelector("#price-text");
+        const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-            const MS_PER_DAY = 1000 * 60 * 60 * 24;
+        function getDailyPrice(date) {
+          for (const period of pricePeriods) {
+            const from = new Date(period.from);
+            const to = new Date(period.to);
+            if (date >= from && date <= to) return period.price;
+          }
+          return basePrice;
+        }
 
-            function getDailyPrice(date) {
-                for (const period of pricePeriods) {
-                    const fromDate = new Date(period.from);
-                    const toDate = new Date(period.to);
+        function calculateTotalPrice(checkInStr, checkOutStr) {
+          const checkIn = new Date(checkInStr);
+          const checkOut = new Date(checkOutStr);
 
-                    if (date >= fromDate && date <= toDate) return period.price;
-                }
-                return basePrice;
-            }
+          if (checkOut <= checkIn) return basePrice;
 
-            function calculateTotalPrice(checkInStr, checkOutStr) {
-                // NOTE: This check remains, but it's not the primary display control
-                if (!checkInStr || !checkOutStr) return basePrice;
+          const nights = Math.round((checkOut - checkIn) / MS_PER_DAY);
+          let total = 0;
+          for (let i = 0; i < nights; i++) {
+            const day = new Date(checkIn);
+            day.setDate(checkIn.getDate() + i);
+            total += getDailyPrice(day);
+          }
+          return total;
+        }
 
-                const checkIn = new Date(checkInStr);
-                const checkOut = new Date(checkOutStr);
+        function getNextDay(dateStr) {
+          const date = new Date(dateStr);
+          date.setDate(date.getDate() + 1);
+          return formatDateStr(date);
+        }
 
-                if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime()) || checkOut <= checkIn) {
-                    return basePrice;
-                }
+        function formatDateStr(date) {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        }
 
-                const nights = Math.round((checkOut - checkIn) / MS_PER_DAY);
-                let total = 0;
-                for (let i = 0; i < nights; i++) {
-                    const day = new Date(checkIn);
-                    day.setDate(checkIn.getDate() + i);
-                    total += getDailyPrice(day);
-                }
-                return total;
-            }
+        function updatePrice() {
+          const checkInValue = checkInInput.value;
+          const checkOutValue = checkOutInput.value;
+          if (!checkInValue || !checkOutValue) {
+            priceText.textContent = `${currency}`;
+            return;
+          }
 
-            function getNextDay(dateStr) {
-                const date = new Date(dateStr);
-                date.setDate(date.getDate() + 1);
-                return formatDateStr(date);
-            }
+          const total = calculateTotalPrice(checkInValue, checkOutValue);
+          priceText.textContent = total.toFixed(2) + " " + currency;
+        }
 
-            function formatDateStr(date) {
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            }
+        checkInInput.addEventListener("change", (e) => {
+          const newCheckIn = e.target.value;
+          const nextDay = getNextDay(newCheckIn);
+          checkOutInput.min = nextDay;
 
-            function updatePrice() {
-                const checkInValue = checkInInput.value;
-                const checkOutValue = checkOutInput.value;
+          const currentOut = checkOutInput.value;
+          if (!currentOut || new Date(currentOut) <= new Date(newCheckIn)) {
+            checkOutInput.value = nextDay;
+          }
 
-                // 💡 NEW LOGIC: If checkOutValue is missing, show nothing.
-                if (!checkInValue || !checkOutValue) {
-                    priceText.textContent = `${currency}`; // Or set to an empty string: priceText.textContent = '';
-                    // If you want to show a message like "Select dates", use: priceText.textContent = 'Select Dates';
-                    return;
-                }
+          updatePrice();
+        });
 
-                const total = calculateTotalPrice(checkInValue, checkOutValue);
+        checkOutInput.addEventListener("change", updatePrice);
 
-                // Show the total, using toFixed(2) is usually good practice for currency
-                priceText.textContent = total.toFixed(2) + " " + currency;
-            }
-
-            // Handle check-in date change
-            checkInInput.addEventListener('change', (e) => {
-                const newCheckInDate = e.target.value;
-                const currentCheckOutDate = checkOutInput.value;
-
-                // Set checkout minimum to the day after check-in
-                const nextDay = getNextDay(newCheckInDate);
-                checkOutInput.min = nextDay;
-
-                // If checkout is before or equal to check-in, auto-set it to check-in + 1
-                if (!currentCheckOutDate || new Date(currentCheckOutDate) <= new Date(newCheckInDate)) {
-                    checkOutInput.value = nextDay;
-                }
-
-                updatePrice();
-            });
-
-            // Handle check-out date change
-            checkOutInput.addEventListener('change', updatePrice);
-
-            // 💡 INITIAL PRICE CALCULATION LOGIC (Using guaranteed dates)
-            // We must also apply the check here to ensure if initialCheckOut is empty, no price is shown.
-            if (initialCheckIn && initialCheckOut) {
-                const total = calculateTotalPrice(initialCheckIn, initialCheckOut);
-                priceText.textContent = total.toFixed(2) + " " + currency;
-            } else {
-                // If the initial checkout date is missing (unlikely with your current utility, but safe)
-                priceText.textContent = `${currency}`;
-            }
-
-            // Observer with improved state update logic (matching first file pattern)
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    const attrName = mutation.attributeName;
-
-
-                    if (attrName === "data-initial-checkin") {
-                        const newCheckInDate = card.getAttribute(attrName);
-                        checkInInput.value = newCheckInDate;
-
-                        // Update checkout minimum and validate
-                        const nextDay = getNextDay(newCheckInDate);
-                        checkOutInput.min = nextDay;
-
-                        const currentCheckOutDate = checkOutInput.value;
-                        if (!currentCheckOutDate || new Date(currentCheckOutDate) <= new Date(newCheckInDate)) {
-                            checkOutInput.value = nextDay;
-                        }
-
-                        updatePrice();
-                    } else if (attrName === "data-initial-checkout") {
-                        checkOutInput.value = card.getAttribute(attrName);
-                        updatePrice();
-                    } else if (attrName === "data-price") {
-                        // Update basePrice if needed (requires recalculation)
-                        updatePrice();
-                    } else if (attrName === "data-currency") {
-                        currency = card.dataset.currency;
-                        updatePrice();
-                    }
-                });
-            });
-
-            observer.observe(card, {
-                attributes: true,
-                attributeFilter: [
-                    "data-price",
-                    "data-currency",
-                    "data-price-periods",
-                    "data-initial-checkin",
-                    "data-initial-checkout"
-                ]
-            });
-        })();
+        // Initial price display
+        updatePrice();
+      })();
     </script>
 </div>

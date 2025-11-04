@@ -83,8 +83,6 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
             <span class="text-base text-gray-500">/ stay*</span>
         </div>
 
-        <!-- Extra charge notice for perStay -->
-        <div id="extra-charge-notice"></div>
 
         <div class="divider my-1"></div>
 
@@ -130,233 +128,146 @@ const pricePeriodsJson = JSON.stringify(pricePeriods);
     </div>
 
     <script type="text/javascript">
-      (function () {
-        const card = document.getElementById("preview-price-component-dynamic-plus-guest");
-        const MS_PER_DAY = 1000 * 60 * 60 * 24;
+        (function () {
+          const card = document.getElementById("preview-price-component-dynamic-plus-guest");
+          const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-        // State object
-        let state = {
-          basePrice: Number(card.dataset.price),
-          currency: card.dataset.currency,
-          pricePeriods: JSON.parse(card.dataset.pricePeriods),
-          extraPerGuest: Number(card.dataset.extraPerGuest),
-          maxGuests: Number(card.dataset.maxGuests),
-          guestCostBasis: card.dataset.guestCostBasis,
-          initialCheckIn: card.dataset.initialCheckin,
-          initialCheckOut: card.dataset.initialCheckout,
-          selectedGuests: 1
-        };
+          // State object
+          let state = {
+            basePrice: Number(card.dataset.price),
+            currency: card.dataset.currency,
+            pricePeriods: JSON.parse(card.dataset.pricePeriods),
+            extraPerGuest: Number(card.dataset.extraPerGuest),
+            maxGuests: Number(card.dataset.maxGuests),
+            guestCostBasis: card.dataset.guestCostBasis,
+            initialCheckIn: card.dataset.initialCheckin,
+            initialCheckOut: card.dataset.initialCheckout,
+            selectedGuests: 1
+            };
 
-        // DOM Elements
-        const checkInInput = card.querySelector("#checkIn-input");
-        const checkOutInput = card.querySelector("#checkOut-input");
-        const guestsInput = card.querySelector("#guests-input");
-        const priceText = card.querySelector("#price-text");
-        const extraChargeNotice = card.querySelector("#extra-charge-notice");
+          // DOM Elements
+          const checkInInput = card.querySelector("#checkIn-input");
+          const checkOutInput = card.querySelector("#checkOut-input");
+          const guestsInput = card.querySelector("#guests-input");
+          const priceText = card.querySelector("#price-text");
 
-        // Utility: Format date string from Date object
-        function formatDateStr(date) {
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const day = String(date.getDate()).padStart(2, '0');
-          return `${year}-${month}-${day}`;
-        }
+          // Utility: Format date string from Date object
+          function formatDateStr(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+            }
 
-        // Utility: Get next day as formatted string
-        function getNextDay(dateStr) {
-          const date = new Date(dateStr);
-          date.setDate(date.getDate() + 1);
-          return formatDateStr(date);
-        }
+          // Utility: Get next day as formatted string
+          function getNextDay(dateStr) {
+            const date = new Date(dateStr);
+            date.setDate(date.getDate() + 1);
+            return formatDateStr(date);
+            }
 
-        // Get daily price from periods
-        function getDailyPrice(date) {
-          for (const period of state.pricePeriods) {
-            const fromDate = new Date(period.from);
-            const toDate = new Date(period.to);
+          // Get daily price from periods
+          function getDailyPrice(date) {
+            for (const period of state.pricePeriods) {
+              const fromDate = new Date(period.from);
+              const toDate = new Date(period.to);
+              if (date >= fromDate && date <= toDate) return period.price;
+              }
+            return state.basePrice;
+            }
 
-            if (date >= fromDate && date <= toDate) return period.price;
-          }
-          return state.basePrice;
-        }
+          // Calculate total price for date range
+          function calculateTotalPrice(checkInStr, checkOutStr) {
+            if (!checkInStr || !checkOutStr) return { total: state.basePrice, nights: 0 };
 
-        // Calculate total price for date range
-        function calculateTotalPrice(checkInStr, checkOutStr) {
-          if (!checkInStr || !checkOutStr) return {total: state.basePrice, nights: 0};
+            const checkIn = new Date(checkInStr);
+            const checkOut = new Date(checkOutStr);
 
-          const checkIn = new Date(checkInStr);
-          const checkOut = new Date(checkOutStr);
-
-          if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime()) || checkOut <= checkIn) {
-            return {total: state.basePrice, nights: 0};
-          }
-
-          const nights = Math.round((checkOut - checkIn) / MS_PER_DAY);
-          let total = 0;
-          for (let i = 0; i < nights; i++) {
-            const day = new Date(checkIn);
-            day.setDate(checkIn.getDate() + i);
-            total += getDailyPrice(day);
-          }
-          return {total, nights};
-        }
-
-        // Calculate guest surcharge
-        function calculateGuestSurcharge(selectedGuests, nights) {
-          let surcharge = 0;
-
-          if (state.guestCostBasis === 'perNight') {
-            surcharge = selectedGuests * state.extraPerGuest * nights;
-          } else if (state.guestCostBasis === 'perStay') {
-            const extraGuests = Math.max(0, selectedGuests - 1);
-            surcharge = extraGuests * state.extraPerGuest;
-          }
-
-          return surcharge;
-        }
-
-        // Render guest selector options
-        function renderGuestSelector() {
-          const optionsHtml = Array.from({length: state.maxGuests}, (_, i) =>
-            `<option value="${i + 1}">${i + 1}</option>`
-          ).join('');
-          guestsInput.innerHTML = optionsHtml;
-
-          // Ensure selected guests doesn't exceed max guests
-          if (state.selectedGuests > state.maxGuests) {
-            state.selectedGuests = state.maxGuests;
-          }
-          guestsInput.value = state.selectedGuests;
-        }
-
-        // Render extra charge notice
-        function renderExtraChargeNotice() {
-          if (state.guestCostBasis === "perStay" && state.extraPerGuest) {
-            extraChargeNotice.innerHTML = `
-              <p class="text-xs text-gray-500 mt-1">* An extra charge of ${state.extraPerGuest}${state.currency} will be added per person per day</p>
-            `;
-          } else {
-            extraChargeNotice.innerHTML = "";
-          }
-        }
-
-        // Update displayed price
-        function updateDisplayedPrice() {
-          const checkInValue = checkInInput.value;
-          const checkOutValue = checkOutInput.value;
-
-          if (!checkInValue || !checkOutValue) {
-            priceText.textContent = state.currency;
-            return;
-          }
-
-          const {total: datesTotal, nights} = calculateTotalPrice(checkInValue, checkOutValue);
-          const guestSurcharge = calculateGuestSurcharge(state.selectedGuests, nights);
-          const finalTotal = datesTotal + guestSurcharge;
-
-          priceText.textContent = finalTotal.toFixed(2) + " " + state.currency;
-        }
-
-        // Render function to consolidate all UI updates
-        function render() {
-          updateDisplayedPrice();
-          renderExtraChargeNotice();
-          renderGuestSelector();
-        }
-
-        // Handle check-in date change
-        checkInInput.addEventListener('change', (e) => {
-          const newCheckInDate = e.target.value;
-          const currentCheckOutDate = checkOutInput.value;
-
-          // Set checkout minimum to the day after check-in
-          const nextDay = getNextDay(newCheckInDate);
-          checkOutInput.min = nextDay;
-
-          // If checkout is before or equal to check-in, auto-set it to check-in + 1
-          if (!currentCheckOutDate || new Date(currentCheckOutDate) <= new Date(newCheckInDate)) {
-            checkOutInput.value = nextDay;
-          }
-
-          render();
-        });
-
-        // Handle check-out date change
-        checkOutInput.addEventListener('change', render);
-
-        // Handle guest selection change
-        guestsInput.addEventListener('change', (e) => {
-          state.selectedGuests = Number(e.target.value);
-          render();
-        });
-
-        // Initial render
-        render();
-
-        // Observer for data attribute changes (from parent form updates)
-        const observer = new MutationObserver((mutations) => {
-          let shouldUpdate = false;
-
-          mutations.forEach((mutation) => {
-            const attrName = mutation.attributeName;
-
-            if (attrName === "data-price") {
-              state.basePrice = Number(card.getAttribute(attrName));
-              shouldUpdate = true;
-            } else if (attrName === "data-currency") {
-              state.currency = card.getAttribute(attrName);
-              shouldUpdate = true;
-            } else if (attrName === "data-extra-per-guest") {
-              state.extraPerGuest = Number(card.getAttribute(attrName));
-              shouldUpdate = true;
-            } else if (attrName === "data-max-guests") {
-              state.maxGuests = Number(card.getAttribute(attrName));
-              state.selectedGuests = 1; // Reset to 1 when max guests changes
-              shouldUpdate = true;
-            } else if (attrName === "data-guest-cost-basis") {
-              state.guestCostBasis = card.getAttribute(attrName);
-              shouldUpdate = true;
-            } else if (attrName === "data-initial-checkin") {
-              const newCheckInDate = card.getAttribute(attrName);
-              checkInInput.value = newCheckInDate;
-
-              // Update checkout minimum and validate
-              const nextDay = getNextDay(newCheckInDate);
-              checkOutInput.min = nextDay;
-
-              const currentCheckOutDate = checkOutInput.value;
-              if (!currentCheckOutDate || new Date(currentCheckOutDate) <= new Date(newCheckInDate)) {
-                checkOutInput.value = nextDay;
+            if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime()) || checkOut <= checkIn) {
+              return { total: state.basePrice, nights: 0 };
               }
 
-              shouldUpdate = true;
-            } else if (attrName === "data-initial-checkout") {
-              checkOutInput.value = card.getAttribute(attrName);
-              shouldUpdate = true;
-            } else if (attrName === "data-price-periods") {
-              state.pricePeriods = JSON.parse(card.getAttribute(attrName));
-              shouldUpdate = true;
+            const nights = Math.round((checkOut - checkIn) / MS_PER_DAY);
+            let total = 0;
+            for (let i = 0; i < nights; i++) {
+              const day = new Date(checkIn);
+              day.setDate(checkIn.getDate() + i);
+              total += getDailyPrice(day);
+              }
+            return { total, nights };
             }
-          });
 
-          if (shouldUpdate) {
+          const calculateGuestSurcharge = (selectedGuests, nights) => {
+            const extraGuests = Math.max(selectedGuests - 1, 0);
+            const extra = Number(state.extraPerGuest || 0);
+
+            if (state.guestCostBasis === "perNight") {
+              return extraGuests * extra * nights;
+              } else {
+              return extraGuests * extra;
+              }
+            };
+
+          // Render guest selector options
+          function renderGuestSelector() {
+            const optionsHtml = Array.from({ length: state.maxGuests }, (_, i) =>
+              `<option value="${i + 1}">${i + 1}</option>`
+              ).join('');
+            guestsInput.innerHTML = optionsHtml;
+
+            if (state.selectedGuests > state.maxGuests) {
+              state.selectedGuests = state.maxGuests;
+              }
+            guestsInput.value = state.selectedGuests;
+            }
+
+
+          // Update displayed price
+          function updateDisplayedPrice() {
+            const checkInValue = checkInInput.value;
+            const checkOutValue = checkOutInput.value;
+
+            if (!checkInValue || !checkOutValue) {
+              priceText.textContent = state.currency;
+              return;
+              }
+
+            const { total: datesTotal, nights } = calculateTotalPrice(checkInValue, checkOutValue);
+            const guestSurcharge = calculateGuestSurcharge(state.selectedGuests, nights);
+            const finalTotal = datesTotal + guestSurcharge;
+
+            priceText.textContent = finalTotal.toFixed(2) + " " + state.currency;
+            }
+
+          // Render function
+          function render() {
+            updateDisplayedPrice();
+            renderGuestSelector();
+            }
+
+          // Event handlers
+          checkInInput.addEventListener('change', (e) => {
+            const newCheckInDate = e.target.value;
+            const currentCheckOutDate = checkOutInput.value;
+
+            const nextDay = getNextDay(newCheckInDate);
+            checkOutInput.min = nextDay;
+
+            if (!currentCheckOutDate || new Date(currentCheckOutDate) <= new Date(newCheckInDate)) {
+              checkOutInput.value = nextDay;
+              }
+
             render();
-          }
-        });
+            });
 
-        observer.observe(card, {
-          attributes: true,
-          attributeFilter: [
-            "data-price",
-            "data-currency",
-            "data-extra-per-guest",
-            "data-max-guests",
-            "data-guest-cost-basis",
-            "data-initial-checkin",
-            "data-initial-checkout",
-            "data-price-periods"
-          ]
-        });
-      })();
+          checkOutInput.addEventListener('change', render);
+          guestsInput.addEventListener('change', (e) => {
+            state.selectedGuests = Number(e.target.value);
+            render();
+            });
+
+          // Initial render
+          render();
+          })();
     </script>
 </div>

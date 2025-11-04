@@ -4,21 +4,28 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "NODE_ENV=production astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/node": "^9.5.0",
+    "@astrojs/react": "^4.4.1",
     "@astrojs/ts-plugin": "^1.10.4",
     "@flaticon/flaticon-uicons": "^3.3.1",
     "@google-cloud/storage": "^7.17.2",
-    "@tailwindcss/vite": "^4.1.14",
+    "@tailwindcss/vite": "^4.1.16",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
     "astro": "^5.14.4",
-    "daisyui": "^5.3.8"
+    "firebase": "^12.5.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@types/firebase": "^3.2.3",
     "autoprefixer": "^10.4.21",
+    "daisyui": "^5.3.10",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.16"
   }

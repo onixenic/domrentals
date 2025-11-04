@@ -93,16 +93,16 @@ const {
     <!--  whatsAppNumber={whatsAppNumber}-->
     <!--/>-->
 
-    <BBPriceComponentFixedPlain
-            slot="price"
-            propertyId={propertyId}
-            roomPricing={roomPricing}
-            currency={currency}
-            checkIn={checkIn}
-            checkOut={checkOut}
-            email={email}
-            phoneNumber={phoneNumber}
-            whatsAppNumber={whatsAppNumber}
+    <!--<BBPriceComponentFixedPlain-->
+    <!--        slot="price"-->
+    <!--        propertyId={propertyId}-->
+    <!--        roomPricing={roomPricing}-->
+    <!--        currency={currency}-->
+    <!--        checkIn={checkIn}-->
+    <!--        checkOut={checkOut}-->
+    <!--        email={email}-->
+    <!--        phoneNumber={phoneNumber}-->
+    <!--        whatsAppNumber={whatsAppNumber}-->
 
     <!--/>-->
 
@@ -120,22 +120,7 @@ const {
 
     <!--/>-->
 
-    <BBPriceComponentDynamic
-      slot="price"
-      propertyId={propertyId}
-      roomPricing={roomPricing}
-      roomDetails={roomDetails}
-      currency={currency}
-      checkIn={checkIn}
-      checkOut={checkOut}
-      email={email}
-      phoneNumber={phoneNumber}
-      whatsAppNumber={whatsAppNumber}
-
-    />
-
-
-    <!--<BBPriceComponentDynamicPlusGuest-->
+    <!--<BBPriceComponentDynamic-->
     <!--  slot="price"-->
     <!--  propertyId={propertyId}-->
     <!--  roomPricing={roomPricing}-->
@@ -148,6 +133,21 @@ const {
     <!--  whatsAppNumber={whatsAppNumber}-->
 
     <!--/>-->
+
+
+    <BBPriceComponentDynamicPlusGuest
+      slot="price"
+      propertyId={propertyId}
+      roomPricing={roomPricing}
+      roomDetails={roomDetails}
+      currency={currency}
+      checkIn={checkIn}
+      checkOut={checkOut}
+      email={email}
+      phoneNumber={phoneNumber}
+      whatsAppNumber={whatsAppNumber}
+
+    />
 
 
     <Map slot="map" mapEmbed={mapEmbed} showDirections={showDirections}

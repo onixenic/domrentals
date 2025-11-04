@@ -55,25 +55,26 @@ const roomNames = Object.keys(roomPricing);
 
         <div class="divider my-1"></div>
 
+
         <!-- Room Selector -->
-        <div>
-            <label class="block text-sm font-semibold mb-1" for="roomSelect">Room</label>
+        <div class="flex justify-between text-sm items-center">
+            <label for="roomSelect" class="font-semibold">Room</label>
             <select
-                    id="roomSelect"
-                    class="border p-2 rounded w-full text-left"
+              id="roomSelect"
+              class="text-gray-600 border rounded p-1 w-2/3 text-left"
             >
-              {roomNames.map((room) => (
-                      <option value={room}>{room}</option>
-              ))}
+                {roomNames.map((room) => (
+                  <option value={room}>{room}</option>
+                ))}
             </select>
         </div>
 
         <!-- Guest Selector -->
-        <div>
-            <label class="block text-sm font-semibold mb-1" for="guestsSelect">Guests</label>
+        <div class="flex justify-between text-sm items-center">
+            <label for="guestsSelect" class="font-semibold">Guests</label>
             <select
-                    id="guestsSelect"
-                    class="border p-2 rounded w-full text-left"
+              id="guestsSelect"
+              class="text-gray-600 border rounded p-1 w-2/3 text-left"
             ></select>
         </div>
 

@@ -11,7 +11,7 @@ export const bbConfig = {
   roomDetails: [
     {
       roomName: "Room1",
-      guests: 1,
+      guests: 5,
       beds: 1,
       bathrooms: 1,
       privateBathroom: true,

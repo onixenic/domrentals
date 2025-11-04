@@ -1,34 +1,51 @@
 ---
 import ContactUsPriceComponent from "./ContactUsPriceComponent.astro";
 import CheckInCheckOut from "./CheckInCheckOut.astro";
+import PriceComponentToQuoteClient from "./Client/PriceComponentToQuoteClient.jsx";
+
 interface Props {
-  propertyId: string;
-  checkIn: string;
-  checkOut: string;
-  email: string;
-  phoneNumber: string;
-  whatsAppNumber: string;
+    propertyId: string;
+    checkIn: string;
+    checkOut: string;
+    email: string;
+    phoneNumber: string;
+    whatsAppNumber: string;
+    interactive?: boolean; // <— optional toggle for dynamic mode
 }
 
 const {
-  propertyId,
-  checkIn,
-  checkOut,
-  email,
-  phoneNumber,
-  whatsAppNumber,
+    propertyId,
+    checkIn,
+    checkOut,
+    email,
+    phoneNumber,
+    whatsAppNumber,
+    interactive = false,
 } = Astro.props;
 ---
 
-
-<div class="card bg-base-100 shadow-xl border border-base-300">
+{interactive ? (
+  <PriceComponentToQuoteClient
+  client:load
+  propertyId={propertyId}
+  email={email}
+  phoneNumber={phoneNumber}
+  whatsAppNumber={whatsAppNumber}
+  initialCheckIn={checkIn}
+  initialCheckOut={checkOut}
+/>
+  ) : (
+  <div class="card bg-base-100 shadow-xl border border-base-300">
     <div class="card-body">
-
-        <CheckInCheckOut checkIn={checkIn} checkOut={checkOut}/>
-
+        <CheckInCheckOut checkIn={checkIn} checkOut={checkOut} />
         <div class="divider my-1"></div>
         <h3 class="text-xl font-semibold mb-1">Contact host for a price</h3>
-        <ContactUsPriceComponent propertyId={propertyId} email={email} phoneNumber={phoneNumber}
-                                 whatsAppNumber={whatsAppNumber}/>
+        <ContactUsPriceComponent
+          propertyId={propertyId}
+          email={email}
+          phoneNumber={phoneNumber}
+          whatsAppNumber={whatsAppNumber}
+        />
     </div>
 </div>
+  )}
