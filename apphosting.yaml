@@ -1,0 +1,78 @@
+# Settings for Backend (on Cloud Run).
+# See https://firebase.google.com/docs/app-hosting/configure#cloud-run
+runConfig:
+  minInstances: 0
+
+  # maxInstances: 100
+  # concurrency: 80
+  # cpu: 1
+  # memoryMiB: 512
+
+# Environment variables and secrets.
+# See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
+env:
+  # Frontend (browser) - Public environment variables
+  - variable: PUBLIC_FIREBASE_API_KEY
+    value: "AIzaSyA5lNynkw90sCr2ZYounRfmo8SXnbtT_Zw"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: "domrentals-76496.firebaseapp.com"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: PUBLIC_FIREBASE_PROJECT_ID
+    value: "domrentals-76496"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: "domrentals-76496.firebasestorage.app"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "843925924965"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: PUBLIC_FIREBASE_APP_ID
+    value: "1:843925924965:web:c677e82399b615ab546a8c"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: PUBLIC_FIREBASE_MEASUREMENT_ID
+    value: "G-TF69DC7NKY"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # Backend (Server) - Private environment variables
+  - variable: FIREBASE_FIREBASE_DB
+    value: "https://domrentals-76496-default-rtdb.europe-west1.firebasedatabase.app"
+    availability:
+      - RUNTIME
+
+  - variable: FIREBASE_FIREBASE_DBNAME
+    value: "domrentals-db"
+    availability:
+      - RUNTIME
+
+  - variable: NODE_ENV
+    value: "production"
+    availability:
+      - RUNTIME
+
+  # Secret from Google Secret Manager
+  # First create the secret: gcloud secrets create firebase-service-account --data-file=service-account.json
+  - variable: FIREBASE_SERVICE_ACCOUNT_KEY
+    secret: firebase-service-account
+    availability:
+      - RUNTIME
