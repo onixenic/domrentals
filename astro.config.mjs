@@ -9,16 +9,10 @@ import react from "@astrojs/react";
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
-    // optimizeDeps: {
-    //   include: ['whatwg-url']
-    // },
-    // ssr: {
-    //   noExternal: ['whatwg-url']
-    // }
   },
 
   adapter: node({
-    mode: "standalone",
+    mode: 'standalone',
   }),
 
   integrations: [react()],

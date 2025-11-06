@@ -9,7 +9,6 @@ let db;
  * Only call this function at runtime (in API routes, not during build)
  */
 export function initializeFirebaseAdmin() {
-  // Check if already initialized
   if (getApps().length > 0) {
     app = getApps()[0];
     if (!db) {
