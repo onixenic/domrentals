@@ -3,42 +3,11 @@
         src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"
 ></script>
 
-<script is:inline>
-  // Function to load Google Analytics
-  function loadGoogleAnalytics() {
-    // Prevent loading multiple times
-    if (window.gtag) return;
+<script type="module">
 
-    const gaScript = document.createElement("script");
-    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-5K76VL7C16";
-    gaScript.async = true;
-    document.head.appendChild(gaScript);
-
-    gaScript.onload = () => {
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      window.gtag = gtag;
-      gtag("js", new Date());
-      gtag("config", "G-5K76VL7C16");
-    };
-  }
-
-  // Function to delete Google Analytics cookies
-  function deleteGoogleAnalyticsCookies() {
-    const gaCookies = ['_ga', '_ga_5K76VL7C16', '_gid', '_gat', '_gat_gtag_G_5K76VL7C16'];
-
-    gaCookies.forEach(cookieName => {
-      // Delete for current domain
-      document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      // Delete for parent domain
-      document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
-    });
-  }
+  import { loadGoogleAnalytics, deleteAnalyticsCookies } from "../../public/scripts/analyticsLoader.js";
 
   window.addEventListener("load", () => {
-    // Initialize cookie consent
     CookieConsent.run({
       guiOptions: {
         consentModal: { layout: "cloud", position: "bottom center", flipButtons: false },
@@ -76,7 +45,7 @@
                 {
                   title: "Analytics Cookies",
                   description:
-                    "These cookies help us understand how visitors use our site, e.g., Google Analytics.",
+                    "These cookies help us understand how visitors use our site, e.g., Firebase Analytics.",
                   linkedCategory: "analytics",
                 },
               ],
@@ -105,7 +74,7 @@
           loadGoogleAnalytics();
         } else {
           // User revoked analytics consent - delete GA cookies
-          deleteGoogleAnalyticsCookies();
+          deleteAnalyticsCookies();
         }
       },
     });
@@ -115,7 +84,7 @@
       loadGoogleAnalytics();
     }
 
-    // Setup preferences button
+    // Preferences button
     const prefBtn = document.getElementById("cookie_preferences_btn");
     if (prefBtn) {
       prefBtn.addEventListener("click", (e) => {

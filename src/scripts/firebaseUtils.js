@@ -1,20 +1,28 @@
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import {
-  doc,
-  setDoc,
-  getDoc,
-  updateDoc
-} from 'firebase/firestore';
-import { database } from '../../firebase.json';
-import { firebaseConfig } from "../config/firebaseConfig.js";
-import { initializeApp } from "firebase/app";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "../config/firebaseConfig.js";
 
+// Generate a short alphanumeric ID
+function generateShortId(length = 4) {
+  return crypto.getRandomValues(new Uint8Array(length))
+      .reduce((str, byte) => str + byte.toString(36), '');
+}
 
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
+export function uploadFilesToPropertyBucket(file, propertyId, onProgress, existingFolderName) {
+  let folderName;
 
-export function uploadPhoto(file, propertyId, onProgress) {
-  const storageRef = ref(storage, `properties/${propertyId}/${file.name}`);
+  if (existingFolderName) {
+    folderName = existingFolderName; // reuse existing folder
+  } else {
+    const now = new Date();
+    const dateTimeString = now.toISOString()
+        .split('T')
+        .map((part, i) => i === 1 ? part.split('.')[0].replace(/:/g, '-') : part)
+        .join('_');
+    const shortId = generateShortId(6);
+    folderName = `${dateTimeString}_${shortId}`;
+  }
+
+  const storageRef = ref(storage, `properties/${propertyId}/file-upload/${folderName}/${file.name}`);
   const uploadTask = uploadBytesResumable(storageRef, file);
 
   return new Promise((resolve, reject) => {
@@ -28,23 +36,10 @@ export function uploadPhoto(file, propertyId, onProgress) {
         },
         (error) => reject(error),
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => resolve(downloadURL));
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+              resolve({ url: downloadURL, folderName })
+          );
         }
     );
   });
 }
-
-
-export const getNextPropertyId = async () => {
-  const counterRef = doc(db, 'counters', 'properties');
-  const snapshot = await getDoc(counterRef);
-
-  if (!snapshot.exists()) {
-    await setDoc(counterRef, { value: 1 });
-    return 1;
-  }
-
-  const newValue = snapshot.data().value + 1;
-  await updateDoc(counterRef, { value: newValue });
-  return newValue;
-};

@@ -1,9 +1,8 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {currencies} from '../../config/currencies.js';
-import {services} from "../../config/servicesConfig.js";
-
-import { getNextPropertyId } from '../../config/firebaseConfig';
-import { generateRandomPassword  } from '../../scripts/securityUtils';
+import { currencies } from '../../config/currencies.js';
+import { services } from "../../config/servicesConfig.js";
+import { downloadConfig, uploadConfigToFirebase } from '../../scripts/downloadUploadScripts.js';
+import { uploadFilesToPropertyBucket } from "../../scripts/firebaseUtils";
 
 import Privacy from "../Footer/Privacy.astro";
 import PricingSectionClient from "./BBPricingSectionClient";
@@ -27,32 +26,20 @@ const sortedCurrencies = [
       .sort((a, b) => a.code.localeCompare(b.code))
 ];
 
-
 export default function PropertyConfigLayout() {
-  // Host Data
-  const [propertyId] = useState('test');
-  const [propertyPsw] = useState('test');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState('');
+  const [propertyId, setPropertyId] = useState('test');
+  const [propertyPsw, setPropertyPsw] = useState('test');
   const [hostType, setHostType] = useState('');
-
-  // Company Fields
   const [companyName, setCompanyName] = useState('');
   const [companyAddress, setCompanyAddress] = useState('');
   const [companyVat, setCompanyVat] = useState('');
   const [companyRep, setCompanyRep] = useState('');
   const [companyEmail, setCompanyEmail] = useState('');
-
-  // Individual Fields
   const [individualName, setIndividualName] = useState('');
   const [individualAddress, setIndividualAddress] = useState('');
   const [individualTaxId, setIndividualTaxId] = useState('');
   const [individualEmail, setIndividualEmail] = useState('');
-
-  // Property Type
   const [propertyType, setPropertyType] = useState('apartment');
-
-  // General Info
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
   const [showDirections, setShowDirections] = useState(false);
@@ -60,39 +47,20 @@ export default function PropertyConfigLayout() {
   const [phone, setPhone] = useState('');
   const [languages, setLanguages] = useState([]);
   const [languagesOther, setLanguagesOther] = useState('');
-
-  // Apartment Fields
   const [guests, setGuests] = useState(1);
   const [bedrooms, setBedrooms] = useState(1);
   const [beds, setBeds] = useState(1);
   const [bathrooms, setBathrooms] = useState(1);
-
-  // Check-in/out
   const [checkin, setCheckin] = useState('14:00');
   const [checkout, setCheckout] = useState('11:00');
-
-  // B&B Fields
   const [bbRooms, setBbRooms] = useState([]);
   const [breakfastIncluded, setBreakfastIncluded] = useState(true);
   const [breakfastAvailable, setBreakfastAvailable] = useState(false);
   const [breakfastCost, setBreakfastCost] = useState('');
-
-  // Pricing
-  const [apartmentPricing, setApartmentPricing] = useState({
-    0: {fixedPrice: 100, currency: '€', extraPerGuest: 0, extraPerGuestType: 'perNight'}
-  });
-
+  const [apartmentPricing, setApartmentPricing] = useState({0: {fixedPrice: 100, currency: '€', extraPerGuest: 0, extraPerGuestType: 'perNight'}});
   const [pricingType, setPricingType] = useState('contactHost');
-  const [pricing, setPricing] = useState({
-    0: {fixedPrice: 100, currency: '€', extraPerGuest: 0, extraPerGuestType: 'perNight'}
-  });
-
-  const [pricePeriods, setPricePeriods] = useState({
-    apartment: [],
-    // B&B rooms will be added dynamically
-  });
-
-  // Other
+  const [pricing, setPricing] = useState({0: {fixedPrice: 100, currency: '€', extraPerGuest: 0, extraPerGuestType: 'perNight'}});
+  const [pricePeriods, setPricePeriods] = useState({ apartment: [] });
   const [houseRules, setHouseRules] = useState(
       `No smoking inside the apartment.
 No pets allowed.
@@ -105,42 +73,42 @@ Please respect the neighbors and keep noise to a minimum.`
   const [hostDescription, setHostDescription] = useState('');
   const [privacyConsent, setPrivacyConsent] = useState(false);
   const [showDirectionsTooltip, setShowDirectionsTooltip] = useState(false);
-
   const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
+  const [uploadingConfig, setUploadingConfig] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const [uploadSuccess, setUploadSuccess] = useState('');
+  const [imagesStatus, setImagesStatus] = useState({ hasPendingFiles: false, isUploading: false });
+  const [downloadError, setDownloadError] = useState('');
 
   useEffect(() => {
-    const initializeCredentials = async () => {
-      setIsGenerating(true);
-      setError('');
-      try {
-        // Get next ID from counter
-        const nextId = await getNextPropertyId();
-        const newPassword = generateRandomPassword();
+    if (uploadSuccess) {
+      const timer = setTimeout(() => setUploadSuccess(''), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [uploadSuccess]);
 
-        setPropertyId(nextId.toString());
-        setPropertyPsw(newPassword);
-      } catch (err) {
-        setError(`Failed to generate credentials: ${err.message}`);
-        console.error('Error:', err);
-      } finally {
-        setIsGenerating(false);
-      }
-    };
+  useEffect(() => {
+    if (uploadError) {
+      const timer = setTimeout(() => setUploadError(''), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [uploadError]);
 
-    initializeCredentials();
-  }, []);
-
+  useEffect(() => {
+    if (downloadError) {
+      const timer = setTimeout(() => setDownloadError(''), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [downloadError]);
 
   useEffect(() => {
     setPricing(prev => {
       const updated = { ...prev };
       Object.keys(updated).forEach(key => {
-        // Determina il nome della room per cercare i periodi
         let roomKey = key;
         if (propertyType === 'apartment' && key === '0') {
           roomKey = 'apartment';
         }
-
         updated[key] = {
           ...updated[key],
           pricePeriods: pricePeriods[roomKey] || []
@@ -150,24 +118,22 @@ Please respect the neighbors and keep noise to a minimum.`
     });
   }, [pricePeriods, propertyType]);
 
-  const handlePropertyTypeChange = (newType) => {
-    if (newType === 'bb') {
-      // Going to B&B: save apartment pricing and clear pricing
-      setApartmentPricing(pricing);
-      setPricing({});
-      setBbRooms([]);
-      setPropertyType('bb');
-      // I pricePeriods rimangono come sono (apartment + eventuali rooms)
-    } else if (newType === 'apartment') {
-      // Going to Apartment: restore apartment pricing
-      setPricing(apartmentPricing);
-      setPropertyType('apartment');
-      // I pricePeriods rimangono come sono
+  const getSubmitDisabledReason = () => {
+    if (!privacyConsent) {
+      return "Please accept the privacy policy";
     }
+    if (uploadingConfig) {
+      return "Submitting configuration...";
+    }
+    if (imagesStatus.isUploading) {
+      return "Images are uploading...";
+    }
+    if (imagesStatus.hasPendingFiles) {
+      return "Please upload all selected images before submitting";
+    }
+    return null;
   };
 
-
-  // Helper function to format time
   const formatTimeForDisplay = (time, type) => {
     if (!time) return '';
     if (type === 'checkin') {
@@ -178,7 +144,6 @@ Please respect the neighbors and keep noise to a minimum.`
     return time;
   };
 
-  // Language handling
   const toggleLanguage = (lang) => {
     setLanguages(prev =>
         prev.includes(lang)
@@ -187,7 +152,6 @@ Please respect the neighbors and keep noise to a minimum.`
     );
   };
 
-  // Service selection
   const toggleService = (serviceKey) => {
     setSelectedServices(prev => ({
       ...prev,
@@ -206,19 +170,16 @@ Please respect the neighbors and keep noise to a minimum.`
     };
 
     setBbRooms(prev => [...prev, newRoom]);
-
-    // ✅ Initialize price periods for this room
     setPricePeriods(prev => ({
       ...prev,
-      [newRoomName]: []  // Add empty periods array for new room
+      [newRoomName]: []
     }));
-
     setPricing(prev => ({
       ...prev,
       [newRoomName]: {
         price: 0,
         currency: "€",
-        pricePeriods: [],  // Empty initially
+        pricePeriods: [],
         extraPerGuest: 0,
         guestCostBasis: 'perStay',
       },
@@ -232,19 +193,17 @@ Please respect the neighbors and keep noise to a minimum.`
       updated[index] = {...updated[index], [field]: value};
 
       if (field === 'name' && value !== oldName && oldName) {
-        // ✅ Rename in pricePeriods
         setPricePeriods(prev => {
           const updatedPeriods = {...prev};
           if (updatedPeriods[oldName]) {
             updatedPeriods[value] = updatedPeriods[oldName];
             delete updatedPeriods[oldName];
           } else {
-            updatedPeriods[value] = [];  // Create empty if doesn't exist
+            updatedPeriods[value] = [];
           }
           return updatedPeriods;
         });
 
-        // Also rename in pricing
         setPricing(prev => {
           const updatedPricing = {...prev};
           if (updatedPricing[oldName]) {
@@ -267,13 +226,11 @@ Please respect the neighbors and keep noise to a minimum.`
     });
   };
 
-// 4. When deleting a room, delete from pricePeriods too
   const deleteRoom = (index) => {
     setBbRooms(prev => {
       const roomToDelete = prev[index];
       const updatedRooms = prev.filter((_, i) => i !== index);
 
-      // ✅ Delete from pricePeriods
       setPricePeriods(prev => {
         const updatedPeriods = {...prev};
         if (roomToDelete?.name) {
@@ -282,7 +239,6 @@ Please respect the neighbors and keep noise to a minimum.`
         return updatedPeriods;
       });
 
-      // Delete from pricing
       setPricing(prev => {
         const updatedPricing = {...prev};
         if (roomToDelete?.name) {
@@ -295,65 +251,38 @@ Please respect the neighbors and keep noise to a minimum.`
     });
   };
 
-  // Update pricing
-  const updatePricing = (roomIndex, field, value) => {
-    // If no roomIndex provided, use the currently active room tab
-    const index = roomIndex !== undefined ? roomIndex : currentRoomIndex;
-
-    // Find the pricing input for this specific room
-    const priceInput = document.querySelector(
-        `input[id="fixed-price-input-${index}"]`
-    );
-    const currencySelect = document.querySelector(
-        `select[id="currency-select-${index}"]`
-    );
-    const extraGuestInput = document.querySelector(
-        `input[id="extra-guest-input-${index}"]`
-    );
-    const extraGuestTypeSelect = document.querySelector(
-        `select[id="extra-guest-type-${index}"]`
-    );
-
-    if (field === 'fixedPrice' && priceInput) {
-      priceInput.value = value;
-    } else if (field === 'currency' && currencySelect) {
-      currencySelect.value = value;
-    } else if (field === 'extraPerGuest' && extraGuestInput) {
-      extraGuestInput.value = value;
-    } else if (field === 'extraPerGuestType' && extraGuestTypeSelect) {
-      extraGuestTypeSelect.value = value;
+  const handleUploadAndUpdate = async () => {
+    try {
+      setUploadError('');
+      setUploadSuccess('');
+      await handleUpload();
+      await updateFirestoreDB(true);
+    } catch (error) {
+      setUploadError(error.message || 'Failed to complete submission');
     }
   };
 
-  function updateRoomTabs() {
-    const rooms = bbRoomsContainer.children;
-    roomTabsContainer.innerHTML = '';
+  const handleSubmit = async () => {
+    try {
+      await updateFirestoreDB(false);
+    } catch (error) {
+      console.error('Failed to update Firestore after image upload:', error);
+      setUploadError(error.message || 'Failed to update after image upload');
+    }
+  };
 
-    Array.from(rooms).forEach((room, index) => {
-      const roomNameInput = room.querySelector('input[name*="[name]"]');
-      const roomName = roomNameInput?.value || `Room ${index + 1}`;
+  const handlePropertyTypeChange = (newType) => {
+    if (newType === 'bb') {
+      setApartmentPricing(pricing);
+      setPricing({});
+      setBbRooms([]);
+      setPropertyType('bb');
+    } else if (newType === 'apartment') {
+      setPricing(apartmentPricing);
+      setPropertyType('apartment');
+    }
+  };
 
-      const tab = document.createElement('button');
-      tab.type = 'button';
-      tab.className = `px-4 py-2 font-medium rounded-t-lg ${
-          index === currentRoomIndex
-              ? 'bg-gray-800 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-      }`;
-      tab.textContent = roomName;
-
-      // KEY: Set currentRoomIndex when tab is clicked
-      tab.addEventListener('click', () => {
-        setCurrentRoomIndex(index);
-        updateRoomTabs();
-        showRoomPricing(index);
-      });
-
-      roomTabsContainer.appendChild(tab);
-    });
-  }
-
-  // Breakfast toggle
   const handleBreakfastIncludedChange = (checked) => {
     setBreakfastIncluded(checked);
     if (checked) {
@@ -369,225 +298,121 @@ Please respect the neighbors and keep noise to a minimum.`
     }
   };
 
-  // Download JSON
-  const downloadConfig = useCallback(() => {
+  const getConfigData = useCallback(() => ({
+    propertyType,
+    pricingType,
+    pricing,
+    propertyId,
+    propertyPsw,
+    hostType,
+    companyName,
+    companyAddress,
+    companyVat,
+    companyRep,
+    companyEmail,
+    individualName,
+    individualAddress,
+    individualTaxId,
+    individualEmail,
+    title,
+    location,
+    guests,
+    bedrooms,
+    beds,
+    bathrooms,
+    checkin,
+    checkout,
+    houseRules,
+    selectedServices,
+    additionalServices,
+    hostDescription,
+    languages,
+    bbRooms,
+    breakfastIncluded,
+    breakfastAvailable,
+    breakfastCost,
+    showDirections,
+    pricePeriods,
+    email,
+    phone,
+    formatTimeForDisplay,
+  }), [propertyType, pricingType, pricing, propertyId]);
+
+  const handleDownload = useCallback(() => {
+    setDownloadError('');
+
     if (!privacyConsent) {
-      alert('Please accept the privacy policy');
+      setDownloadError('Please accept the privacy policy before downloading');
       return;
     }
 
-    const apartmentServices = {};
-    Object.entries(selectedServices).forEach(([key, value]) => {
-      if (value) apartmentServices[key] = true;
-    });
+    try {
+      downloadConfig(getConfigData(), propertyType, propertyId);
+      setUploadSuccess('Configuration downloaded successfully');
+    } catch (error) {
+      setDownloadError(error.message || 'Failed to download config');
+    }
+  }, [privacyConsent, getConfigData, propertyType, propertyId]);
 
-    let json;
+  const handleUpload = useCallback(async () => {
+    setDownloadError('');
 
-    if (propertyType === 'apartment') {
-      let price = null;
-      let pricePeriods = null;
-      let extraPerGuest = null;
-      let guestCostBasis = null;
-      let currency = null;
-
-      const roomPricing = pricing[0];
-
-      if (pricingType === 'fixedAllYear' || pricingType === 'fixedExtraGuests') {
-        price = roomPricing?.fixedPrice || null;
-        currency = roomPricing?.currency || null;
-      }
-
-      if (pricingType === 'fixedExtraGuests' || pricingType === 'dynamicDatesExtraGuests') {
-        extraPerGuest = roomPricing?.extraPerGuest || null;
-        guestCostBasis = roomPricing?.extraPerGuestType || null;
-      }
-
-      if (pricingType === 'dynamicDates' || pricingType === 'dynamicDatesExtraGuests') {
-        currency = roomPricing?.currency || null;
-        // Usa i periodi dell'appartamento
-        pricePeriods = pricePeriods['apartment'] || [];
-      }
-
-      // Validation
-      if ((pricingType === 'fixedAllYear' || pricingType === 'fixedExtraGuests') && !price) {
-        alert('Please enter a price for the fixed pricing option');
-        return;
-      }
-
-      if ((pricingType === 'fixedAllYear' || pricingType === 'fixedExtraGuests') && !currency) {
-        alert('Please select a currency');
-        return;
-      }
-
-      if ((pricingType === 'fixedExtraGuests' || pricingType === 'dynamicDatesExtraGuests') && extraPerGuest === null) {
-        alert('Please enter the extra per guest amount');
-        return;
-      }
-
-      const hostEmail = hostType === 'company' ? companyEmail : individualEmail;
-
-      json = {
-        propertyId,
-        propertyPsw,
-        hostType,
-        companyName: hostType === 'company' ? companyName || null : null,
-        companyAddress: hostType === 'company' ? companyAddress || null : null,
-        companyVat: hostType === 'company' ? companyVat || null : null,
-        companyRep: hostType === 'company' ? companyRep || null : null,
-        individualName: hostType === 'individual' ? individualName || null : null,
-        individualAddress: hostType === 'individual' ? individualAddress || null : null,
-        individualTaxId: hostType === 'individual' ? individualTaxId || null : null,
-        hostEmail,
-        headTitle: title,
-        title,
-        location,
-        guests,
-        bedrooms,
-        beds,
-        bathrooms,
-        imagesMainPage: null,
-        imagesThumbnail: null,
-        imagesByCategory: null,
-        description: null,
-        houseRules: houseRules.split('\n'),
-        price,
-        pricePeriods,
-        extraPerGuest,
-        guestCostBasis,
-        currency,
-        checkIn: formatTimeForDisplay(checkin, 'checkin') || null,
-        checkOut: formatTimeForDisplay(checkin, 'checkin') || null,
-        email,
-        phoneNumber: phone || null,
-        whatsAppNumber: null,
-        apartmentServices,
-        additionalServices: additionalServices || null,
-        mapEmbed: null,
-        showDirections: showDirections || null,
-        carDirectionsDescription: null,
-        publicTransportDirectionsDescription: null,
-        hostImage: null,
-        hostName: null,
-        hostBio: hostDescription || null,
-        hostLanguages: languages || null
-      };
-    } else if (propertyType === 'bb') {
-      if (bbRooms.length === 0) {
-        alert('Please add at least one room');
-        return;
-      }
-
-      const roomDetails = bbRooms.map((room, index) => ({
-        roomName: room.name || `Room ${index + 1}`,
-        guests: Number(room.guests),
-        beds: Number(room.beds),
-        bathrooms: Number(room.bathrooms),
-        privateBathroom: room.privateBathroom || false,
-      }));
-
-      const roomPricing = {};
-      bbRooms.forEach((room, index) => {
-        const roomName = room.name || `Room ${index + 1}`;
-        const pricingData = pricing[roomName] || {
-          fixedPrice: 0,
-          currency: '€',
-          extraPerGuest: 0,
-          extraPerGuestType: 'perStay'
-        };
-
-        roomPricing[roomName] = {
-          price: pricingType === 'fixedAllYear' || pricingType === 'fixedExtraGuests' ? pricingData.fixedPrice : null,
-          // Usa i periodi specifici di questa room
-          pricePeriods: pricingType === 'dynamicDates' || pricingType === 'dynamicDatesExtraGuests'
-              ? (pricePeriods[roomName] || [])
-              : [],
-          extraPerGuest: pricingData.extraPerGuest || 0,
-          guestCostBasis: pricingData.extraPerGuestType || 'perStay',
-        };
-      });
-
-      const currency = pricing[0]?.currency || null;
-      const hostEmail = hostType === 'company' ? companyEmail : individualEmail;
-
-      json = {
-        propertyId,
-        propertyPsw,
-        hostType,
-        companyName: hostType === 'company' ? companyName || null : null,
-        companyAddress: hostType === 'company' ? companyAddress || null : null,
-        companyVat: hostType === 'company' ? companyVat || null : null,
-        companyRep: hostType === 'company' ? companyRep || null : null,
-        individualName: hostType === 'individual' ? individualName || null : null,
-        individualAddress: hostType === 'individual' ? individualAddress || null : null,
-        individualTaxId: hostType === 'individual' ? individualTaxId || null : null,
-        hostEmail,
-        headTitle: title,
-        title,
-        location,
-        rooms: bbRooms.length,
-        breakFastIncluded: breakfastIncluded,
-        breakFastAvailable: breakfastAvailable,
-        breakFastCost: breakfastCost || null,
-        roomDetails,
-        imagesMainPage: null,
-        imagesThumbnail: null,
-        imagesByCategory: null,
-        description: null,
-        houseRules: houseRules.split('\n'),
-        roomPricing,
-        currency,
-        checkIn: formatTimeForDisplay(checkin, 'checkin') || null,
-        checkOut: formatTimeForDisplay(checkin, 'checkin') || null,
-        email,
-        phoneNumber: phone || null,
-        whatsAppNumber: null,
-        apartmentServices,
-        additionalServices: additionalServices || null,
-        mapEmbed: null,
-        showDirections: showDirections || null,
-        carDirectionsDescription: null,
-        publicTransportDirectionsDescription: null,
-        hostImage: null,
-        hostName: null,
-        hostBio: hostDescription || null,
-        hostLanguages: languages || null
-      };
+    if (!privacyConsent) {
+      setUploadError('Please accept the privacy policy before uploading');
+      return;
     }
 
-    const blob = new Blob([JSON.stringify(json, null, 2)], {
-      type: 'application/json',
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${propertyType}-${propertyId || 'config'}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    setUploadingConfig(true);
+    setUploadError('');
 
-  }, [propertyType, pricingType, pricing, propertyId, hostType, title, location, guests, bedrooms, beds, bathrooms, checkin, checkout, houseRules, selectedServices, additionalServices, hostDescription, languages, bbRooms, breakfastIncluded, breakfastAvailable, breakfastCost, companyName, companyAddress, companyVat, companyRep, companyEmail, individualName, individualAddress, individualTaxId, individualEmail, email, phone, showDirections, privacyConsent]);
+    try {
+      const result = await uploadConfigToFirebase(
+          getConfigData(),
+          propertyType,
+          propertyId,
+          uploadFilesToPropertyBucket
+      );
+      setUploadSuccess(result.message || 'Data uploaded successfully');
+      setUploadingConfig(false);
+    } catch (error) {
+      setUploadError(error.message || 'Failed to upload config');
+      setUploadingConfig(false);
+    }
+  }, [privacyConsent, getConfigData, propertyType, propertyId]);
 
-  // Update Firestore DB
-  const updateFirestoreDB = async () => {
-    // Your existing download logic
-    const propertyData = {
-      id_property: propertyId,
-      password: propertyPsw,
-      img
-    };
+  const updateFirestoreDB = async (isInitialSubmit = false) => {
+    try {
+      const response = await fetch('/api/updateFirestore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          propertyId,
+          password: propertyPsw,
+          hostType,
+          companyRep,
+          individualName,
+          phone,
+          imgUploaded: true,
+          jsonUploaded: !isInitialSubmit,
+          isUpdate: !isInitialSubmit,
+        }),
+      });
 
-    // Save to Firestore
-    const propertyRef = doc(db, 'properties', propertyId);
-    await setDoc(propertyRef, {
-      ...propertyData,
-      creation_date: new Date().toISOString(),
-      img_uploaded: false,
-      json_uploaded: false
-    });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.details || error.error);
+      }
+
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
   };
 
   return (
       <div className="min-h-screen flex flex-col font-[Geist] bg-white text-gray-900">
-        <main className="flex-1 mx-auto px-6 py-12 max-w-6xl w-full">
+        <main className="flex-1 mx-auto px-6 max-w-6xl w-full">
+
           <form className="bg-white border border-gray-200 rounded-2xl shadow-sm p-10 space-y-10">
             <h1 className="text-2xl font-bold text-gray-800 border-b pb-2">Property Configuration</h1>
 
@@ -595,7 +420,6 @@ Please respect the neighbors and keep noise to a minimum.`
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Host Data</h2>
 
-              {/* Property Info */}
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div className="flex flex-col">
                   <label className="text-sm font-medium text-gray-700 mb-1">Property ID</label>
@@ -603,11 +427,10 @@ Please respect the neighbors and keep noise to a minimum.`
                 </div>
                 <div className="flex flex-col">
                   <label className="text-sm font-medium text-gray-700 mb-1">Property Password</label>
-                  <input type="text" value={propertyPsw} className="input w-full mt-1" readOnly/>
+                  <input type="text" value={propertyPsw} className="input w-full mt-1"/>
                 </div>
               </div>
 
-              {/* Host Type */}
               <div className="flex flex-col mb-6">
                 <span className="text-sm font-medium text-gray-700 mb-2">Host Type</span>
                 <div className="flex gap-4">
@@ -638,7 +461,6 @@ Please respect the neighbors and keep noise to a minimum.`
                 </div>
               </div>
 
-              {/* Company Fields */}
               {hostType === 'company' && (
                   <div className="grid md:grid-cols-5 gap-6 mb-6">
                     <div className="flex flex-col">
@@ -672,8 +494,7 @@ Please respect the neighbors and keep noise to a minimum.`
                       />
                     </div>
                     <div className="flex flex-col">
-                      <label className="text-sm font-medium text-gray-700 mb-1">Legal
-                        Representative</label>
+                      <label className="text-sm font-medium text-gray-700 mb-1">Legal Representative</label>
                       <input
                           type="text"
                           value={companyRep}
@@ -695,7 +516,6 @@ Please respect the neighbors and keep noise to a minimum.`
                   </div>
               )}
 
-              {/* Individual Fields */}
               {hostType === 'individual' && (
                   <div className="grid md:grid-cols-5 gap-6 mb-6">
                     <div className="flex flex-col">
@@ -709,8 +529,7 @@ Please respect the neighbors and keep noise to a minimum.`
                       />
                     </div>
                     <div className="flex flex-col">
-                      <label className="text-sm font-medium text-gray-700 mb-1">Residential
-                        Address</label>
+                      <label className="text-sm font-medium text-gray-700 mb-1">Residential Address</label>
                       <input
                           type="text"
                           value={individualAddress}
@@ -816,8 +635,7 @@ Please respect the neighbors and keep noise to a minimum.`
                   >
                     Show directions
                     {showDirectionsTooltip && (
-                        <span
-                            className="absolute left-0 -top-14 w-64 p-2 text-xs text-white bg-gray-800 rounded shadow-lg opacity-100 pointer-events-none">
+                        <span className="absolute left-0 -top-14 w-64 p-2 text-xs text-white bg-gray-800 rounded shadow-lg opacity-100 pointer-events-none">
                       We'll create a section for your guests with instructions on how to reach the apartment by car or public transport.
                     </span>
                     )}
@@ -908,8 +726,7 @@ Please respect the neighbors and keep noise to a minimum.`
                           <div key={index} className="border border-gray-200 rounded p-4">
                             <div className="grid md:grid-cols-5 gap-4 mb-4">
                               <div className="flex flex-col">
-                                <label className="text-sm font-medium text-gray-700 mb-1">Room
-                                  Name</label>
+                                <label className="text-sm font-medium text-gray-700 mb-1">Room Name</label>
                                 <input
                                     type="text"
                                     value={room.name}
@@ -919,8 +736,7 @@ Please respect the neighbors and keep noise to a minimum.`
                                 />
                               </div>
                               <div className="flex flex-col">
-                                <label
-                                    className="text-sm font-medium text-gray-700 mb-1">Guests</label>
+                                <label className="text-sm font-medium text-gray-700 mb-1">Guests</label>
                                 <input
                                     type="number"
                                     value={room.guests}
@@ -930,8 +746,7 @@ Please respect the neighbors and keep noise to a minimum.`
                                 />
                               </div>
                               <div className="flex flex-col">
-                                <label
-                                    className="text-sm font-medium text-gray-700 mb-1">Beds</label>
+                                <label className="text-sm font-medium text-gray-700 mb-1">Beds</label>
                                 <input
                                     type="number"
                                     value={room.beds}
@@ -941,8 +756,7 @@ Please respect the neighbors and keep noise to a minimum.`
                                 />
                               </div>
                               <div className="flex flex-col">
-                                <label
-                                    className="text-sm font-medium text-gray-700 mb-1">Bathrooms</label>
+                                <label className="text-sm font-medium text-gray-700 mb-1">Bathrooms</label>
                                 <input
                                     type="number"
                                     value={room.bathrooms}
@@ -965,7 +779,7 @@ Please respect the neighbors and keep noise to a minimum.`
                               <button
                                   type="button"
                                   onClick={() => deleteRoom(index)}
-                                  className="bg-red-500 text-white font-bold rounded w-full  h-10 flex items-center justify-center md:w-10 md:h-10">
+                                  className="bg-red-500 text-white font-bold rounded w-full h-10 flex items-center justify-center md:w-10 md:h-10">
                                 X
                               </button>
                             </div>
@@ -973,7 +787,6 @@ Please respect the neighbors and keep noise to a minimum.`
                       ))}
                     </div>
 
-                    {/* Breakfast Section */}
                     <fieldset className="block mt-4">
                       <span className="text-sm font-medium text-gray-700">Breakfast</span>
                       <div className="mt-3 space-y-3">
@@ -1095,13 +908,9 @@ Please respect the neighbors and keep noise to a minimum.`
             <div className="mt-6 bg-white border border-gray-200 rounded-2xl shadow-md p-6">
               <h2 className="text-lg font-semibold text-gray-800 mb-4">Pricing</h2>
 
-
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
-                {/* Left side: radio buttons */}
                 <div className="space-y-3 flex-1">
-                  <p className="text-gray-600 text-sm mb-4">
-                    Choose how you want to display pricing to guests.
-                  </p>
+                  <p className="text-gray-600 text-sm mb-4">Choose how you want to display pricing to guests.</p>
                   <label className="flex items-center gap-2">
                     <input
                         type="radio"
@@ -1205,7 +1014,6 @@ Please respect the neighbors and keep noise to a minimum.`
                   )}
                 </div>
 
-                {/* Right side: PriceComponentToQuoteClient */}
                 {pricingType === 'contactHost' && (
                     <div className="flex-1">
                       <PriceComponentToQuoteClient
@@ -1335,22 +1143,21 @@ Please respect the neighbors and keep noise to a minimum.`
 
                 {(propertyType === 'bb' && pricingType === 'dynamicDatesExtraGuests' && bbRooms.length > 0) && (
                     <div className="flex-1">
-                        <BBPriceComponentDynamicPlusGuestClient
-                            propertyId={propertyId}
-                            roomPricing={pricing}
-                            roomDetails={bbRooms}
-                            currency={pricing[Object.keys(pricing)[0]]?.currency}
-                            checkIn={formatTimeForDisplay(checkin, 'checkin')}
-                            checkOut={formatTimeForDisplay(checkout, 'checkout')}
-                            email={email}
-                            phoneNumber={phone}
-                            whatsAppNumber={""}
-                        />
+                      <BBPriceComponentDynamicPlusGuestClient
+                          propertyId={propertyId}
+                          roomPricing={pricing}
+                          roomDetails={bbRooms}
+                          currency={pricing[Object.keys(pricing)[0]]?.currency}
+                          checkIn={formatTimeForDisplay(checkin, 'checkin')}
+                          checkOut={formatTimeForDisplay(checkout, 'checkout')}
+                          email={email}
+                          phoneNumber={phone}
+                          whatsAppNumber={""}
+                      />
                     </div>
                 )}
               </div>
             </div>
-
 
             {/* House Rules */}
             <div>
@@ -1365,10 +1172,8 @@ Please respect the neighbors and keep noise to a minimum.`
 
             {/* Services */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-2">Services (guests can use on their
-                own)</h2>
-              <p className="text-gray-600 mb-4">Facilities and services accessible to guests
-                for <strong>self-use</strong> during their stay.</p>
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">Services (guests can use on their own)</h2>
+              <p className="text-gray-600 mb-4">Facilities and services accessible to guests for <strong>self-use</strong> during their stay.</p>
               <div className="grid md:grid-cols-2 gap-4">
                 {services.map(service => (
                     <label key={service.key} className="flex items-center gap-2">
@@ -1387,8 +1192,7 @@ Please respect the neighbors and keep noise to a minimum.`
             {/* Additional Services */}
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Additional Services</h2>
-              <p className="text-gray-600 mb-2">Specify any extra facilities or services that guests can use
-                on their own which are not included in the list above.</p>
+              <p className="text-gray-600 mb-2">Specify any extra facilities or services that guests can use on their own which are not included in the list above.</p>
               <textarea
                   value={additionalServices}
                   onChange={(e) => setAdditionalServices(e.target.value)}
@@ -1413,7 +1217,22 @@ Please respect the neighbors and keep noise to a minimum.`
             <div className="mt-4">
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Upload Photos</h2>
               <p className="text-gray-600 mb-2">Kindly provide photos in the highest quality possible and include as many as relevant.</p>
-              <PhotoUploadClient propertyId={propertyId} />
+              <div className="relative group inline-block w-full">
+                <PhotoUploadClient
+                    propertyId={propertyId}
+                    privacyConsent={privacyConsent}
+                    onUploadStart={() => {}}
+                    onUploadComplete={() => handleUploadAndUpdate()}
+                    onUploadError={() => {}}
+                    onUploadStatusChange={(status) => setImagesStatus(status)}
+                />
+                {!privacyConsent && (
+                    <div className="absolute bottom-full left-0 mb-3 w-56 p-3 text-xs text-white bg-gray-800 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 whitespace-normal text-center">
+                      Please accept the privacy policy before uploading
+                      <div className="absolute top-full left-0 border-4 border-transparent border-t-gray-800"></div>
+                    </div>
+                )}
+              </div>
             </div>
 
             {/* Privacy Consent */}
@@ -1439,24 +1258,54 @@ Please respect the neighbors and keep noise to a minimum.`
                 >
                   Privacy Policy
                 </a>
-                and consent to the processing of my personal data for the purposes of creating and managing
-                my property configuration.
+                and consent to the processing of my personal data for the purposes of creating and managing my property configuration.
                 <span className="text-red-500"> *</span>
               </label>
             </div>
+          </form>
 
-            {/* Download Button */}
-            <div className="flex justify-end mt-6">
+          <div className="flex justify-end gap-4 mt-6 flex-wrap">
+            {/* Status Messages on Left */}
+            <div className="flex items-center gap-2">
+              {uploadSuccess && (
+                  <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm flex items-center gap-2 animate-in fade-in">
+                    <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>{uploadSuccess}</span>
+                  </div>
+              )}
+
+              {uploadError && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm flex items-center gap-2 animate-in fade-in">
+                    <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                    <span>{uploadError}</span>
+                  </div>
+              )}
+            </div>
+
+            {/* Submit Button with Tooltip on Hover */}
+            <div className="relative group">
               <button
                   type="button"
-                  onClick={downloadConfig}
-                  disabled={!privacyConsent}
+                  onClick={() => handleSubmit()}
+                  disabled={!privacyConsent || uploadingConfig || imagesStatus.isUploading || imagesStatus.hasPendingFiles}
                   className="bg-black text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
               >
-                Download Config JSON
+                {uploadingConfig ? '...' : 'Submit'}
               </button>
+
+              {/* Tooltip - Shows on hover when disabled */}
+              {(!privacyConsent || uploadingConfig || imagesStatus.isUploading || imagesStatus.hasPendingFiles) && (
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-56 p-3 text-xs text-white bg-gray-800 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 whitespace-normal text-center">
+                    {getSubmitDisabledReason()}
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                  </div>
+              )}
             </div>
-          </form>
+          </div>
         </main>
       </div>
   );

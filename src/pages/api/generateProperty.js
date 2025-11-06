@@ -1,56 +1,40 @@
 // src/pages/api/generatePropertyId.js
-import { Storage } from "@google-cloud/storage";
+import { db } from "../../config/firebaseAdminConfig.js";
 
-const storage = new Storage({
-    projectId: "YOUR_PROJECT_ID",
-    keyFilename: "./path/to/service-account.json",
-});
 
-const bucketName = "your-bucket-name";
-const bucket = storage.bucket(bucketName);
+export function generateSecurePassword(length = 16) {
+    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*_-+=';
+    const charsetLength = charset.length;
+    const randomValues = new Uint8Array(length);
 
-function generateRandomId(length = 4) {
-    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let id = "";
+    crypto.getRandomValues(randomValues);
+
+    let password = '';
     for (let i = 0; i < length; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
-}
-
-function generateRandomPassword(length = 6) {
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let psw = "";
-    for (let i = 0; i < length; i++) {
-        psw += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return psw;
-}
-
-async function generateUniqueId() {
-    let id;
-    let exists = true;
-
-    while (exists) {
-        id = generateRandomId();
-        const file = bucket.file(id);
-        const [fileExists] = await file.exists();
-        exists = fileExists;
+        password += charset[randomValues[i] % charsetLength];
     }
 
-    return id;
+    return password;
 }
 
-export async function get() {
-    // const propertyId = await generateUniqueId();
-    // const propertyPsw = generateRandomPassword();
+export async function GET() {
+    try {
+        const counterRef = db.collection("counters").doc("properties");
+        const snapshot = await counterRef.get();
+        let newValue = 1;
+        if (snapshot.exists) {
+            newValue = snapshot.data().value + 1;
+            await counterRef.update({ value: newValue });
+        } else {
+            await counterRef.set({ value: newValue });
+        }
 
-    const propertyId = "Test";
-    const propertyPsw = "Test";
-
-    return {
-        body: JSON.stringify({ propertyId, propertyPsw }),
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-    };
+        return new Response(
+            JSON.stringify({ propertyId: newValue, password: generateSecurePassword() }),
+            { status: 200, headers: { "Content-Type": "application/json" } }
+        );
+    } catch (err) {
+        console.error("Error generating next property ID:", err);
+        return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
+    }
 }
