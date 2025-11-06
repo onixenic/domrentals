@@ -1,13 +1,16 @@
 ---
 import { SITE_CONFIG } from "../../config/constantsConfig";
 ---
-<dialog id="cookie_modal" class="modal">
-    <div class="modal-box w-full max-w-2xl max-h-screen overflow-y-auto">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
 
-        <h3 class="font-bold text-xl mb-2">Cookie Policy & Terms</h3>
+<dialog id="cookie_modal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box w-full max-w-2xl h-[90vh] md:max-h-screen overflow-y-auto rounded-xl">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-xl">Cookie Policy & Terms</h3>
+            <form method="dialog">
+                <button class="btn btn-sm btn-ghost text-xl leading-none">✕</button>
+            </form>
+        </div>
+
         <p class="text-sm"><strong>Last Updated:</strong> {SITE_CONFIG.LAST_UPDATED}</p>
 
         <div class="space-y-4 text-sm mt-4">
@@ -36,7 +39,7 @@ import { SITE_CONFIG } from "../../config/constantsConfig";
 
             <div class="mt-4">
                 <button
-                        class="btn btn-sm btn-info"
+                        class="bg-[#30363c] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#24292e] transition disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
                         id="cookie_preferences_btn"
                         onclick="cookie_modal.close()"
                 >

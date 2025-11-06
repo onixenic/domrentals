@@ -2,12 +2,15 @@
 import { SITE_CONFIG } from "../../config/constantsConfig";
 ---
 
-<dialog id="company_data_modal" class="modal">
-    <div class="modal-box w-full max-w-md">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <h3 class="font-bold text-xl mb-4">Legal Details</h3>
+<dialog id="company_data_modal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box w-full max-w-2xl h-[90vh] md:max-h-screen overflow-y-auto rounded-xl">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-xl">Legal Details</h3>
+            <form method="dialog">
+                <button class="btn btn-sm btn-ghost text-xl leading-none">✕</button>
+            </form>
+        </div>
+
         <p class="text-sm"><strong>Last Updated:</strong> {SITE_CONFIG.LAST_UPDATED}</p>
 
         <div class="space-y-3 text-sm mt-4">

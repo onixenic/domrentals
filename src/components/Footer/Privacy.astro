@@ -1,18 +1,21 @@
 ---
 import { SITE_CONFIG } from "../../config/constantsConfig";
 ---
-<dialog id="privacy_modal" class="modal">
-    <div class="modal-box w-full max-w-2xl max-h-screen overflow-y-auto">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <h3 class="font-bold text-xl mb-4">Privacy Policy</h3>
+<dialog id="privacy_modal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box w-full max-w-2xl h-[90vh] md:max-h-screen overflow-y-auto rounded-xl">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-xl mb-4">Privacy Policy</h3>
+            <form method="dialog">
+                <button class="btn btn-sm btn-ghost text-xl leading-none">✕</button>
+            </form>
+        </div>
         <p class="text-sm"><strong>Last Updated:</strong> {SITE_CONFIG.LAST_UPDATED}</p>
 
         <div class="space-y-4 text-sm mt-4">
 
             <h4>1. Data Controller Information</h4>
-            <p>The Data Controller responsible for the collection and processing of your personal data on the website <code>{SITE_CONFIG.DOMAIN}</code> is:</p>
+            <p>The Data Controller responsible for the collection and processing of your personal data on the website
+                <code>{SITE_CONFIG.DOMAIN}</code> is:</p>
             <ul class="list-disc list-inside space-y-1 ml-4">
                 <li><strong>Name:</strong> {SITE_CONFIG.OWNER_NAME}</li>
                 <li><strong>Registered Address:</strong> {SITE_CONFIG.LEGAL_ADDRESS}</li>
@@ -21,72 +24,108 @@ import { SITE_CONFIG } from "../../config/constantsConfig";
             </ul>
 
             <h4 class="font-bold mt-4">2. Types of Data Processed and Purposes</h4>
-            <p>The <strong>{SITE_CONFIG.PAGE_TITLE}</strong> website operates exclusively as a <strong>showcase and intermediary service</strong>; it does not use direct contact forms or payment systems. We process data for the following purposes:</p>
+            <p>The <strong>{SITE_CONFIG.PAGE_TITLE}</strong> website operates exclusively as a <strong>showcase and
+                intermediary service</strong>; it does not use direct contact forms or payment systems. We process data
+                for the following purposes:</p>
 
-            <table class="table w-full text-left text-xs mt-2 border-collapse">
-                <thead>
-                <tr class="bg-gray-100">
-                    <th class="p-2 border border-gray-200">Type of Data</th>
-                    <th class="p-2 border border-gray-200">Purpose</th>
-                    <th class="p-2 border border-gray-200">Legal Basis (GDPR Art. 6)</th>
-                    <th class="p-2 border border-gray-200">Retention Period</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="p-2 border border-gray-200"><strong>Navigation Data</strong> (IP address, browser, OS)</td>
-                    <td class="p-2 border border-gray-200">To ensure the correct technical functioning and security of the website.</td>
-                    <td class="p-2 border border-gray-200"><strong>Legitimate Interest</strong> of the Controller (Art. 6(1)(f)).</td>
-                    <td class="p-2 border border-gray-200">For the duration of the browsing session.</td>
-                </tr>
-                <tr>
-                    <td class="p-2 border border-gray-200"><strong>Consent Data</strong> (User's cookie choices)</td>
-                    <td class="p-2 border border-gray-200">To record and respect your cookie preferences (legal requirement).</td>
-                    <td class="p-2 border border-gray-200"><strong>Legal Obligation</strong> (Art. 6(1)(c)).</td>
-                    <td class="p-2 border border-gray-200">Up to {SITE_CONFIG.analyticsRetentionMonths} months, or until consent is revoked.</td>
-                </tr>
-                <tr>
-                    <td class="p-2 border border-gray-200"><strong>Analytics Data</strong> (Google Analytics)</td>
-                    <td class="p-2 border border-gray-200">To measure website performance, traffic, and user behavior to improve our services.</td>
-                    <td class="p-2 border border-gray-200"><strong>Explicit User Consent</strong> (Art. 6(1)(a)) – Granted via the Cookie Consent Banner.</td>
-                    <td class="p-2 border border-gray-200">{SITE_CONFIG.ANALYTICS_RETENTION_MONTHS} months.</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="table w-full text-left text-xs mt-2 border-collapse">
+                    <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-2 border border-gray-200">Type of Data</th>
+                        <th class="p-2 border border-gray-200">Purpose</th>
+                        <th class="p-2 border border-gray-200">Legal Basis (GDPR Art. 6)</th>
+                        <th class="p-2 border border-gray-200">Retention Period</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="p-2 border border-gray-200"><strong>Navigation Data</strong> (IP address, browser,
+                            OS)
+                        </td>
+                        <td class="p-2 border border-gray-200">To ensure the correct technical functioning and security
+                            of the website.
+                        </td>
+                        <td class="p-2 border border-gray-200"><strong>Legitimate Interest</strong> of the Controller
+                            (Art. 6(1)(f)).
+                        </td>
+                        <td class="p-2 border border-gray-200">For the duration of the browsing session.</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2 border border-gray-200"><strong>Consent Data</strong> (User's cookie choices)
+                        </td>
+                        <td class="p-2 border border-gray-200">To record and respect your cookie preferences (legal
+                            requirement).
+                        </td>
+                        <td class="p-2 border border-gray-200"><strong>Legal Obligation</strong> (Art. 6(1)(c)).</td>
+                        <td class="p-2 border border-gray-200">Up to {SITE_CONFIG.analyticsRetentionMonths} months, or
+                            until consent is revoked.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-2 border border-gray-200"><strong>Analytics Data</strong> (Google Analytics)</td>
+                        <td class="p-2 border border-gray-200">To measure website performance, traffic, and user
+                            behavior to improve our services.
+                        </td>
+                        <td class="p-2 border border-gray-200"><strong>Explicit User Consent</strong> (Art. 6(1)(a)) –
+                            Granted via the Cookie Consent Banner.
+                        </td>
+                        <td class="p-2 border border-gray-200">{SITE_CONFIG.ANALYTICS_RETENTION_MONTHS} months.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <h4 class="font-bold mt-4">2.1 Property Owner/Host Data</h4>
             <p>When you submit the Property Configuration form, we collect and process:</p>
             <ul class="list-disc list-inside space-y-1 ml-4">
-                <li><strong>Company Data:</strong> Company name, legal address, VAT number, legal representative name</li>
+                <li><strong>Company Data:</strong> Company name, legal address, VAT number, legal representative name
+                </li>
                 <li><strong>Individual Data:</strong> Full name, residential address, tax ID</li>
                 <li><strong>Contact Information:</strong> Email address, phone number</li>
                 <li><strong>Property Details:</strong> All information provided in the configuration form</li>
             </ul>
 
-            <table class="table w-full text-left text-xs mt-2 border-collapse">
-                <thead>
-                <tr class="bg-gray-100">
-                    <th class="p-2 border border-gray-200">Type of Data</th>
-                    <th class="p-2 border border-gray-200">Purpose</th>
-                    <th class="p-2 border border-gray-200">Legal Basis</th>
-                    <th class="p-2 border border-gray-200">Retention Period</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="p-2 border border-gray-200">Host/Owner Personal & Business Data</td>
-                    <td class="p-2 border border-gray-200">To create and manage your property listing and fulfill contractual obligations.</td>
-                    <td class="p-2 border border-gray-200"><strong>Explicit Consent</strong> (Art. 6(1)(a)) and <strong>Contract Performance</strong> (Art. 6(1)(b))</td>
-                    <td class="p-2 border border-gray-200">For the duration of the service agreement, plus 10 years for tax/legal obligations.</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="table w-full text-left text-xs mt-2 border-collapse">
+                    <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-2 border border-gray-200">Type of Data</th>
+                        <th class="p-2 border border-gray-200">Purpose</th>
+                        <th class="p-2 border border-gray-200">Legal Basis</th>
+                        <th class="p-2 border border-gray-200">Retention Period</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="p-2 border border-gray-200">Host/Owner Personal & Business Data</td>
+                        <td class="p-2 border border-gray-200">To create and manage your property listing and fulfill
+                            contractual obligations.
+                        </td>
+                        <td class="p-2 border border-gray-200"><strong>Explicit Consent</strong> (Art. 6(1)(a)) and
+                            <strong>Contract
+                                Performance</strong> (Art. 6(1)(b))
+                        </td>
+                        <td class="p-2 border border-gray-200">For the duration of the service agreement, plus 10 years
+                            for
+                            tax/legal obligations.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <h4 class="font-bold mt-4">3. Data Recipients and International Transfer</h4>
             <p>Your personal data may be shared with the following recipients:</p>
             <ul class="list-disc list-inside space-y-1 ml-4">
-                <li><strong>Google LLC:</strong> For the web analytics service (Google Analytics). This service may involve the transfer of data outside the European Union (EU), specifically to the United States (USA). Such transfer is secured by the adoption of Standard Contractual Clauses (SCCs) approved by the European Commission.</li>
-                <li><strong>Hosting Provider:</strong> The company that hosts the website files and is bound by a Data Processing Agreement (DPA).</li>
+                <li><strong>Google LLC:</strong> For the web analytics service (Google Analytics). This service may
+                    involve the transfer of data outside the European Union (EU), specifically to the United States
+                    (USA). Such transfer is secured by the adoption of Standard Contractual Clauses (SCCs) approved by
+                    the European Commission.
+                </li>
+                <li><strong>Hosting Provider:</strong> The company that hosts the website files and is bound by a Data
+                    Processing Agreement (DPA).
+                </li>
                 <li><strong>Judicial Authorities:</strong> If required by law for legal purposes.</li>
             </ul>
 
@@ -100,11 +139,15 @@ import { SITE_CONFIG } from "../../config/constantsConfig";
                 <li>Receive your data in a structured, commonly used format (Right to Data Portability).</li>
                 <li><strong>Withdraw your consent</strong> at any time (for Analytics data).</li>
             </ul>
-            <p class="mt-2">You can exercise these rights by sending an email to the dedicated privacy contact: {SITE_CONFIG.CONTACT_EMAIL}.</p>
-            <p class="mt-2">You also have the right to lodge a complaint with the supervisory authority (the Garante per la Protezione dei Dati Personali in {SITE_CONFIG.COUNTRY}) if you believe the processing violates the GDPR.</p>
+            <p class="mt-2">You can exercise these rights by sending an email to the dedicated privacy
+                contact: {SITE_CONFIG.CONTACT_EMAIL}.</p>
+            <p class="mt-2">You also have the right to lodge a complaint with the supervisory authority (the Garante per
+                la Protezione dei Dati Personali in {SITE_CONFIG.COUNTRY}) if you believe the processing violates the
+                GDPR.</p>
 
             <h4 class="font-bold mt-4">5. Data Security Measures</h4>
-            <p>We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction. These include:</p>
+            <p>We implement appropriate technical and organizational measures to protect your personal data against
+                unauthorized access, alteration, disclosure, or destruction. These include:</p>
             <ul class="list-disc list-inside space-y-1 ml-4">
                 <li>Encrypted data transmission (SSL/TLS)</li>
                 <li>Secure server infrastructure</li>
