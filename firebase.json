@@ -17,7 +17,7 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "dist/client",
+    "source": "dist/client",
     "ignore": [
       "firebase.json",
       "**/.*",
