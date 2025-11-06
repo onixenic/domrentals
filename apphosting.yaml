@@ -73,6 +73,6 @@ env:
   # Secret from Google Secret Manager
   # First create the secret: gcloud secrets create firebase-service-account --data-file=service-account.json
   - variable: FIREBASE_SERVICE_ACCOUNT_KEY
-    secret: firebase-service-account
+    secret: FIREBASE_SERVICE_ACCOUNT_SECRET
     availability:
       - RUNTIME
