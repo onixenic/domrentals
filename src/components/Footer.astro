@@ -10,45 +10,52 @@ import { SITE_CONFIG } from "../config/constantsConfig";
 ---
 
 <footer class="footer bg-white text-base-content p-6 text-center">
+    <div
+      class="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-2 text-xs text-gray-500"
+    >
+        <p class="w-full sm:w-auto">© 2025 {SITE_CONFIG.PAGE_TITLE}</p>
 
-    <div class="flex justify-center space-x-4 mt-2 text-xs text-gray-500">
-        <p>© 2025 {SITE_CONFIG.PAGE_TITLE}</p>
-        <span class="text-gray-400">|</span>
+        <span class="hidden sm:inline text-gray-400">|</span>
         <button
-                class="hover:underline cursor-pointer"
-                onclick="privacy_modal.showModal()"
+          class="hover:underline cursor-pointer"
+          onclick="privacy_modal.showModal()"
         >
             Privacy Policy
         </button>
-        <span class="text-gray-400">|</span>
+
+        <span class="hidden sm:inline text-gray-400">|</span>
         <button
-                class="hover:underline cursor-pointer"
-                onclick="cookie_modal.showModal()"
+          class="hover:underline cursor-pointer"
+          onclick="cookie_modal.showModal()"
         >
             Cookie Policy
         </button>
-        <span class="text-gray-400">|</span>
+
+        <span class="hidden sm:inline text-gray-400">|</span>
         <button
-                class="hover:underline cursor-pointer"
-                onclick="terms_modal.showModal()"
+          class="hover:underline cursor-pointer"
+          onclick="terms_modal.showModal()"
         >
             Terms & Conditions
         </button>
-        <span class="text-gray-400">|</span>
+
+        <span class="hidden sm:inline text-gray-400">|</span>
         <button
-                class="hover:underline cursor-pointer"
-                onclick="company_data_modal.showModal()"
+          class="hover:underline cursor-pointer"
+          onclick="company_data_modal.showModal()"
         >
             Legal Details
         </button>
-        <span class="text-gray-400">|</span>
+
+        <span class="hidden sm:inline text-gray-400">|</span>
         <button
-                class="hover:underline cursor-pointer"
-                onclick="attributions_modal.showModal()"
+          class="hover:underline cursor-pointer"
+          onclick="attributions_modal.showModal()"
         >
             Icon Credits
         </button>
-        <span class="text-gray-400">|</span>
+
+        <span class="hidden sm:inline text-gray-400">|</span>
         <button
           class="hover:underline cursor-pointer"
           onclick="photo_credits_modal.showModal()"
