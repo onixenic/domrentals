@@ -1,5 +1,5 @@
 // src/pages/api/generatePropertyId.js
-import { db } from "./firebaseAdminConfig.js";
+import {getDb} from "./firebaseAdminConfig.js";
 
 
 export function generateSecurePassword(length = 16) {
@@ -19,6 +19,8 @@ export function generateSecurePassword(length = 16) {
 
 export async function GET() {
     try {
+
+        const db = getDb();
         const counterRef = db.collection("counters").doc("properties");
         const snapshot = await counterRef.get();
         let newValue = 1;

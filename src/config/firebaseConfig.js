@@ -13,8 +13,6 @@ const firebaseConfig = {
   measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-console.log("KEY:" + import.meta.env.PUBLIC_FIREBASE_API_KEY)
-
 let app;
 try {
   app = getApp();

@@ -1,9 +1,10 @@
 // src/pages/api/updateFirestore.js
-import { db } from "./firebaseAdminConfig.js";
+import { getDb } from "./firebaseAdminConfig.js";
 export const prerender = false;
 
 export async function POST({ request }) {
   try {
+    const db = getDb();
     const {
       propertyId,
       password,
