@@ -1,5 +1,5 @@
 // src/pages/api/generatePropertyId.js
-import { db } from "../../config/firebaseAdminConfig.js";
+import { db } from "./firebaseAdminConfig.js";
 
 
 export function generateSecurePassword(length = 16) {

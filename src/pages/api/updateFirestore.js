@@ -1,5 +1,5 @@
 // src/pages/api/updateFirestore.js
-import { db } from "../../config/firebaseAdminConfig.js";
+import { db } from "./firebaseAdminConfig.js";
 export const prerender = false;
 
 export async function POST({ request }) {
