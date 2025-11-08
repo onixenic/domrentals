@@ -25,45 +25,45 @@ export const bbConfig = {
     }
   ],
   imagesMainPage: [
-    "property/showcase_bb/avif/600/shared_space_01.avif",
-    "property/showcase_bb/avif/600/shared_space_04.avif",
-    "property/showcase_bb/avif/600/room1_0.avif",
-    "property/showcase_bb/avif/600/room2_0.avif",
-    "property/showcase_bb/avif/600/room2_1.avif"
+    "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/600/shared_space_01.avif",
+    "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/600/shared_space_04.avif",
+    "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/600/room1_0.avif",
+    "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/600/room2_0.avif",
+    "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/600/room2_1.avif"
   ],
   imagesThumbnail: {
     "Shared space": [
-      "property/showcase_bb/avif/200/shared_space_01.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/200/shared_space_01.avif"
     ],
     "room 1": [
-      "property/showcase_bb/avif/200/room1_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/200/room1_0.avif"
     ],
     "room 2": [
-      "property/showcase_bb/avif/200/room2_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/200/room2_0.avif"
     ],
     "additional": [
-      "property/showcase_bb/avif/200/other_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/200/other_0.avif"
     ]
   },
   imagesByCategory: {
     "Shared space": [
-      "property/showcase_bb/avif/shared_space_01.avif",
-      "property/showcase_bb/avif/shared_space_02.avif",
-      "property/showcase_bb/avif/shared_space_03.avif",
-      "property/showcase_bb/avif/shared_space_04.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/shared_space_01.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/shared_space_02.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/shared_space_03.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/shared_space_04.avif",
 
     ],
     "room 1": [
-      "property/showcase_bb/avif/room1_0.avif",
-      "property/showcase_bb/avif/room1_1.avif",
-      "property/showcase_bb/avif/room1_2.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/room1_0.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/room1_1.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/room1_2.avif"
     ],
     "room 2": [
-      "property/showcase_bb/avif/room2_0.avif",
-      "property/showcase_bb/avif/room2_1.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/room2_0.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/room2_1.avif",
     ],
     "additional": [
-      "property/showcase_bb/avif/other_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase_bb/avif/other_0.avif"
     ],
   },
   description: `Located right in the city center, this elegant B&B offers a prime location just steps from John Ball Zoo. You'll be surrounded by all essential amenities.
@@ -103,7 +103,7 @@ This exceptional setting perfectly combines vibrant urban energy with the tranqu
   checkOut: "Before 11AM",
   email: "test@gmail.com",
   phoneNumber: "+39 000 000 0000",
-  whatsAppNumber: "0390000000000",
+  whatsAppNumber: "+390000000000",
   apartmentServices: {
     wifi: true,
     ac: true,

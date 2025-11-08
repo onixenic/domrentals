@@ -1,6 +1,6 @@
 ---
+export const prerender = true;
 import ApartmentLayout from "../layouts/Showcase.astro";
-
 import Navbar from "../components/Navbar.astro";
 import ApartmentHeader from "../components/ApartmentHeader.astro";
 import Gallery from "../components/Gallery.astro";
@@ -133,7 +133,7 @@ const {
     <Map slot="map" mapEmbed={mapEmbed} showDirections={showDirections}
          carDirectionsDescription={carDirectionsDescription}
          publicTransportDirectionsDescription={publicTransportDirectionsDescription}/>
-    <Host slot="host" hostName={hostName} hostImage={hostImage} hostBio={hostBio} hostEmail={email}
+    <Host slot="host" hostName={hostName} hostImage={hostImage} hostBio={hostBio} hostEmail={email} hostWhatsapp={whatsAppNumber}
           hostPhone={phoneNumber} hostLanguages={hostLanguages}/>
     <Footer slot="footer"/>
 

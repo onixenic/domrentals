@@ -1,34 +1,43 @@
 ---
+import { fetchFirebaseImage } from "../scripts/retrieveImages.js";
+
 interface Props {
     imagesMainPage: string[];
     imagesByCategory: Record<string, string[]>;
     imagesThumbnail: Record<string, string[]>;
 }
-
 const {imagesMainPage, imagesByCategory, imagesThumbnail} = Astro.props;
+
+const imagesMainPageBase64: string[] = await Promise.all(
+  imagesMainPage.map(async (path) => {
+      const data = await fetchFirebaseImage(path);
+      return `data:${data.contentType};base64,${data.base64}`;
+  })
+);
+
 ---
 
 <!-- Image gallery -->
 <div class="col-span-6">
     <div class="hidden sm:grid grid-cols-2 gap-2 overflow-hidden rounded-lg">
-        <img src={imagesMainPage[0]} alt="Main" loading="eager"
+        <img src={imagesMainPageBase64[0]} alt="Main" loading="eager"
              class="w-full h-98 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
              onclick="openGalleryModal()"/>
         <div class="grid grid-cols-2 gap-2">
             <div class="space-y-2">
-                <img src={imagesMainPage[1]} alt="Small1" loading="eager"
+                <img src={imagesMainPageBase64[1]} alt="Small1" loading="eager"
                      class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                      onclick="openGalleryModal()"/>
-                <img src={imagesMainPage[2]} alt="Small2" loading="eager"
+                <img src={imagesMainPageBase64[2]} alt="Small2" loading="eager"
                      class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                      onclick="openGalleryModal()"/>
             </div>
             <div class="space-y-2">
-                <img src={imagesMainPage[3]} alt="Small3" loading="eager"
+                <img src={imagesMainPageBase64[3]} alt="Small3" loading="eager"
                      class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                      onclick="openGalleryModal()"/>
                 <div class="relative">
-                    <img src={imagesMainPage[4]} alt="Small4" loading="eager"
+                    <img src={imagesMainPageBase64[4]} alt="Small4" loading="eager"
                          class="w-full h-48 object-cover hover:shadow-lg hover:brightness-70 cursor-pointer"
                          onclick="openGalleryModal()"/>
                     <button
@@ -100,7 +109,7 @@ const {imagesMainPage, imagesByCategory, imagesThumbnail} = Astro.props;
                 </button>
 
             </div>
-            <div class="sticky top-0 bg-base-100 z-30 pt-6 pb-20 overflow-x-auto" id="gallery_tabs">
+            <div class="sticky top-0 bg-base-100 z-30 pt-6 pb-20 overflow-x-auto hide-scrollbar" id="gallery_tabs">
                 <div class="tabs tabs-bordered flex flex-nowrap min-w-max lg:flex-wrap lg:min-w-0 px-6 lg:px-0">
                     {Object.keys(imagesThumbnail).map((category, index) => (
                       <button
@@ -173,7 +182,7 @@ const {imagesMainPage, imagesByCategory, imagesThumbnail} = Astro.props;
     <!-- Modal for full-size image -->
     <div
       id="imageModal"
-      class="fixed inset-0 hidden items-center justify-center bg-foreground/90 p-4 backdrop-blur-sm z-50"
+      class="fixed inset-0 hidden items-center justify-center bg-foreground/90 p-0 sm:p-4 backdrop-blur-sm z-50"
     >
         <button
           id="closeModal"
@@ -195,12 +204,14 @@ const {imagesMainPage, imagesByCategory, imagesThumbnail} = Astro.props;
                 <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
         </button>
-        <img
-          id="modalImage"
-          src="/placeholder.svg"
-          alt="Full size"
-          class="max-h-[90vh] max-w-[90vw] rounded-2xl object-contain"
-        />
+        <div class="rounded-2xl overflow-hidden w-full max-h-[95vh] sm:max-w-4xl lg:max-w-5xl">
+            <img
+              id="modalImage"
+              src="/placeholder.svg"
+              alt="Full size"
+              class="w-full h-auto object-contain"
+            />
+        </div>
     </div>
 
     <script>

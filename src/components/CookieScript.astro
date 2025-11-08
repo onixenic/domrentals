@@ -1,11 +1,8 @@
-<script
-        is:inline
-        src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"
-></script>
+<script>
 
-<script type="module">
-
-  import { loadGoogleAnalytics, deleteAnalyticsCookies } from "../../public/scripts/analyticsLoader.js";
+  import { loadGoogleAnalytics, deleteAnalyticsCookies } from "../scripts/analyticsLoader.js";
+  import * as CookieConsent from "vanilla-cookieconsent";
+  window.CookieConsent = CookieConsent;
 
   window.addEventListener("load", () => {
     CookieConsent.run({
@@ -54,43 +51,29 @@
         },
       },
 
-      onFirstConsent: function () {
-        console.log("First consent given");
-        if (CookieConsent.acceptedCategory("analytics")) {
-          loadGoogleAnalytics();
-        }
+      onFirstConsent: function ({ cookie }) {
+        console.log("First consent given", cookie);
+        if (CookieConsent.acceptedCategory("analytics")) loadGoogleAnalytics();
       },
 
-      onConsent: function () {
-        console.log("Consent changed");
-        if (CookieConsent.acceptedCategory("analytics")) {
-          loadGoogleAnalytics();
-        }
+      onConsent: function ({ cookie }) {
+        console.log("Consent changed", cookie);
+        if (CookieConsent.acceptedCategory("analytics")) loadGoogleAnalytics();
       },
 
-      onChange: function () {
-        console.log("Preferences changed");
-        if (CookieConsent.acceptedCategory("analytics")) {
-          loadGoogleAnalytics();
-        } else {
-          // User revoked analytics consent - delete GA cookies
-          deleteAnalyticsCookies();
-        }
+      onChange: function ({ cookie, changedCategories }) {
+        console.log("Preferences changed", cookie, changedCategories);
+        if (CookieConsent.acceptedCategory("analytics")) loadGoogleAnalytics();
+        else deleteAnalyticsCookies();
       },
     });
 
-    // Check if analytics was already accepted (on page reload)
     if (CookieConsent.acceptedCategory("analytics")) {
+      console.log("Analytics already accepted on load");
       loadGoogleAnalytics();
     }
 
-    // Preferences button
     const prefBtn = document.getElementById("cookie_preferences_btn");
-    if (prefBtn) {
-      prefBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        CookieConsent.showPreferences();
-      });
-    }
+    if (prefBtn) prefBtn.addEventListener("click", e => { e.preventDefault(); CookieConsent.showPreferences(); });
   });
 </script>

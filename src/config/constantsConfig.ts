@@ -15,5 +15,5 @@ export const SITE_CONFIG = {
   PAGE_DESCRIPTION: "Maximize Your Rental Revenue. Showcase Your Property With Us.",
   MONTHLY_PRICE: "20€",
   CONTACT_PHONE:"+39 3452754245",
-  CONTACT_WHATSAPP_LINK: "https://wa.me/00393452754245"
+  CONTACT_WHATSAPP_LINK: "https://wa.me/+393452754245"
 }

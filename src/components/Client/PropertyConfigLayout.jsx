@@ -81,6 +81,24 @@ Please respect the neighbors and keep noise to a minimum.`
   const [downloadError, setDownloadError] = useState('');
 
   useEffect(() => {
+    const initializeCredentials = async () => {
+      try {
+        const res = await fetch('/api/generateProperty');
+        if (!res.ok) throw new Error('Failed to generate credentials');
+
+        const data = await res.json();
+        setPropertyId(data.propertyId.toString());
+        setPropertyPsw(data.password);
+      } catch (err) {
+        console.error('Error:', err);
+      } finally {
+      }
+    };
+
+    initializeCredentials();
+  }, []);
+
+  useEffect(() => {
     if (uploadSuccess) {
       const timer = setTimeout(() => setUploadSuccess(''), 5000);
       return () => clearTimeout(timer);

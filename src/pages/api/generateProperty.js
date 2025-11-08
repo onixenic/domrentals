@@ -19,7 +19,6 @@ export function generateSecurePassword(length = 16) {
 
 export async function GET() {
     try {
-
         const db = getDb();
         const counterRef = db.collection("counters").doc("properties");
         const snapshot = await counterRef.get();

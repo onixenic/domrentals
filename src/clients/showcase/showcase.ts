@@ -9,68 +9,68 @@ export const apartmentConfig = {
   beds: 3,
   bathrooms: 2,
   imagesMainPage: [
-    "property/showcase/avif/600/livingroom_0.avif",
-    "property/showcase/avif/600/kitchen_0_0.avif",
-    "property/showcase/avif/600/room_0_0.avif",
-    "property/showcase/avif/600/bathroom_0_0.avif",
-    "property/showcase/avif/600/room_1_0.avif"
+    "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/600/livingroom_0.avif",
+    "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/600/kitchen_0_0.avif",
+    "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/600/room_0_0.avif",
+    "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/600/bathroom_0_0.avif",
+    "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/600/room_1_0.avif"
   ],
   imagesThumbnail: {
     "living room": [
-      "property/showcase/avif/200/livingroom_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/livingroom_0.avif"
     ],
     kitchen: [
-      "property/showcase/avif/200/kitchen_0_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/kitchen_0_0.avif"
     ],
     "bedroom 1": [
-      "property/showcase/avif/200/room_0_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/room_0_0.avif"
     ],
     "bedroom 2": [
-      "property/showcase/avif/200/room_1_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/room_1_0.avif"
     ],
     "bedroom 3": [
-      "property/showcase/avif/200/room_2_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/room_2_0.avif"
     ],
     "bathroom 1": [
-      "property/showcase/avif/200/bathroom_0_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/bathroom_0_0.avif"
     ],
     "bathroom 2": [
-      "property/showcase/avif/200/bathroom_1_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/bathroom_1_0.avif"
     ],
     "additional": [
-      "property/showcase/avif/200/other_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/other_0.avif"
     ],
   },
   imagesByCategory: {
     "living room": [
-      "property/showcase/avif/livingroom_0.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/livingroom_0.avif",
 
     ],
     kitchen: [
-      "property/showcase/avif/kitchen_0_1.avif",
-      "property/showcase/avif/kitchen_0_0.avif",
-      "property/showcase/avif/kitchen_0_2.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/kitchen_0_1.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/kitchen_0_0.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/kitchen_0_2.avif"
     ],
     "bedroom 1": [
-      "property/showcase/avif/room_0_0.avif",
-      "property/showcase/avif/room_0_1.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/room_0_0.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/room_0_1.avif",
     ],
     "bedroom 2": [
-      "property/showcase/avif/room_1_0.avif",
-      "property/showcase/avif/room_1_2.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/room_1_0.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/room_1_2.avif",
     ],
     "bedroom 3": [
-      "property/showcase/avif/room_2_0.avif",
-      "property/showcase/avif/room2_1.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/room_2_0.avif",
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/room2_1.avif",
     ],
     "bathroom 1": [
-      "property/showcase/avif/bathroom_0_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/bathroom_0_0.avif"
     ],
     "bathroom 2": [
-      "property/showcase/avif/bathroom_1_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/bathroom_1_0.avif"
     ],
     "additional": [
-      "property/showcase/avif/other_0.avif"
+      "gs://domrentals-76496.firebasestorage.app/properties/showcase/avif/other_0.avif"
     ],
   },
   description: `Located right in the city center, this elegant apartment offers a prime location just steps from John Ball Zoo. You'll be surrounded by all essential amenities.
@@ -97,7 +97,7 @@ This exceptional setting perfectly combines vibrant urban energy with the tranqu
   checkOut: "Before 11AM",
   email: "test@gmail.com",
   phoneNumber: "+39 000 000 0000",
-  whatsAppNumber: "0390000000000",
+  whatsAppNumber: "+390000000000",
   apartmentServices: {
     wifi: true,
     ac: true,

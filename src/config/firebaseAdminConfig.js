@@ -1,6 +1,8 @@
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import dotenv from 'dotenv';
 
+dotenv.config();
 let app;
 let db;
 
@@ -12,26 +14,26 @@ export function initializeFirebaseAdmin() {
   if (getApps().length > 0) {
     app = getApps()[0];
     if (!db) {
-      db = getFirestore(process.env.FIREBASE_FIREBASE_DBNAME);
+      db = getFirestore(process.env.PRIVATE_FIREBASE_DBNAME);
     }
     return db;
   }
 
   // Ensure credentials are available
-  if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
-    throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set');
+  if (!process.env.PRIVATE_SERVICE_ACCOUNT_KEY) {
+    throw new Error('PRIVATE_SERVICE_ACCOUNT_KEY environment variable is not set');
   }
 
   try {
     // Parse and initialize
-    const credential = cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY));
+    const credential = cert(JSON.parse(process.env.PRIVATE_SERVICE_ACCOUNT_KEY));
     app = initializeApp({
       credential: credential,
-      databaseURL: process.env.FIREBASE_FIREBASE_DB,
+      databaseURL: process.env.PRIVATE_FIREBASE_DB,
     });
 
     // Initialize Firestore
-    db = getFirestore(process.env.FIREBASE_FIREBASE_DBNAME);
+    db = getFirestore(process.env.PRIVATE_FIREBASE_DBNAME);
 
     return db;
   } catch (error) {

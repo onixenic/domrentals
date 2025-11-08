@@ -2,10 +2,10 @@ import React from "react";
 
 export default function ContactUsPriceComponentClient({ propertyId, email, phoneNumber, whatsAppNumber }) {
 
-    const formatWhatsAppNumber = (number) => {
-        if (!number) return "";
-        return  number.startsWith("+") ? "00" + number.slice(1) : number;
-    };
+    // const formatWhatsAppNumber = (number) => {
+    //     if (!number) return "";
+    //     return  number.startsWith("+") ? "00" + number.slice(1) : number;
+    // };
 
     return (
         <div className="space-y-3">
@@ -56,7 +56,7 @@ export default function ContactUsPriceComponentClient({ propertyId, email, phone
             {/* 💬 WhatsApp Contact */}
             <a
                 id="preview-whatsapp-link"
-                href={`https://wa.me/${formatWhatsAppNumber(phoneNumber)}`}
+                href={`https://wa.me/${whatsAppNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-green-600 hover:underline transition-colors"

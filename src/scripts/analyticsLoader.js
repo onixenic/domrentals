@@ -1,5 +1,6 @@
 // analyticsLoader.js
-import { getFirebaseAnalytics, logEvent } from "../../src/config/firebaseConfig.js"; // adjust path
+import { getFirebaseAnalytics, logEvent, getMeasurementId } from "../config/firebaseConfig.js"; // adjust path
+
 
 export async function loadGoogleAnalytics() {
   if (typeof window === "undefined") return;
@@ -19,7 +20,11 @@ export async function loadGoogleAnalytics() {
 }
 
 export function deleteAnalyticsCookies() {
-  const cookies = ["_ga", "_gid", "_gat", "_ga_TF69DC7NKY"];
+
+  const cookies = ["_ga", "_gid", "_gat"];
+  const measurementId = getMeasurementId();
+
+  if (measurementId) cookies.push(`_ga_${measurementId.replace("G-", "")}`);
   cookies.forEach((cookie) => {
     document.cookie = cookie + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie =

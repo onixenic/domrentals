@@ -1,7 +1,6 @@
 import { initializeApp, getApp } from "firebase/app";
 import { getAnalytics, logEvent as fbLogEvent } from "firebase/analytics";
 import { getStorage } from "firebase/storage";
-import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
@@ -35,6 +34,9 @@ export function logEvent(eventName, eventParams) {
   fbLogEvent(analytics, eventName, eventParams);
 }
 
+export function getMeasurementId() {
+  return firebaseConfig.measurementId;
+}
+
 export const storage = getStorage(app);
-export const db = getFirestore(app);
 export { app };
