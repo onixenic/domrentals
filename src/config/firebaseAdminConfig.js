@@ -1,10 +1,13 @@
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-import dotenv from 'dotenv';
+import { getStorage } from "firebase-admin/storage";
+import dotenv from "dotenv";
 
 dotenv.config();
+
 let app;
 let db;
+let storage;
 
 /**
  * Initialize Firebase Admin SDK
@@ -16,39 +19,63 @@ export function initializeFirebaseAdmin() {
     if (!db) {
       db = getFirestore(process.env.PRIVATE_FIREBASE_DBNAME);
     }
-    return db;
+    if (!storage) {
+      storage = getStorage();
+    }
+    return { db, storage };
   }
 
-  // Ensure credentials are available
   if (!process.env.PRIVATE_SERVICE_ACCOUNT_KEY) {
-    throw new Error('PRIVATE_SERVICE_ACCOUNT_KEY environment variable is not set');
+    throw new Error(
+        "PRIVATE_SERVICE_ACCOUNT_KEY environment variable is not set"
+    );
   }
+
+  if (!process.env.PUBLIC_FIREBASE_STORAGE_BUCKET) {
+    throw new Error(
+        "PUBLIC_FIREBASE_STORAGE_BUCKET environment variable is not set"
+    );
+  }
+
+
 
   try {
-    // Parse and initialize
-    const credential = cert(JSON.parse(process.env.PRIVATE_SERVICE_ACCOUNT_KEY));
+    const credential = cert(
+        JSON.parse(process.env.PRIVATE_SERVICE_ACCOUNT_KEY)
+    );
     app = initializeApp({
-      credential: credential,
+      credential,
       databaseURL: process.env.PRIVATE_FIREBASE_DB,
+      storageBucket: process.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
     });
 
-    // Initialize Firestore
     db = getFirestore(process.env.PRIVATE_FIREBASE_DBNAME);
+    storage = getStorage(app);
 
-    return db;
+    return { db, storage };
   } catch (error) {
-    console.error('Failed to initialize Firebase Admin:', error);
+    console.error("Failed to initialize Firebase Admin:", error);
     throw error;
   }
 }
 
 /**
  * Get Firestore instance
- * Will initialize if not already done
  */
 export function getDb() {
   if (!db) {
     initializeFirebaseAdmin();
   }
   return db;
+}
+
+/**
+ * Get Storage instance
+ */
+export function getStorageInstance() {
+  if (!storage) {
+    const admin = initializeFirebaseAdmin();
+    storage = admin.storage;
+  }
+  return storage;
 }
